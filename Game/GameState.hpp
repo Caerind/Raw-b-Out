@@ -4,6 +4,8 @@
 #include "../Engine/Application/StateManager.hpp"
 #include "../Engine/Core/World.hpp"
 
+#include "Bar.hpp"
+
 class GameState : public oe::State
 {
 	public:
@@ -17,17 +19,19 @@ class GameState : public oe::State
 		inline oe::Window& getWindow();
 		inline oe::View& getView();
 		void zoomView(const sf::Event& event);
-		void moveView(oe::Time dt);
-
-		void initMap();
-		oe::Vector2i getCoordsZone(U32 zone);
-
-		oe::Vector2i getMouseCoords();
-		void moveView(const sf::Event& event);
 
 	private:
 		oe::World mWorld;
-		oe::Clock mClock;
+		oe::Time mDuration;
+		oe::ImGuiProfiler mProfiler;
+		oe::ImGuiDataViewer mDataViewer;
+
+		sf::Text mInfoText;
+		U32 mCurrentInfo;
+
+		Bar mBarPlayerLevel;
+		Bar mBarPlayerBattery;
+		sf::Text mPlayerLevelText;
 };
 
 #endif // GAMESTATE_HPP

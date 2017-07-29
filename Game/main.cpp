@@ -12,14 +12,21 @@ int main()
 	oe::Application application;
 
 	// Load Resources
+	GameSingleton::minikillerTexture = application.getTextures().create("minikillerTexture", oe::TextureLoader::loadFromFile(TEXTURE_MINIKILLER));
+	GameSingleton::killerTexture = application.getTextures().create("killerTexture", oe::TextureLoader::loadFromFile(TEXTURE_KILLER));
+	GameSingleton::projectilesTexture = application.getTextures().create("projectilesTexture", oe::TextureLoader::loadFromFile(TEXTURE_PROJECTILES));
+	GameSingleton::sansationFont = application.getFonts().create("sansation", oe::FontLoader::loadFromFile(FONTSANSATION));
+	GameSingleton::actionSound = application.getAudio().createSound("action", SOUNDACTION);
 	GameSingleton::loadTileset();
-	GameSingleton::objectsTexture = application.getTextures().create("objects", oe::TextureLoader::loadFromFile("Assets/objects.png"));
-	GameSingleton::sansationFont = application.getFonts().create("sansation", oe::FontLoader::loadFromFile("Assets/sansation.ttf"));
-	GameSingleton::actionSound = application.getAudio().createSound("action", "Assets/action.wav");
+	GameSingleton::loadAnimations();
+	GameSingleton::loadInputs();
 	
 	// Load Window
 	oe::Window& window = application.getWindow();
 	window.create(sf::VideoMode(WINSIZEX, WINSIZEY), WINTITLE, sf::Style::Close);
+	//application.getWindow().setIcon("...");
+	window.useCustomCursor("../Assets/cursor.png", sf::IntRect(0, 0, 48, 48), sf::Vector2f(24, 24));
+	window.setScreenshotPath("../Screenshots/");
 	window.setMainView(sf::View(sf::FloatRect(0.0f, 0.0f, WINSIZEX, WINSIZEY)));
 	window.applyMainView();
 

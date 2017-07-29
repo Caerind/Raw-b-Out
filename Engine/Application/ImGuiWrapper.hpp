@@ -28,7 +28,7 @@ void shutdown();
 class ImGuiWindow
 {
 	public:
-		ImGuiWindow(const std::string& name, F32 x = -1.0f, F32 y = 1.0f, F32 w = -1.0f, F32 h = -1.0f);
+		ImGuiWindow(const std::string& name, F32 x = -1.0f, F32 y = -1.0f, F32 w = -1.0f, F32 h = -1.0f);
 
 		void show();
 		void hide();
@@ -47,7 +47,7 @@ class ImGuiWindow
 class ImGuiLogger : public LogReceiver, public ImGuiWindow
 {
 	public:
-		ImGuiLogger(F32 x = -1.0f, F32 y = 1.0f, F32 w = -1.0f, F32 h = -1.0f);
+		ImGuiLogger(F32 x = -1.0f, F32 y = -1.0f, F32 w = -1.0f, F32 h = -1.0f);
 		virtual ~ImGuiLogger();
 
 		virtual void onReceive(const Log& log);
@@ -63,7 +63,7 @@ class ImGuiLogger : public LogReceiver, public ImGuiWindow
 class ImGuiConsole : public ConsoleInstance, public ImGuiWindow
 {
 	public:
-		ImGuiConsole(F32 x = -1.0f, F32 y = 1.0f, F32 w = -1.0f, F32 h = -1.0f);
+		ImGuiConsole(F32 x = -1.0f, F32 y = -1.0f, F32 w = -1.0f, F32 h = -1.0f);
 		virtual ~ImGuiConsole();
 
 		void clearLines();
@@ -80,7 +80,7 @@ class ImGuiConsole : public ConsoleInstance, public ImGuiWindow
 class ImGuiProfiler : public ProfilerDisplay, public ImGuiWindow
 {
 	public:
-		ImGuiProfiler(F32 x = -1.0f, F32 y = 1.0f, F32 w = -1.0f, F32 h = -1.0f);
+		ImGuiProfiler(F32 x = -1.0f, F32 y = -1.0f, F32 w = -1.0f, F32 h = -1.0f);
 		virtual ~ImGuiProfiler();
 
 		virtual void displayFrame(const ProfilerFrame& frame);
@@ -102,7 +102,7 @@ class ImGuiProfiler : public ProfilerDisplay, public ImGuiWindow
 class ImGuiDataViewer : public DataViewer, public ImGuiWindow
 {
 	public:
-		ImGuiDataViewer(F32 x = -1.0f, F32 y = 1.0f, F32 w = -1.0f, F32 h = -1.0f);
+		ImGuiDataViewer(F32 x = -1.0f, F32 y = -1.0f, F32 w = -1.0f, F32 h = -1.0f);
 		virtual ~ImGuiDataViewer();
 
 		virtual void setData(const std::string& key, const std::string& value);

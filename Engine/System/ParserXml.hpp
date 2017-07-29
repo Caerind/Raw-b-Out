@@ -25,6 +25,9 @@ class ParserXml
 		
 		void setAttribute(const std::string& attributeName, const std::string& value);
 		void getAttribute(const std::string& attributeName, std::string& value);
+		void getAttribute(const std::string& attributeName, I32& value);
+		void getAttribute(const std::string& attributeName, U32& value);
+		void getAttribute(const std::string& attributeName, F32& value);
 		void createAttribute(const std::string& attributeName);
 		void removeAttribute(const std::string& attributeName);
 

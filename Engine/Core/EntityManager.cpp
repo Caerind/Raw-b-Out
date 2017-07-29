@@ -30,6 +30,15 @@ void EntityManager::update()
 	I32 change = spawned - destroyed;
 }
 
+void EntityManager::update(oe::Time dt)
+{
+	for (auto itr = mEntitiesPlaying.begin(); itr != mEntitiesPlaying.end(); ++itr)
+	{
+		ASSERT((*itr).isValid());
+		(*itr)->update(dt);
+	}
+}
+
 void EntityManager::killEntity(const EntityHandle& handle)
 {
 	if (handle.isValid())

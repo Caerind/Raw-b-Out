@@ -91,9 +91,32 @@ void ParserXml::getAttribute(const std::string& attributeName, std::string& valu
 	{
 		value = mCurrentNode.attribute(n).as_string();
 	}
-	else
+}
+
+void ParserXml::getAttribute(const std::string& attributeName, I32& value)
+{
+	const char* n = attributeName.c_str();
+	if (mCurrentNode.attribute(n))
 	{
-		value.clear();
+		value = mCurrentNode.attribute(n).as_int();
+	}
+}
+
+void ParserXml::getAttribute(const std::string& attributeName, U32& value)
+{
+	const char* n = attributeName.c_str();
+	if (mCurrentNode.attribute(n))
+	{
+		value = mCurrentNode.attribute(n).as_uint();
+	}
+}
+
+void ParserXml::getAttribute(const std::string& attributeName, F32& value)
+{
+	const char* n = attributeName.c_str();
+	if (mCurrentNode.attribute(n))
+	{
+		value = mCurrentNode.attribute(n).as_float();
 	}
 }
 

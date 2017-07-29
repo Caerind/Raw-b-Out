@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="64" tileheight="64" nextobjectid="2">
+ <tileset firstgid="1" source="tileset.tsx"/>
+ <layer name="Calque de Tile 1" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztmlELwyAMhKUbbIz+/9+7p4GIWI2X5JLuIS/a0vsSzVnao5RyJIkzeNQcn2r8QaBNyiGN1+L41ZwXh1assDJzIOsRpV8gtXlyWudRi817PfTYonK0eqJxvIF62Ooh1cTI8dM1mm/PTbscGr5icY9Uo7afSrR4rzkEh7deLY5e74zIwRJ35WDd6zu9WiMsOSzyKvWneuxJwDNii1APae7/HDwMqxye6xO1P1avk/RVxL0z+tB5RXnHLEeEPTTL4a0zK0fr1QgOhm8lUetxdw4rFmkvtvaPntaRbvT7y25ukJ5nUQ8tv/bg0NSL4GDuW6hzu3dI+tvO87Te/VuOq38zMtXDk6XObZ1ziS7GmmTjyBBfLIBk7g==
+  </data>
+ </layer>
+ <objectgroup name="Calque d'objets 1" visible="0">
+  <object id="1" name="T" x="148" y="160">
+   <properties>
+    <property name="map" type="int" value="0"/>
+    <property name="x" type="float" value="1760"/>
+    <property name="y" type="float" value="1760"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

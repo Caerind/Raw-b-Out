@@ -2,19 +2,61 @@
 #define GAMEMAP_HPP
 
 #include "../Engine/Core/Map.hpp"
+#include "../Engine/System/ParserXml.hpp"
 
-class GameMap : public oe::Map
+#include "Info.hpp"
+#include "Spawner.hpp"
+#include "Chest.hpp"
+#include "Teleporter.hpp"
+
+class GameMap : public oe::Entity
 {
 	public:
 		GameMap(oe::EntityManager& manager);
 
-		void setTileId(const oe::Vector2& worldPos, oe::TileId tile);
-		void setTileId(const oe::Vector2i& coords, oe::TileId tile);
+		oe::TileId getTileId(const oe::Vector2i& coords);
+		void setTileId(const oe::Vector2i& coords, oe::TileId id);
+
+		void load(U32 mapId, const oe::Vector2& spawnPoint);
+		U32 getMapId() const;
+		U32 getPreviousMapId() const;
+
+		void setSpawnPoint(const oe::Vector2& point);
+		const oe::Vector2& getSpawnPoint() const;
 
 		oe::LayerComponent& getLayer();
 
+		void setSize(const oe::Vector2i& size);
+		const oe::Vector2i& getSize() const;
+
+		virtual void update(oe::Time dt);
+
+		bool collide(const oe::Vector2i& coords);
+
+		Info* getCurrentInfo();
+
+		void openChest(const oe::Vector2i& coords);
+
 	private:
-		oe::LayerComponent* mLayer;
+		void createLayer(const oe::Vector2i& size);
+		void readLayer(oe::ParserXml& parser);
+		void readObject(oe::ParserXml& parser);
+		void readInfo(oe::ParserXml& parser);
+		void readChest(oe::ParserXml& parser);
+		void readTeleporter(oe::ParserXml& parser);
+
+	private:
+		oe::LayerComponent mLayer;
+		std::vector<bool> mCollisions;
+		std::vector<Info> mInfos;
+		std::vector<Spawner> mSpawners;
+		std::vector<Chest> mChests;
+		std::vector<Teleporter> mTeleporters;
+		std::vector<oe::Vector2> mChargers;
+		oe::Vector2 mSpawnPoint;
+		U32 mMapId;
+		U32 mPreviousMapId;
+		Info* mCurrentInfo;
 };
 
 #endif // GAMEMAP_HPP

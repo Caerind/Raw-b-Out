@@ -32,6 +32,7 @@ class Application
 		AudioSystem& getAudio();
 		TextureManager& getTextures();
 		FontManager& getFonts();
+		DataManager& getData();
 
 		template <typename State, typename ... Args>
 		void start();

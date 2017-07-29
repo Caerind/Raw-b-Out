@@ -38,6 +38,7 @@ class Entity : public Node
 
 		Application& getApplication();
 		World& getWorld();
+		EntityManager& getManager();
 
 		const UID& getId() const;
 
@@ -63,6 +64,11 @@ class Entity : public Node
 		void setVisible(bool visible);
 
 		void render(sf::RenderTarget& target, const Rect& viewAABB);
+
+		virtual void update(oe::Time dt);
+
+		template <typename T>
+		T* getAs();
 
 	private:
 		friend class EntityManager;
@@ -106,6 +112,12 @@ class Entity : public Node
 
 		mutable bool mNeedOrderComponents;
 };
+
+template <typename T>
+inline T* Entity::getAs()
+{
+	return fast_dynamic_cast<T*>(this);
+}
 
 } // namespace oe
 

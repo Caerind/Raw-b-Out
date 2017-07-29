@@ -56,9 +56,9 @@ void DebugDraw::drawRect(F32 x, F32 y, F32 w, F32 h, const Color& c1, const Colo
 	if (instanced())
 	{
 		sf::RectangleShape* rect = new sf::RectangleShape(sf::Vector2f(w, h));
-		rect->setFillColor(toSF(c1));
 		rect->setOutlineThickness(1.5f);
-		rect->setOutlineColor(toSF(c2));
+		rect->setOutlineColor(toSF(c1));
+		rect->setFillColor(toSF(c2));
 		rect->setPosition(x, y);
 		mSingleton->mDrawables.push_back(rect);
 	}

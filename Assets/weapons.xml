@@ -1,0 +1,51 @@
+<weapon id="0" name="Tuto Gun Fake" cool="0.8" stre="20" proj="0" />
+<weapon id="1" name="Rifle I" cool="0.2" stre="100" proj="1" />
+<weapon id="2" name="Rifle II" cool="0.2" stre="125" proj="1" />
+<weapon id="3" name="Rifle III" cool="0.2" stre="150" proj="1" />
+<weapon id="4" name="Rifle IV" cool="0.2" stre="175" proj="1" />
+<weapon id="5" name="Rifle V" cool="0.2" stre="200" proj="1" />
+<weapon id="6" name="Sniper I" cool="0.6" stre="300" proj="1" />
+<weapon id="7" name="Sniper II" cool="0.6" stre="325" proj="1" />
+<weapon id="8" name="Sniper III" cool="0.6" stre="350" proj="1" />
+<weapon id="9" name="Sniper IV" cool="0.6" stre="375" proj="1" />
+<weapon id="10" name="Sniper V" cool="0.6" stre="400" proj="1" />
+<weapon id="11" name="Gun I" cool="0.4" stre="200" proj="1" />
+<weapon id="12" name="Gun II" cool="0.4" stre="225" proj="1" />
+<weapon id="13" name="Gun III" cool="0.4" stre="250" proj="1" />
+<weapon id="14" name="Gun IV" cool="0.4" stre="275" proj="1" />
+<weapon id="15" name="Gun V" cool="0.4" stre="300" proj="1" />
+<weapon id="16" name="Plasma Rifle I" cool="0.2" stre="100" proj="2" />
+<weapon id="17" name="Plasma Rifle II" cool="0.2" stre="125" proj="2" />
+<weapon id="18" name="Plasma Rifle III" cool="0.2" stre="150" proj="2" />
+<weapon id="19" name="Plasma Rifle IV" cool="0.2" stre="175" proj="2" />
+<weapon id="20" name="Plasma Rifle V" cool="0.2" stre="200" proj="2" />
+<weapon id="21" name="Plasma Sniper I" cool="0.6" stre="300" proj="2" />
+<weapon id="22" name="Plasma Sniper II" cool="0.6" stre="325" proj="2" />
+<weapon id="23" name="Plasma Sniper III" cool="0.6" stre="350" proj="2" />
+<weapon id="24" name="Plasma Sniper IV" cool="0.6" stre="375" proj="2" />
+<weapon id="25" name="Plasma Sniper V" cool="0.6" stre="400" proj="2" />
+<weapon id="26" name="Plasma Gun I" cool="0.4" stre="200" proj="2" />
+<weapon id="27" name="Plasma Gun II" cool="0.4" stre="225" proj="2" />
+<weapon id="28" name="Plasma Gun III" cool="0.4" stre="250" proj="2" />
+<weapon id="29" name="Plasma Gun IV" cool="0.4" stre="275" proj="2" />
+<weapon id="30" name="Plasma Gun V" cool="0.4" stre="300" proj="2" />
+<weapon id="31" name="Laser Rifle I" cool="0.2" stre="100" proj="3" />
+<weapon id="32" name="Laser Rifle II" cool="0.2" stre="125" proj="3" />
+<weapon id="33" name="Laser Rifle III" cool="0.2" stre="150" proj="3" />
+<weapon id="34" name="Laser Rifle IV" cool="0.2" stre="175" proj="3" />
+<weapon id="35" name="Laser Rifle V" cool="0.2" stre="200" proj="3" />
+<weapon id="36" name="Laser Sniper I" cool="0.6" stre="300" proj="3" />
+<weapon id="37" name="Laser Sniper II" cool="0.6" stre="325" proj="3" />
+<weapon id="38" name="Laser Sniper III" cool="0.6" stre="350" proj="3" />
+<weapon id="39" name="Laser Sniper IV" cool="0.6" stre="375" proj="3" />
+<weapon id="40" name="Laser Sniper V" cool="0.6" stre="400" proj="3" />
+<weapon id="41" name="Laser Gun I" cool="0.4" stre="200" proj="1" />
+<weapon id="42" name="Laser Gun II" cool="0.4" stre="225" proj="1" />
+<weapon id="43" name="Laser Gun III" cool="0.4" stre="250" proj="1" />
+<weapon id="44" name="Laser Gun IV" cool="0.4" stre="275" proj="1" />
+<weapon id="45" name="Laser Gun V" cool="0.4" stre="300" proj="1" />
+<weapon id="46" name="Gun X" cool="0.3" stre="350" proj="1" />
+<weapon id="47" name="Plasma X" cool="0.3" stre="350" proj="2" />
+<weapon id="48" name="Laser X" cool="0.3" stre="350" proj="3" />
+<weapon id="49" name="Ultime X" cool="0.2" stre="400" proj="4" />
+<weapon id="50" name="Tuto Gun" cool="0.8" stre="20" proj="1" />

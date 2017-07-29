@@ -74,6 +74,11 @@ FontManager& Application::getFonts()
 	return mFontManager;
 }
 
+DataManager& Application::getData()
+{
+	return mDataManager;
+}
+
 void Application::stop()
 {
 	mRunning = false;
