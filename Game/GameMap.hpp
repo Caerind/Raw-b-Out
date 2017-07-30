@@ -23,6 +23,7 @@ class GameMap : public oe::Entity
 
 		void setSpawnPoint(const oe::Vector2& point);
 		const oe::Vector2& getSpawnPoint() const;
+		oe::Vector2 getRespawnPoint() const;
 
 		oe::LayerComponent& getLayer();
 
@@ -31,6 +32,7 @@ class GameMap : public oe::Entity
 
 		virtual void update(oe::Time dt);
 
+		void setCollision(const oe::Vector2i& coords, bool collide);
 		bool collide(const oe::Vector2i& coords);
 
 		Info* getCurrentInfo();

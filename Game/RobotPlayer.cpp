@@ -6,16 +6,36 @@
 #include "../Engine/Core/World.hpp"
 #include "../Engine/Application/Application.hpp"
 
+#include "Fx.hpp"
+
 RobotPlayer::RobotPlayer(oe::EntityManager& manager)
 	: Robot(manager, Robot::Killer)
 	, mAction(*this)
+	, mWheel(*this)
+	, mBody(*this)
+	, mEyes(*this)
+	, mWeaponSprite(*this)
 {
-	// TODO : Remove temp stat
-	setSpeed(300);
-
 	oe::ActionId shootAction = mAction.addAction("shoot");
 	mAction.setInput(shootAction, &GameSingleton::shootInput);
 	mAction.addOutput(shootAction, [this]() { shoot(); });
+
+	mWheel.setTexture(GameSingleton::killerTexture);
+	mWheel.setTextureRect(sf::IntRect(64, 0, 21, 21));
+	mWheel.setPosition(-11.f, -10.f);
+	mWheel.setPositionZ(-1.0f);
+
+	mBody.setTexture(GameSingleton::killerTexture);
+	mBody.setPosition(-32.0f, -58.0f);
+	mBody.setPositionZ(1.0f);
+
+	mEyes.setTexture(GameSingleton::killerTexture);
+	mEyes.setPositionZ(2.0f);
+
+	mWeaponSprite.setTexture(GameSingleton::weaponsTexture);
+	mWeaponSprite.setPositionZ(3.0f);
+
+	setLookAt(1000);
 
 	mLevel = 1;
 	mExperience = 0;
@@ -34,7 +54,11 @@ U32 RobotPlayer::getLevel() const
 
 void RobotPlayer::gainLevel()
 {
+	getManager().createEntity<Fx>(Fx::Level, getPosition());
+	getApplication().getAudio().playSound(GameSingleton::levelSound);
 	mLevel++;
+	addPoint();
+	addPoint();
 	addPoint();
 	addPoint();
 	addPoint();
@@ -58,10 +82,11 @@ U32 RobotPlayer::getExperienceMax() const
 void RobotPlayer::addExperience(U32 experience)
 {
 	mExperience += experience;
-	if (mExperience > getExperienceMax())
+	U32 max = getExperienceMax();
+	if (mExperience > max)
 	{
 		gainLevel();
-		mExperience = 0;
+		mExperience -= max;
 	}
 }
 
@@ -163,26 +188,24 @@ void RobotPlayer::update(oe::Time dt)
 			updateView();
 		}
 	}
-	else
-	{
-		notMoving();
-	}
 
 	mWeaponCooldown += dt;
 
 	if (mBattery <= 0.0f)
 	{
-		setPosition(120, 120);
-		setBattery(getBatteryMax());
+		setPosition(GameSingleton::map->getRespawnPoint());
 		updateView();
+		charge();
 	}
+
+	updateLook();
 }
 
 void RobotPlayer::shoot()
 {
 	if (Robot::shoot(getApplication().getWindow().getCursorPositionView(getWorld().getRenderSystem().getView())) && mWeapon.getId() != 0)
 	{
-		consumeBattery(1.0f); // Battery consumtion
+		consumeBattery(1.0f);
 	}
 }
 
@@ -191,14 +214,82 @@ void RobotPlayer::updateView()
 	getWorld().getRenderSystem().getView().setCenter(getPosition());
 }
 
+void RobotPlayer::updateLook()
+{
+	setLookAt(getApplication().getWindow().getCursorPositionView(getWorld().getRenderSystem().getView()).x);
+}
+
+void RobotPlayer::setLookAt(F32 x)
+{
+	if (x - getPosition().x > 0.0f)
+	{
+		mBody.setTextureRect(sf::IntRect(0, 0, 64, 64));
+
+		mEyes.setPosition(-2, -40);
+		mEyes.setTextureRect(sf::IntRect(64, 21, 14, 7));
+
+		mWeaponSprite.setPosition(-20, -40);
+		mWeaponSprite.setTextureRect(GameSingleton::getTextureRectFromWeapon(mWeapon.getId()));
+		mStrikePos.set(mWeaponSprite.getGlobalPosition().x + 56, mWeaponSprite.getGlobalPosition().y + 32);
+	}
+	else
+	{
+		mBody.setTextureRect(sf::IntRect(0, 64, 64, 64));
+
+		mEyes.setPosition(-12, -40);
+		mEyes.setTextureRect(sf::IntRect(64, 21, 14, 7));
+
+		mWeaponSprite.setPosition(-40, -40);
+		sf::IntRect r = GameSingleton::getTextureRectFromWeapon(mWeapon.getId());
+		r.top += 192;
+		mWeaponSprite.setTextureRect(r);
+		mStrikePos.set(mWeaponSprite.getGlobalPosition().x, mWeaponSprite.getGlobalPosition().y + 32);
+	}
+}
+
 void RobotPlayer::addWeapon(WeaponId id)
 {
-	mWeapons.push_back(id);
+	if (!hasWeapon(id))
+	{
+		mWeapons.push_back(id);
+	}
+}
+
+bool RobotPlayer::hasWeapon(WeaponId id) const
+{
+	for (U32 i = 0; i < mWeapons.size(); i++)
+	{
+		if ((WeaponId)mWeapons[i] == id)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 std::vector<WeaponId>& RobotPlayer::getWeapons()
 {
 	return mWeapons;
+}
+
+void RobotPlayer::charge()
+{
+	setBattery(getBatteryMaxWithBonus());
+}
+
+bool RobotPlayer::isCharged() const
+{
+	return mBattery + 2.0f >= mBatteryMax;
+}
+
+void RobotPlayer::setColor(const oe::Color& color)
+{
+	mBody.setColor(color);
+}
+
+oe::Color RobotPlayer::getColor() const
+{
+	return mBody.getColor();
 }
 
 bool RobotPlayer::determineMovement(oe::Vector2& mvt)

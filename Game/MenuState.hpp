@@ -5,7 +5,6 @@
 
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/CircleShape.hpp>
 
 class MenuState : public oe::State
 {
@@ -19,6 +18,14 @@ class MenuState : public oe::State
 	private:
 		sf::Texture mTextureBg;
 		sf::Sprite mBackground;
+		sf::Sprite mScreen;
+		sf::Sprite mPlay;
+		sf::Sprite mQuit;
+		sf::Sprite mSoundButton;
+		sf::Sprite mMusicButton;
+		sf::Sprite mSound;
+		sf::Sprite mMusic;
+		sf::Sprite mName;
 };
 
 #endif // MENUSTATE_HPP

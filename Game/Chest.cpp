@@ -30,7 +30,7 @@ WeaponId Chest::getWeapon() const
 	return mWeaponId;
 }
 
-void Chest::setOpen(bool open)
+bool Chest::setOpen(bool open)
 {
 	if (open && !mOpen)
 	{
@@ -39,12 +39,15 @@ void Chest::setOpen(bool open)
 		GameSingleton::player->addWeapon(mWeaponId);
 
 		mOpen = open;
+
+		return true;
 	}
 	else if (!open && mOpen)
 	{
 		GameSingleton::map->setTileId(mPosition, TILE_CHEST);
 		mOpen = open;
 	}
+	return false;
 }
 
 bool Chest::isOpen() const

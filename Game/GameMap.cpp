@@ -4,6 +4,10 @@
 #include "GameConfig.hpp" // Used to get data
 
 #include "../Engine/System/Compression.hpp"
+#include "../Engine/Core/EntityManager.hpp"
+#include "../Engine/Application/Application.hpp"
+
+#include "Fx.hpp"
 
 GameMap::GameMap(oe::EntityManager& manager)
 	: oe::Entity(manager)
@@ -28,10 +32,9 @@ void GameMap::setTileId(const oe::Vector2i& coords, oe::TileId id)
 
 void GameMap::load(U32 mapId, const oe::Vector2& spawnPoint)
 {
-	// Clear layer ?
 	mInfos.clear();
 	mSpawners.clear();
-	mChests.clear(); // TODO : Save opened chests
+	mChests.clear();
 	mTeleporters.clear();
 	mChargers.clear();
 	mCurrentInfo = nullptr;
@@ -131,6 +134,18 @@ const oe::Vector2& GameMap::getSpawnPoint() const
 	return mSpawnPoint;
 }
 
+oe::Vector2 GameMap::getRespawnPoint() const
+{
+	if (mPreviousMapId == 0 && mMapId == 0)
+	{
+		return oe::Vector2(120, 120);
+	}
+	else
+	{
+		return mSpawnPoint;
+	}
+}
+
 oe::LayerComponent& GameMap::getLayer()
 {
 	return mLayer;
@@ -163,9 +178,11 @@ void GameMap::update(oe::Time dt)
 	{
 		const oe::Vector2 delta = GameSingleton::player->getPosition() - mChargers[i];
 		const F32 d = delta.getLength();
-		if (d <= CHARGER_DISTANCE)
+		if (d <= CHARGER_DISTANCE && !GameSingleton::player->isCharged())
 		{
-			GameSingleton::player->setBattery(GameSingleton::player->getBatteryMaxWithBonus());
+			getManager().createEntity<Fx>(Fx::Charge, mChargers[i]);
+			GameSingleton::player->charge();
+			getApplication().getAudio().playSound(GameSingleton::chargeSound);
 		}
 	}
 
@@ -175,11 +192,21 @@ void GameMap::update(oe::Time dt)
 		mSpawners[i].update();
 	}
 
+	// TODO : Do it in last to avoid errors, but is it working nicelly ?
 	// Teleporters
 	for (U32 i = 0; i < mTeleporters.size(); i++)
 	{
-		mTeleporters[i].update();
+		if (mTeleporters[i].update())
+		{
+			getApplication().getAudio().playSound(GameSingleton::teleportSound);
+		}
 	}
+}
+
+void GameMap::setCollision(const oe::Vector2i& coords, bool collide)
+{
+	ASSERT(coords.x >= 0 && coords.y >= 0 && coords.x < mLayer.getSize().x && coords.y < mLayer.getSize().y);
+	mCollisions[coords.x + coords.y * mLayer.getSize().x] = collide;
 }
 
 bool GameMap::collide(const oe::Vector2i& coords)
@@ -199,7 +226,10 @@ void GameMap::openChest(const oe::Vector2i& coords)
 	{
 		if (coords == mChests[i].getPosition() && !mChests[i].isOpen())
 		{
-			mChests[i].setOpen(true);
+			if (mChests[i].setOpen(true))
+			{
+				getApplication().getAudio().playSound(GameSingleton::chestSound);
+			}
 		}
 	}
 }
@@ -247,12 +277,16 @@ void GameMap::readLayer(oe::ParserXml& parser)
 		{
 			oe::TileId gid = byteVector[i] | byteVector[i + 1] << 8 | byteVector[i + 2] << 16 | byteVector[i + 3] << 24;
 
+			if (gid == TILE_CHEST)
+			{
+				gid = TILE_CHEST_OPEN;
+			}
+
 			mLayer.setTileId(coords, gid);
 
 			switch (gid)
 			{
 				case TILE_WALL:
-				case TILE_FAKEWALL:
 				case TILE_WALL1:
 				case TILE_WALL2:
 				case TILE_WALL3:
@@ -263,6 +297,7 @@ void GameMap::readLayer(oe::ParserXml& parser)
 				case TILE_WALL8:
 					mCollisions[coords.x + coords.y * size.x] = true; break;
 				case TILE_CHEST:
+				case TILE_CHEST_OPEN:
 					mCollisions[coords.x + coords.y * size.x] = true;
 					mChests.push_back(Chest(coords, 0));
 					break;
@@ -322,8 +357,6 @@ void GameMap::readInfo(oe::ParserXml& parser)
 		parser.closeNode();
 	}
 
-	printf("Info %d %s %f %f\n", id, str.c_str(), pos.x, pos.y);
-
 	mInfos.back().setId(id);
 	mInfos.back().setPosition(pos);
 	mInfos.back().setString(str);
@@ -348,14 +381,16 @@ void GameMap::readChest(oe::ParserXml& parser)
 				if (mChests[i].getPosition() == coords)
 				{
 					mChests[i].setWeapon(weaponId);
+					if (!GameSingleton::player->hasWeapon(weaponId))
+					{
+						GameSingleton::map->setTileId(coords, TILE_CHEST);
+					}
 				}
 			}
 			parser.closeNode();
 		}
 		parser.closeNode();
 	}
-
-	printf("Chest %f %f %d\n", pos.x, pos.y, weaponId);
 }
 
 void GameMap::readTeleporter(oe::ParserXml& parser)
@@ -407,6 +442,4 @@ void GameMap::readTeleporter(oe::ParserXml& parser)
 	}
 
 	mTeleporters.push_back(Teleporter(pos, mapId, target));
-
-	printf("Teleporter %f %f %d %f %f\n", pos.x, pos.y, mapId, target.x, target.y);
 }

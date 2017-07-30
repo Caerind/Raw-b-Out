@@ -10,11 +10,17 @@ PopUp::PopUp(sf::Texture& screen)
 	mScreen.setTexture(screen);
 	mScreen.setPosition(WINSIZEX - 960, WINSIZEY - 20 - 600);
 	mOpen = true;
+	mExit = false;
 }
 
 bool PopUp::isOpen() const
 {
 	return mOpen;
+}
+
+bool PopUp::isExit() const
+{
+	return mExit;
 }
 
 RobotPopUp::RobotPopUp(sf::Texture& screen, sf::Texture& gui, sf::Font& font)
@@ -32,7 +38,7 @@ RobotPopUp::RobotPopUp(sf::Texture& screen, sf::Texture& gui, sf::Font& font)
 	mNameText.setOrigin(mNameText.getGlobalBounds().width * 0.5f, mNameText.getGlobalBounds().height * 0.5f);
 	mNameText.setPosition(310.0f, 230.0f);
 	f(mBatteryText, font); 
-	mBatteryText.setString(oe::toString((U32)GameSingleton::player->getBattery()) + " + " + oe::toString((U32)GameSingleton::player->getBatteryBonus()));
+	mBatteryText.setString(oe::toString((U32)GameSingleton::player->getBatteryMax()) + " + " + oe::toString((U32)GameSingleton::player->getBatteryBonus()));
 	mBatteryText.setOrigin(mBatteryText.getGlobalBounds().width * 0.5f, mBatteryText.getGlobalBounds().height * 0.5f);
 	mBatteryText.setPosition(630.0f, 420.0f);
 	f(mSpeedText, font); 
@@ -95,11 +101,12 @@ void RobotPopUp::handleEvent(const sf::Event& event)
 {
 	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && GameSingleton::player->hasPoints())
 	{
+		GameSingleton::click();
 		sf::Vector2f pos((F32)event.mouseButton.x, (F32)event.mouseButton.y);
 		if (mBatteryPlus.getGlobalBounds().contains(pos))
 		{
 			GameSingleton::player->increaseBattery();
-			mBatteryText.setString(oe::toString((U32)GameSingleton::player->getBattery()) + " + " + oe::toString((U32)GameSingleton::player->getBatteryBonus()));
+			mBatteryText.setString(oe::toString((U32)GameSingleton::player->getBatteryMax()) + " + " + oe::toString((U32)GameSingleton::player->getBatteryBonus()));
 			mBatteryText.setOrigin(mBatteryText.getGlobalBounds().width * 0.5f, mBatteryText.getGlobalBounds().height * 0.5f);
 			mPointsText.setString(oe::toString(GameSingleton::player->getPoints()));
 			mPointsText.setOrigin(mPointsText.getGlobalBounds().width * 0.5f, mPointsText.getGlobalBounds().height * 0.5f);
@@ -176,7 +183,7 @@ InventoryPopUp::InventoryPopUp(sf::Texture& screen, sf::Texture& gui, sf::Font& 
 		{
 			mPlayerWeapons.push_back(id);
 			mWeaponsSprites.push_back(sf::Sprite(weapons));
-			mWeaponsSprites.back().setTextureRect(sf::IntRect(0, 0, 64, 64));
+			mWeaponsSprites.back().setTextureRect(GameSingleton::getTextureRectFromWeapon((WeaponId)id));
 			mWeaponsSprites.back().setPosition(getPosition(id) + sf::Vector2f(6.0f, 6.0f));
 		}
 	}
@@ -189,13 +196,13 @@ InventoryPopUp::InventoryPopUp(sf::Texture& screen, sf::Texture& gui, sf::Font& 
 
 	mSelectedId = 0;
 	mSelected.setTexture(gui);
-	mSelected.setTextureRect(sf::IntRect(390, 290, 80, 80));
-	mSelected.setPosition(getPosition(mSelectedId));
+	mSelected.setTextureRect(sf::IntRect(390, 300, 64, 64));
+	mSelected.setPosition(getPosition(mSelectedId) + sf::Vector2f(6.f, 6.f));
 
 	mEquipedId = GameSingleton::player->getWeapon();
 	mEquiped.setTexture(gui);
-	mEquiped.setTextureRect(sf::IntRect(490, 290, 80, 80));
-	mEquiped.setPosition(getPosition(mEquipedId));
+	mEquiped.setTextureRect(sf::IntRect(454, 300, 64, 64));
+	mEquiped.setPosition(getPosition(mEquipedId) + sf::Vector2f(6.f, 6.f));
 }
 
 void InventoryPopUp::handleEvent(const sf::Event& event)
@@ -209,7 +216,8 @@ void InventoryPopUp::handleEvent(const sf::Event& event)
 		{
 			mEquipedId = mSelectedId;
 			GameSingleton::player->setWeapon((WeaponId)mEquipedId);
-			mEquiped.setPosition(getPosition(mEquipedId));
+			mEquiped.setPosition(getPosition(mEquipedId) + sf::Vector2f(6.f, 6.f));
+			GameSingleton::click();
 		}
 		else
 		{
@@ -219,9 +227,10 @@ void InventoryPopUp::handleEvent(const sf::Event& event)
 				{
 					U32 id = mPlayerWeapons[i];
 					mSelectedId = id;
-					mSelected.setPosition(getPosition(mSelectedId));
+					mSelected.setPosition(getPosition(mSelectedId) + sf::Vector2f(6.f, 6.f));
 					mName.setString(GameSingleton::weaponData[id].name);
 					mName.setOrigin(mName.getGlobalBounds().width * 0.5f, mName.getGlobalBounds().height * 0.5f);
+					GameSingleton::click();
 				}
 			}
 		}
@@ -238,13 +247,13 @@ void InventoryPopUp::draw(sf::RenderTarget& target, sf::RenderStates states) con
 	}
 
 	target.draw(mName);
-	target.draw(mEquiped);
 	target.draw(mSelected);
+	target.draw(mEquiped);
 }
 
 sf::Vector2f InventoryPopUp::getPosition(U32 weapon)
 {
-	if (weapon == 0 || weapon == 50)
+	if (weapon == 0 || weapon >= 50)
 	{
 		return sf::Vector2f(-100.0f, -100.0f);
 	}
@@ -288,9 +297,6 @@ OptionsPopUp::OptionsPopUp(sf::Texture& screen, sf::Texture& gui, oe::AudioSyste
 
 void OptionsPopUp::handleEvent(const sf::Event& event)
 {
-	mSoundButton.setTextureRect(sf::IntRect((mAudio.getSoundVolume() > 0.0f) ? 288 : 384, 0, 96, 192));
-	mMusicButton.setTextureRect(sf::IntRect((mAudio.getMusicVolume() > 0.0f) ? 288 : 384, 0, 96, 192));
-
 	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 	{
 		sf::Vector2f pos((F32)event.mouseButton.x, (F32)event.mouseButton.y);
@@ -304,6 +310,8 @@ void OptionsPopUp::handleEvent(const sf::Event& event)
 			{
 				mAudio.setSoundVolume(100.0f);
 			}
+			mSoundButton.setTextureRect(sf::IntRect((mAudio.getSoundVolume() > 0.0f) ? 288 : 384, 0, 96, 192));
+			GameSingleton::playSound(GameSingleton::buttonSound);
 		}
 		else if (mMusicButton.getGlobalBounds().contains(pos))
 		{
@@ -315,14 +323,18 @@ void OptionsPopUp::handleEvent(const sf::Event& event)
 			{
 				mAudio.setMusicVolume(100.0f);
 			}
+			mMusicButton.setTextureRect(sf::IntRect((mAudio.getMusicVolume() > 0.0f) ? 288 : 384, 0, 96, 192));
+			GameSingleton::playSound(GameSingleton::buttonSound);
 		}
 		else if (mResume.getGlobalBounds().contains(pos))
 		{
 			mOpen = false;
+			GameSingleton::click();
 		}
 		else if (mQuit.getGlobalBounds().contains(pos))
 		{
-			// TODO : Quit
+			mExit = true;
+			GameSingleton::click();
 		}
 	}
 }

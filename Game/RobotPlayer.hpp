@@ -4,6 +4,7 @@
 #include "Robot.hpp"
 
 #include "../Engine/Core/Components/ActionComponent.hpp"
+#include "../Engine/Core/Components/SpriteComponent.hpp"
 
 class RobotPlayer : public Robot
 {
@@ -40,16 +41,28 @@ class RobotPlayer : public Robot
 		void shoot();
 
 		void updateView();
+		void updateLook();
+		void setLookAt(F32 x);
 
 		void addWeapon(WeaponId id);
-
+		bool hasWeapon(WeaponId id) const;
 		std::vector<WeaponId>& getWeapons();
+
+		void charge();
+		bool isCharged() const;
+
+		void setColor(const oe::Color& color);
+		oe::Color getColor() const;
 
 	private:
 		bool determineMovement(oe::Vector2& mvt);
 
 	private:
 		oe::ActionComponent mAction;
+		oe::SpriteComponent mWheel;
+		oe::SpriteComponent mBody;
+		oe::SpriteComponent mEyes;
+		oe::SpriteComponent mWeaponSprite;
 
 		U32 mLevel;
 		U32 mExperience;

@@ -23,6 +23,8 @@ class Projectile : public oe::Entity
 
 		virtual void update(oe::Time dt);
 
+		void explode(U32 ignoreId = 0);
+
 	protected:
 		oe::SpriteComponent mSprite;
 		oe::Vector2 mDirection;

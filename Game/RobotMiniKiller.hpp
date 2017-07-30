@@ -3,6 +3,7 @@
 
 #include "Robot.hpp"
 #include "BarComponent.hpp"
+#include "../Engine/Core/Components/SpriteComponent.hpp"
 
 class RobotMiniKiller : public Robot
 {
@@ -11,9 +12,8 @@ class RobotMiniKiller : public Robot
 
 		virtual void update(oe::Time dt);
 
-		virtual bool determineMovement(oe::Vector2& mvt);
-
 	private:
+		oe::SpriteComponent mSprite;
 		BarComponent mBar;
 		bool mFocusPlayer;
 };

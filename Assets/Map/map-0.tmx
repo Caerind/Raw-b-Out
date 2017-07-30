@@ -6,7 +6,7 @@
  <tileset firstgid="1" source="tileset.tsx"/>
  <layer name="Calque de Tile 1" width="30" height="30">
   <data encoding="base64" compression="zlib">
-   eJzdVtEKwyAMlK7QglR92f//6l4mBEnqxcZm60NANM15Z3MaQwjxG4mMaRRhPgLf1jiYuffN4YmbT9Y3YG7vrL9+jO8/4o7+n0h+r2do3uh+uR5LE7SzPl+uHtcTxRgX1VvLdwVyzvxgls4aTYoTrgffDODSnsrBZq9tjdbDJQwrn+PWUqf2LFxEfy9crTe2byEUl/MNzd1iwVfizt0tba2ax9Wa4d0ajZ6Ei/jVyHlb8j0GsasHLhd0tuLsjSvdOdz7EXkLSnVofACup0Io
+   eJzdV8sOwyAMQ3uok1iBy/7/V3spUoSSYtLQbDtEqiCNsWkMjSGEuEcizzSKMB6Bd2uszNjn4vDEzQfzCzD26szfv4zvL+Jqv08kv9czNE+7Xq7H0gTtrPeXq8f1RDHGRfUe5fsAco78YJbOI5oUJ1wPvhnApT2Vg81a2xqth0sYVj7HzaVO7Vm4iP5euKPe2N6FUNyncq+5M0TLV+Jez5b3HhxGzeNqzfDuEY3+CRfxK81+W/JdldjVA28ndLbi7I0rnTnIPxd3F5Tq0NgAuudCKw==
   </data>
  </layer>
  <objectgroup name="Calque d'objets 1">

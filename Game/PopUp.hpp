@@ -19,10 +19,12 @@ class PopUp : public sf::Drawable
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
 
 		bool isOpen() const;
+		bool isExit() const;
 
 	protected:
 		sf::Sprite mScreen;
 		bool mOpen;
+		bool mExit;
 };
 
 class RobotPopUp : public PopUp

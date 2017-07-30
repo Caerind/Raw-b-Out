@@ -19,7 +19,7 @@ class Teleporter
 		void setMapId(U32 mapId);
 		U32 getMapId() const;
 
-		void update();
+		bool update();
 
 	private:
 		oe::Vector2 mPosition;

@@ -3,6 +3,10 @@
 #include "GameSingleton.hpp"
 #include "GameConfig.hpp"
 
+#include "../Engine/Application/Application.hpp"
+#include "../Engine/Core/EntityManager.hpp"
+#include "Fx.hpp"
+
 Projectile::Projectile(oe::EntityManager& manager, Type projType, const oe::Vector2& position, const oe::Vector2& direction, U32 strength, U32 stricker)
 	: oe::Entity(manager)
 	, mSprite(*this)
@@ -20,10 +24,10 @@ Projectile::Projectile(oe::EntityManager& manager, Type projType, const oe::Vect
 	switch (mProjType)
 	{
 		case None: mSprite.setTextureRect(sf::IntRect(0, 0, 1, 1)); break;
-		case Ammo: mSprite.setTextureRect(sf::IntRect(0, 0, 32, 32)); break;
-		case Plasma: mSprite.setTextureRect(sf::IntRect(32, 0, 32, 32)); break;
-		case Laser: mSprite.setTextureRect(sf::IntRect(64, 0, 32, 32)); rotate(mDirection.getPolarAngle()); break;
-		case Ultime: mSprite.setTextureRect(sf::IntRect(92, 0, 32, 32)); rotate(mDirection.getPolarAngle()); break;
+		case Ammo: mSprite.setTextureRect(sf::IntRect(0, 0, 32, 32)); getApplication().getAudio().playSound(GameSingleton::ammoSound); break;
+		case Plasma: mSprite.setTextureRect(sf::IntRect(32, 0, 32, 32)); getApplication().getAudio().playSound(GameSingleton::plasmaSound); break;
+		case Laser: mSprite.setTextureRect(sf::IntRect(64, 0, 32, 32)); getApplication().getAudio().playSound(GameSingleton::laserSound); rotate(mDirection.getPolarAngle()); break;
+		case Ultime: mSprite.setTextureRect(sf::IntRect(92, 0, 32, 32)); getApplication().getAudio().playSound(GameSingleton::ultimeSound); rotate(mDirection.getPolarAngle()); break;
 	}
 }
 
@@ -43,14 +47,25 @@ void Projectile::update(oe::Time dt)
 	{
 		rotate(400.f * dt.asSeconds());
 	}
-
-	// Proj AABB
-	//oe::DebugDraw::drawRect(getAABB());
 	
 	bool collision = false;
 	if (coords != mCoords)
 	{
-		if (GameSingleton::map->collide(coords))
+		// Break walls with Plasma
+		if ((mProjType == Type::Plasma || mProjType == Type::Ultime) && GameSingleton::map->getTileId(coords) == TILE_BREAKABLEWALL)
+		{
+			getManager().createEntity<Fx>(Fx::WallExplosion, getPosition());
+			getApplication().getAudio().playSound(GameSingleton::wallSound);
+
+			GameSingleton::map->setTileId(coords, TILE_GROUND);
+			GameSingleton::map->setCollision(coords, false);
+			if (mProjType == Type::Plasma)
+			{
+				explode();
+				kill();
+			}
+		}
+		else if (GameSingleton::map->collide(coords))
 		{
 			collision = true;
 		}
@@ -66,10 +81,12 @@ void Projectile::update(oe::Time dt)
 	}
 	else
 	{
+		if (mProjType == Type::Plasma || mProjType == Type::Ultime)
+		{
+			explode();
+		}
 		kill();
 	}
-
-	// TODO : Plasma & Laser Effect
 
 	mElapsed += dt;
 	const oe::Rect& r = getAABB();
@@ -92,6 +109,10 @@ void Projectile::update(oe::Time dt)
 					}
 					GameSingleton::player->addExperience(amountExp);
 				}
+				if (mProjType == Type::Plasma || mProjType == Type::Ultime)
+				{
+					explode(robot->getId());
+				}
 				kill();
 			}
 			else
@@ -99,10 +120,56 @@ void Projectile::update(oe::Time dt)
 				Projectile* projectile = entity->getAs<Projectile>();
 				if (projectile != nullptr && projectile != this)
 				{
-					projectile->kill();
-					kill();
+					if (projectile->mProjType == Type::Ammo || projectile->mProjType == Type::Plasma)
+					{
+						projectile->kill();
+					}
+					if (mProjType == Type::Ammo || mProjType == Type::Plasma)
+					{
+						kill();
+					}
 				}
 			}
 		}
 	}
+}
+
+void Projectile::explode(U32 ignoreId)
+{
+	if (mProjType == Type::Plasma)
+	{
+		getManager().createEntity<Fx>(Fx::PlasmaExplosion, getPosition());
+	}
+	else if (mProjType == Type::Ultime)
+	{
+		getManager().createEntity<Fx>(Fx::UltimeExplosion, getPosition());
+	}
+
+	getApplication().getAudio().playSound(GameSingleton::explosionSound);
+
+	for (oe::Entity* entity : GameSingleton::rQuery.getEntities())
+	{
+		Robot* robot = entity->getAs<Robot>();
+		if (robot != nullptr && robot->getId() != ignoreId)
+		{
+			const oe::Vector2 delta = robot->getPosition() - getPosition();
+			const F32 d = delta.getLength();
+			if (d <= EXPLOSION_DISTANCE)
+			{
+				if (robot->consumeBattery((F32)mStrength) && mStricker == GameSingleton::player->getId())
+				{
+					U32 amountExp = 0;
+					switch (robot->getRobotType())
+					{
+						case Robot::MiniKiller: amountExp = 10; break;
+						case Robot::Killer: amountExp = 100; break;
+						case Robot::MegaKiller: amountExp = 5000; break;
+						default: break;
+					}
+					GameSingleton::player->addExperience(amountExp);
+				}
+			}
+		}
+	}
+
 }

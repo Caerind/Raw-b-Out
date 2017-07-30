@@ -18,7 +18,7 @@ class Chest
 		void setWeapon(WeaponId id);
 		WeaponId getWeapon() const;
 
-		void setOpen(bool open);
+		bool setOpen(bool open);
 		bool isOpen() const;
 
 	private:

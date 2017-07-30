@@ -41,7 +41,7 @@ U32 Teleporter::getMapId() const
 	return mMapId;
 }
 
-void Teleporter::update()
+bool Teleporter::update()
 {
 	const oe::Vector2 delta = GameSingleton::player->getPosition() - mPosition;
 	const F32 d = delta.getLength();
@@ -56,5 +56,8 @@ void Teleporter::update()
 		GameSingleton::player->updateView();
 
 		GameSingleton::map->load(mMapId, mTargetPos);
+
+		return true;
 	}	
+	return false;
 }

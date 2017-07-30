@@ -22,6 +22,9 @@ class GameState : public oe::State
 		void zoomView(const sf::Event& event);
 		void popUpEvent(const sf::Event& event);
 
+		void load();
+		void save();
+
 	private:
 		oe::World mWorld;
 		oe::Time mDuration;
@@ -34,11 +37,11 @@ class GameState : public oe::State
 		Bar mBarPlayerLevel;
 		Bar mBarPlayerBattery;
 		sf::Text mPlayerLevelText;
+		Bar mBarPlayerCooldown;
 
 		sf::Sprite mButtonR;
 		sf::Sprite mButtonI;
 		sf::Sprite mButtonO;
-		sf::Texture mScreen;
 		U32 mCurrentPopUp;
 		PopUp* mPopUp;
 

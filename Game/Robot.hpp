@@ -2,7 +2,6 @@
 #define ROBOT_HPP
 
 #include "../Engine/Core/Entity.hpp"
-#include "../Engine/Core/Components/AnimationComponent.hpp"
 
 #include "Weapon.hpp"
 
@@ -43,18 +42,13 @@ class Robot : public oe::Entity
 
 		bool tryMove(oe::Time dt, oe::Vector2& mvt);
 
-		void notMoving();
-
-		oe::Animation* getRightAnimationMove();
-		oe::Animation* getLeftAnimationMove();
-		oe::Animation* getRightAnimationIdle();
-		oe::Animation* getLeftAnimationIdle();
+		oe::Time getWeaponCooldown() const;
 
 	protected:
-		oe::AnimationComponent mAnimation;
-
 		oe::Vector2i mCoords;
 		oe::Time mWeaponCooldown;
+
+		oe::Vector2 mStrikePos;
 
 		Weapon mWeapon;
 		F32 mBattery;

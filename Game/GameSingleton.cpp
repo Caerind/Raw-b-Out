@@ -1,6 +1,7 @@
 #include "GameSingleton.hpp"
 
 #include "GameConfig.hpp" // Used to load the tileset
+#include "../Engine/Application/Application.hpp"
 
 oe::Tileset GameSingleton::tileset;
 oe::ResourceId GameSingleton::minikillerTexture;
@@ -8,35 +9,46 @@ oe::ResourceId GameSingleton::killerTexture;
 oe::ResourceId GameSingleton::projectilesTexture;
 oe::ResourceId GameSingleton::guiTexture;
 oe::ResourceId GameSingleton::weaponsTexture;
+oe::ResourceId GameSingleton::particleTexture;
+oe::ResourceId GameSingleton::screenTexture;
 oe::ResourceId GameSingleton::sansationFont;
-oe::ResourceId GameSingleton::actionSound;
+oe::ResourceId GameSingleton::ammoSound;
+oe::ResourceId GameSingleton::buttonSound;
+oe::ResourceId GameSingleton::chargeSound;
+oe::ResourceId GameSingleton::chestSound;
+oe::ResourceId GameSingleton::clickSound;
+oe::ResourceId GameSingleton::damageSound;
+oe::ResourceId GameSingleton::dieSound;
+oe::ResourceId GameSingleton::errorSound;
+oe::ResourceId GameSingleton::explosionSound;
+oe::ResourceId GameSingleton::infoSound;
+oe::ResourceId GameSingleton::laserSound;
+oe::ResourceId GameSingleton::levelSound;
+oe::ResourceId GameSingleton::plasmaSound;
+oe::ResourceId GameSingleton::teleportSound;
+oe::ResourceId GameSingleton::ultimeSound;
+oe::ResourceId GameSingleton::wallSound;
+oe::ResourceId GameSingleton::mainMusic;
+oe::ResourceId GameSingleton::fightMusic;
+bool GameSingleton::playingMainMusic;
+oe::Application* GameSingleton::application;
 oe::EntityHandle GameSingleton::mapHandle;
 GameMap* GameSingleton::map;
 oe::EntityHandle GameSingleton::playerHandle;
 RobotPlayer* GameSingleton::player;
 std::string GameSingleton::name;
+oe::Color GameSingleton::color;
 oe::ActionInputKey GameSingleton::up;
 oe::ActionInputKey GameSingleton::left;
 oe::ActionInputKey GameSingleton::down;
 oe::ActionInputKey GameSingleton::right;
 oe::ActionInputMouse GameSingleton::shootInput;
 oe::ActionInputMouse GameSingleton::pickupInput;
-oe::Animation GameSingleton::rightMiniKillerMove;
-oe::Animation GameSingleton::leftMiniKillerMove;
-oe::Animation GameSingleton::rightMiniKillerIdle;
-oe::Animation GameSingleton::leftMiniKillerIdle;
-oe::Animation GameSingleton::rightKillerMove;
-oe::Animation GameSingleton::leftKillerMove;
-oe::Animation GameSingleton::rightKillerIdle;
-oe::Animation GameSingleton::leftKillerIdle;
-oe::Animation GameSingleton::rightMegaKillerMove;
-oe::Animation GameSingleton::leftMegaKillerMove;
-oe::Animation GameSingleton::rightMegaKillerIdle;
-oe::Animation GameSingleton::leftMegaKillerIdle;
 oe::EntityQuery GameSingleton::rQuery;
 oe::EntityQuery GameSingleton::rpQuery;
 oe::EntityQuery GameSingleton::repQuery;
 std::map<WeaponId, WeaponData> GameSingleton::weaponData;
+oe::ParserXml GameSingleton::loader;
 
 void GameSingleton::loadTileset()
 {
@@ -45,6 +57,46 @@ void GameSingleton::loadTileset()
 	tileset.setTileCount(TILESETCOUNT);
 	tileset.setColumns(TILESETCOLUMNS);
 	tileset.getTexture(); // Used to load the texture now
+}
+
+void GameSingleton::loadResources(oe::Application& application)
+{
+	GameSingleton::application = &application;
+
+	mainMusic = application.getAudio().createMusic("main", MUSIC_MAIN);
+	fightMusic = application.getAudio().createMusic("fight", MUSIC_FIGHT);
+	application.getAudio().playMusic(mainMusic);
+	playingMainMusic = true;
+}
+
+void GameSingleton::loadResources2()
+{
+	minikillerTexture = application->getTextures().create("minikillerTexture", oe::TextureLoader::loadFromFile(TEXTURE_MINIKILLER));
+	killerTexture = application->getTextures().create("killerTexture", oe::TextureLoader::loadFromFile(TEXTURE_KILLER));
+	projectilesTexture = application->getTextures().create("projectilesTexture", oe::TextureLoader::loadFromFile(TEXTURE_PROJECTILES));
+	guiTexture = application->getTextures().create("guiTexture", oe::TextureLoader::loadFromFile(TEXTURE_GUI));
+	weaponsTexture = application->getTextures().create("weaponsTexture", oe::TextureLoader::loadFromFile(TEXTURE_WEAPONS));
+	particleTexture = application->getTextures().create("particleTexture", oe::TextureLoader::loadFromFile(TEXTURE_PARTICLE));
+	screenTexture = application->getTextures().create("screenTexture", oe::TextureLoader::loadFromFile(TEXTURE_SCREEN));
+
+	sansationFont = application->getFonts().create("sansation", oe::FontLoader::loadFromFile(FONT_SANSATION));
+
+	ammoSound = application->getAudio().createSound("ammo", SOUND_AMMO);
+	buttonSound = application->getAudio().createSound("button", SOUND_BUTTON);
+	chargeSound = application->getAudio().createSound("charge", SOUND_CHARGE);
+	chestSound = application->getAudio().createSound("chest", SOUND_CHEST);
+	clickSound = application->getAudio().createSound("click", SOUND_CLICK);
+	damageSound = application->getAudio().createSound("damage", SOUND_DAMAGE);
+	dieSound = application->getAudio().createSound("die", SOUND_DIE);
+	errorSound = application->getAudio().createSound("error", SOUND_ERROR);
+	explosionSound = application->getAudio().createSound("explosion", SOUND_EXPLOSION);
+	infoSound = application->getAudio().createSound("info", SOUND_INFO);
+	laserSound = application->getAudio().createSound("laser", SOUND_LASER);
+	levelSound = application->getAudio().createSound("level", SOUND_LEVEL);
+	plasmaSound = application->getAudio().createSound("plasma", SOUND_PLASMA);
+	teleportSound = application->getAudio().createSound("teleport", SOUND_TELEPORT);
+	ultimeSound = application->getAudio().createSound("ultime", SOUND_ULTIME);
+	wallSound = application->getAudio().createSound("wall", SOUND_WALL);
 }
 
 void GameSingleton::loadInputs()
@@ -63,34 +115,6 @@ void GameSingleton::loadInputs()
 	shootInput.setType(oe::ActionType::Pressed);
 }
 
-void GameSingleton::loadAnimations()
-{
-	// MiniKiller
-	rightMiniKillerMove.addFrame(minikillerTexture, oe::Rect(0, 0, 64, 64), oe::seconds(0.15f));
-	rightMiniKillerMove.addFrame(minikillerTexture, oe::Rect(64, 0, 64, 64), oe::seconds(0.15f));
-	rightMiniKillerMove.addFrame(minikillerTexture, oe::Rect(128, 0, 64, 64), oe::seconds(0.15f));
-	rightMiniKillerMove.addFrame(minikillerTexture, oe::Rect(192, 0, 64, 64), oe::seconds(0.15f));
-	leftMiniKillerMove.addFrame(minikillerTexture, oe::Rect(0, 64, 64, 64), oe::seconds(0.15f));
-	leftMiniKillerMove.addFrame(minikillerTexture, oe::Rect(64, 64, 64, 64), oe::seconds(0.15f));
-	leftMiniKillerMove.addFrame(minikillerTexture, oe::Rect(128, 64, 64, 64), oe::seconds(0.15f));
-	leftMiniKillerMove.addFrame(minikillerTexture, oe::Rect(192, 64, 64, 64), oe::seconds(0.15f));
-	rightMiniKillerIdle.addFrame(minikillerTexture, oe::Rect(0, 0, 64, 64), oe::seconds(2.0f));
-	leftMiniKillerIdle.addFrame(minikillerTexture, oe::Rect(0, 64, 64, 64), oe::seconds(2.0f));
-
-	// Killer
-	rightKillerMove.addFrame(killerTexture, oe::Rect(0, 0, 64, 64), oe::seconds(0.2f));
-	rightKillerMove.addFrame(killerTexture, oe::Rect(64, 0, 64, 64), oe::seconds(0.2f));
-	rightKillerMove.addFrame(killerTexture, oe::Rect(128, 0, 64, 64), oe::seconds(0.2f));
-	rightKillerMove.addFrame(killerTexture, oe::Rect(192, 0, 64, 64), oe::seconds(0.2f));
-	leftKillerMove.addFrame(killerTexture, oe::Rect(0, 64, 64, 64), oe::seconds(0.2f));
-	leftKillerMove.addFrame(killerTexture, oe::Rect(64, 64, 64, 64), oe::seconds(0.2f));
-	leftKillerMove.addFrame(killerTexture, oe::Rect(128, 64, 64, 64), oe::seconds(0.2f));
-	leftKillerMove.addFrame(killerTexture, oe::Rect(192, 64, 64, 64), oe::seconds(0.2f));
-	rightKillerIdle.addFrame(killerTexture, oe::Rect(0, 0, 64, 64), oe::seconds(2.0f));
-	leftKillerIdle.addFrame(killerTexture, oe::Rect(0, 64, 64, 64), oe::seconds(2.0f));
-
-	// MegaKiller
-}
 void GameSingleton::loadQueries()
 {
 	rQuery.setSelector([](oe::Entity* entity) -> bool
@@ -151,8 +175,38 @@ void GameSingleton::loadWeapons()
 	}
 }
 
+sf::IntRect GameSingleton::getTextureRectFromWeapon(WeaponId id)
+{
+	if (id == 0 || id > 50)
+	{
+		return sf::IntRect();
+	}
+	Projectile::Type t = (Projectile::Type)GameSingleton::weaponData[id].proj;
+	switch (t)
+	{
+		case Projectile::Ammo: return sf::IntRect(0, 0, 64, 64); break;
+		case Projectile::Plasma: return sf::IntRect(0, 64, 64, 64); break;
+		case Projectile::Laser: return sf::IntRect(0, 128, 64, 64); break;
+		case Projectile::Ultime: return sf::IntRect(256, 0, 64, 64); break;
+	}
+	return sf::IntRect();
+}
+
 void GameSingleton::clear()
 {
 	map = nullptr;
 	player = nullptr;
+}
+
+void GameSingleton::playSound(oe::ResourceId sound)
+{
+	if (application != nullptr)
+	{
+		application->getAudio().playSound(sound);
+	}
+}
+
+void GameSingleton::click()
+{
+	playSound(clickSound);
 }

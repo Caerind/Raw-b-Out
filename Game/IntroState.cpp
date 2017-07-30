@@ -2,12 +2,15 @@
 
 #include "../Engine/Application/Application.hpp"
 
+#include "GameConfig.hpp"
+#include "GameSingleton.hpp"
+
 #include "MenuState.hpp" // Used to switch to
 
 IntroState::IntroState(oe::StateManager& manager)
 	: oe::State(manager)
 {
-	mAtmogTexture.loadFromFile("Assets/atmog.png");
+	mAtmogTexture.loadFromFile(TEXTURE_ATMOG);
 	mAtmogSprite.setTexture(mAtmogTexture);
 }
 
@@ -18,12 +21,20 @@ bool IntroState::handleEvent(const sf::Event& event)
 
 bool IntroState::update(oe::Time dt)
 {
-	mElapsed += dt;
-	if (mElapsed > oe::seconds(1.0f))
-	{
-		auto music = getApplication().getAudio().createMusic("music", "Assets/music.ogg");
-		getApplication().getAudio().playMusic(music, true);
+	GameSingleton::loadResources2();
+	GameSingleton::loadTileset();
+	GameSingleton::loadInputs();
+	GameSingleton::loadWeapons();
 
+	#ifdef OE_DEBUG
+		static const oe::Time duration = oe::seconds(0.2f);
+	#else
+		static const oe::Time duration = oe::seconds(2.0f);
+	#endif
+
+	mElapsed += dt;
+	if (mElapsed > duration)
+	{
 		popState();
 		pushState<MenuState>();
 	}

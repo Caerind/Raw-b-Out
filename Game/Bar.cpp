@@ -15,6 +15,10 @@ void Bar::setValue(F32 value)
 	{
 		mValue = mValueMax;
 	}
+	if (mValue < 0.0f)
+	{
+		mValue = 0.0f;
+	}
 	update();
 }
 

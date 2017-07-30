@@ -7,6 +7,7 @@
 #include "../Engine/Core/EntityHandle.hpp"
 #include "../Engine/Core/Systems/ActionSystem.hpp"
 #include "../Engine/Core/EntityQuery.hpp"
+#include "../Engine/System/ParserXml.hpp"
 
 #include <SFML/Window/Keyboard.hpp>
 
@@ -29,14 +30,46 @@ class GameSingleton
 		static oe::Tileset tileset;
 		static void loadTileset();
 
-		// Resources
+		// Textures
 		static oe::ResourceId minikillerTexture;
 		static oe::ResourceId killerTexture;
 		static oe::ResourceId projectilesTexture;
 		static oe::ResourceId guiTexture;
 		static oe::ResourceId weaponsTexture;
+		static oe::ResourceId particleTexture;
+		static oe::ResourceId screenTexture;
+
+		// Font
 		static oe::ResourceId sansationFont;
-		static oe::ResourceId actionSound;
+
+		// Sounds
+		static oe::ResourceId ammoSound;
+		static oe::ResourceId buttonSound;
+		static oe::ResourceId chargeSound;
+		static oe::ResourceId chestSound;
+		static oe::ResourceId clickSound;
+		static oe::ResourceId damageSound;
+		static oe::ResourceId dieSound;
+		static oe::ResourceId errorSound;
+		static oe::ResourceId explosionSound;
+		static oe::ResourceId infoSound;
+		static oe::ResourceId laserSound;
+		static oe::ResourceId levelSound;
+		static oe::ResourceId plasmaSound;
+		static oe::ResourceId teleportSound;
+		static oe::ResourceId ultimeSound;
+		static oe::ResourceId wallSound;
+
+		// Musics
+		static oe::ResourceId mainMusic;
+		static oe::ResourceId fightMusic;
+		static bool playingMainMusic;
+
+		static oe::Application* application;
+
+		// Resources
+		static void loadResources(oe::Application& application);
+		static void loadResources2();
 
 		// Map & Player
 		static oe::EntityHandle mapHandle;
@@ -44,6 +77,7 @@ class GameSingleton
 		static oe::EntityHandle playerHandle;
 		static RobotPlayer* player;
 		static std::string name;
+		static oe::Color color;
 
 		// Inputs
 		static oe::ActionInputKey up;
@@ -54,21 +88,6 @@ class GameSingleton
 		static oe::ActionInputMouse pickupInput;
 		static void loadInputs();
 
-		// Animations
-		static oe::Animation rightMiniKillerMove;
-		static oe::Animation leftMiniKillerMove;
-		static oe::Animation rightMiniKillerIdle;
-		static oe::Animation leftMiniKillerIdle;
-		static oe::Animation rightKillerMove;
-		static oe::Animation leftKillerMove;
-		static oe::Animation rightKillerIdle;
-		static oe::Animation leftKillerIdle;
-		static oe::Animation rightMegaKillerMove;
-		static oe::Animation leftMegaKillerMove;
-		static oe::Animation rightMegaKillerIdle;
-		static oe::Animation leftMegaKillerIdle;
-		static void loadAnimations();
-
 		// Robots
 		static oe::EntityQuery rQuery;
 		static oe::EntityQuery rpQuery;
@@ -78,9 +97,17 @@ class GameSingleton
 		// Weapons
 		static std::map<WeaponId, WeaponData> weaponData;
 		static void loadWeapons();
+		static sf::IntRect getTextureRectFromWeapon(WeaponId id);
 
 		// Clear the singleton before a new game
 		static void clear();
+
+		// Loader
+		static oe::ParserXml loader;
+
+		// Sound
+		static void playSound(oe::ResourceId sound);
+		static void click();
 
 };
 

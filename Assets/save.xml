@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<save version="1.0" name="Teyolo" color="ffa040ff" date="30-07-2017 23-08-07">
+	<stats level="1" exp="0" points="0" battery="0" batteryB="0" speedB="0" strengthB="0" />
+	<map id="0" spawn="200,200" position="200,200" />
+	<weapons />
+</save>
