@@ -81,6 +81,34 @@ void GameMap::load(U32 mapId, const oe::Vector2& spawnPoint)
 		}
 		xml.closeNode();
 	}
+
+	// read enemy weapon
+	if (xml.readNode("properties"))
+	{
+		std::string pname;
+		if (xml.readNode("property"))
+		{
+			xml.getAttribute("name", pname);
+			if (pname == "enemy_weapon")
+			{
+				xml.getAttribute("value", mEnemyWeapon);
+			}
+
+
+			while (xml.nextSibling("property"))
+			{
+				xml.getAttribute("name", pname);
+				if (pname == "enemy_weapon")
+				{
+					xml.getAttribute("value", mEnemyWeapon);
+				}
+
+
+			}
+			xml.closeNode();
+		}
+		xml.closeNode();
+	}
 }
 
 U32 GameMap::getMapId() const
@@ -174,6 +202,11 @@ void GameMap::openChest(const oe::Vector2i& coords)
 			mChests[i].setOpen(true);
 		}
 	}
+}
+
+WeaponId GameMap::getEnemyWeapon() const
+{
+	return mEnemyWeapon;
 }
 
 void GameMap::createLayer(const oe::Vector2i& size)

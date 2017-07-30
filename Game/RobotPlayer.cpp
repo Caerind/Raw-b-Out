@@ -10,7 +10,6 @@ RobotPlayer::RobotPlayer(oe::EntityManager& manager)
 	: Robot(manager, Robot::Killer)
 	, mAction(*this)
 {
-	// TODO : Player specific stats
 	// TODO : Remove temp stat
 	setSpeed(300);
 
@@ -53,16 +52,16 @@ U32 RobotPlayer::getExperience() const
 
 U32 RobotPlayer::getExperienceMax() const
 {
-	return 100 + mLevel * 20; // TODO : Good formula ?
+	return 30 + mLevel * (20 + mLevel);
 }
 
 void RobotPlayer::addExperience(U32 experience)
 {
 	mExperience += experience;
-	U32 x = 100;
-	if (experience > getExperienceMax())
+	if (mExperience > getExperienceMax())
 	{
 		gainLevel();
+		mExperience = 0;
 	}
 }
 
@@ -183,7 +182,7 @@ void RobotPlayer::shoot()
 {
 	if (Robot::shoot(getApplication().getWindow().getCursorPositionView(getWorld().getRenderSystem().getView())) && mWeapon.getId() != 0)
 	{
-		consumeBattery(1.0f); // TODO : Battery consumtion
+		consumeBattery(1.0f); // Battery consumtion
 	}
 }
 
@@ -195,6 +194,11 @@ void RobotPlayer::updateView()
 void RobotPlayer::addWeapon(WeaponId id)
 {
 	mWeapons.push_back(id);
+}
+
+std::vector<WeaponId>& RobotPlayer::getWeapons()
+{
+	return mWeapons;
 }
 
 bool RobotPlayer::determineMovement(oe::Vector2& mvt)

@@ -11,6 +11,8 @@
 #define TEXTURE_KILLER "../Assets/robot-killer.png"
 #define TEXTURE_MEGAKILLER "../Assets/robot-megakiller.png"
 #define TEXTURE_PROJECTILES "../Assets/projectiles.png"
+#define TEXTURE_GUI "../Assets/gui.png"
+#define TEXTURE_WEAPONS "../Assets/weapons.png"
 #define FONTSANSATION "../Assets/font.ttf"
 #define SOUNDACTION "../Assets/select.wav"
 
@@ -22,7 +24,7 @@
 #define TILESETCOLUMNS 10
 
 // Map
-#define MAPPATH "../Assets/map-"
+#define MAPPATH "../Assets/Map/map-"
 #define MAPSIZEX 30
 #define MAPSIZEY 30
 #define MAPTILESIZEX 64

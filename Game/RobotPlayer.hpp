@@ -43,6 +43,8 @@ class RobotPlayer : public Robot
 
 		void addWeapon(WeaponId id);
 
+		std::vector<WeaponId>& getWeapons();
+
 	private:
 		bool determineMovement(oe::Vector2& mvt);
 

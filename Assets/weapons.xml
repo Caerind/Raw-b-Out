@@ -48,4 +48,4 @@
 <weapon id="47" name="Plasma X" cool="0.3" stre="350" proj="2" />
 <weapon id="48" name="Laser X" cool="0.3" stre="350" proj="3" />
 <weapon id="49" name="Ultime X" cool="0.2" stre="400" proj="4" />
-<weapon id="50" name="Tuto Gun" cool="0.8" stre="20" proj="1" />
+<weapon id="50" name="Tuto Gun" cool="0.8" stre="40" proj="1" />

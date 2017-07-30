@@ -6,7 +6,7 @@
 Projectile::Projectile(oe::EntityManager& manager, Type projType, const oe::Vector2& position, const oe::Vector2& direction, U32 strength, U32 stricker)
 	: oe::Entity(manager)
 	, mSprite(*this)
-	, mStrength(strength / 5) // TODO : Used for more active combat
+	, mStrength(strength / 5) // Used for more active combat
 	, mStricker(stricker)
 	, mProjType(projType)
 	, mDirection(direction)
@@ -35,7 +35,7 @@ Projectile::Type Projectile::getProjType() const
 void Projectile::update(oe::Time dt)
 {
 	oe::Vector2 mvt(mDirection);
-	mvt.setLength(dt.asSeconds() * 500.0f); // TODO : Proj speed
+	mvt.setLength(dt.asSeconds() * 500.0f); // Proj speed
 	oe::Vector2 nextPos = getPosition() + mvt;
 	oe::Vector2i coords = oe::MapUtility::worldToCoords(nextPos, oe::MapUtility::Orthogonal, oe::Vector2i(MAPTILESIZEX, MAPTILESIZEY));
 
@@ -69,7 +69,7 @@ void Projectile::update(oe::Time dt)
 		kill();
 	}
 
-	// TODO : Plasma & Laser & Ultime
+	// TODO : Plasma & Laser Effect
 
 	mElapsed += dt;
 	const oe::Rect& r = getAABB();

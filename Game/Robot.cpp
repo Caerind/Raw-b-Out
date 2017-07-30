@@ -21,7 +21,7 @@ Robot::Robot(oe::EntityManager& manager, Robot::Type robotType)
 	switch (robotType)
 	{
 		case MiniKiller:
-			setWeapon(0);
+			setWeapon(GameSingleton::map->getEnemyWeapon());
 			mAnimation.setPosition(-32.0f, -57.0f);
 			break;
 		case Killer: 
@@ -109,7 +109,7 @@ Robot::Type Robot::getRobotType() const
 
 bool Robot::shoot(const oe::Vector2& pos)
 {
-	if (mWeaponCooldown > mWeapon.getCooldown())
+	if (mWeaponCooldown > mWeapon.getCooldown() && mWeapon.getId() > 0)
 	{
 		oe::Vector2 delta = pos - getPosition();
 		delta.normalize();
@@ -120,7 +120,6 @@ bool Robot::shoot(const oe::Vector2& pos)
 
 		return true;
 	}
-
 	return false;
 }
 
@@ -137,7 +136,15 @@ void Robot::update(oe::Time dt)
 		notMoving();
 	}
 
-	mWeaponCooldown += dt;
+	// AI are stronger with cooldown so make it harder for them
+	if (getName() != "player")
+	{
+		mWeaponCooldown += dt * 0.8f;
+	}
+	else
+	{
+		mWeaponCooldown += dt;
+	}
 
 	if (mBattery <= 0.0f)
 	{

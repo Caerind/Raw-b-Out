@@ -5,6 +5,7 @@
 #include "../Engine/Core/World.hpp"
 
 #include "Bar.hpp"
+#include "PopUp.hpp"
 
 class GameState : public oe::State
 {
@@ -19,6 +20,7 @@ class GameState : public oe::State
 		inline oe::Window& getWindow();
 		inline oe::View& getView();
 		void zoomView(const sf::Event& event);
+		void popUpEvent(const sf::Event& event);
 
 	private:
 		oe::World mWorld;
@@ -32,6 +34,14 @@ class GameState : public oe::State
 		Bar mBarPlayerLevel;
 		Bar mBarPlayerBattery;
 		sf::Text mPlayerLevelText;
+
+		sf::Sprite mButtonR;
+		sf::Sprite mButtonI;
+		sf::Sprite mButtonO;
+		sf::Texture mScreen;
+		U32 mCurrentPopUp;
+		PopUp* mPopUp;
+
 };
 
 #endif // GAMESTATE_HPP

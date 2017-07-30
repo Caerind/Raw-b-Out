@@ -37,6 +37,8 @@ class GameMap : public oe::Entity
 
 		void openChest(const oe::Vector2i& coords);
 
+		WeaponId getEnemyWeapon() const;
+
 	private:
 		void createLayer(const oe::Vector2i& size);
 		void readLayer(oe::ParserXml& parser);
@@ -56,6 +58,7 @@ class GameMap : public oe::Entity
 		oe::Vector2 mSpawnPoint;
 		U32 mMapId;
 		U32 mPreviousMapId;
+		WeaponId mEnemyWeapon;
 		Info* mCurrentInfo;
 };
 

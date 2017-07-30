@@ -38,7 +38,7 @@ GameState::GameState(oe::StateManager& manager)
 	GameSingleton::player->setPosition(oe::Vector2(200.0f, 200.0f));
 	GameSingleton::player->updateView();
 
-	mBarPlayerLevel.setSize(WINSIZEX / 2 - 52, 20);
+	mBarPlayerLevel.setSize(WINSIZEX / 2 + 20, 20);
 	mBarPlayerLevel.setPosition(52, WINSIZEY - 40);
 	mBarPlayerLevel.setBackColor(sf::Color(153, 217, 234));
 	mBarPlayerLevel.setBarColor(sf::Color(0, 162, 232));
@@ -65,55 +65,46 @@ GameState::GameState(oe::StateManager& manager)
 	mPlayerLevelText.setPosition(26.0f, WINSIZEY - 35);
 	mPlayerLevelText.setString("");
 	mPlayerLevelText.setOrigin(mPlayerLevelText.getGlobalBounds().width * 0.5f, mPlayerLevelText.getGlobalBounds().height * 0.5f);
+
+	mButtonR.setTexture(getApplication().getTextures().get(GameSingleton::guiTexture));
+	mButtonR.setTextureRect(sf::IntRect(0, 0, 96, 96));
+	mButtonR.setPosition(WINSIZEX - 288, WINSIZEY - 20 - 96);
+	mButtonI.setTexture(getApplication().getTextures().get(GameSingleton::guiTexture));
+	mButtonI.setTextureRect(sf::IntRect(96, 0, 96, 96));
+	mButtonI.setPosition(WINSIZEX - 192, WINSIZEY - 20 - 96);
+	mButtonO.setTexture(getApplication().getTextures().get(GameSingleton::guiTexture));
+	mButtonO.setTextureRect(sf::IntRect(192, 0, 96, 96));
+	mButtonO.setPosition(WINSIZEX - 96, WINSIZEY - 20 - 96);
+
+	mScreen.loadFromFile("../Assets/screen.png");
+	mCurrentPopUp = 0;
+	mPopUp = nullptr;
 }
 
 bool GameState::handleEvent(const sf::Event& event)
 {
 	OE_PROFILE_FUNCTION("GameState::handleEvent");
 
-	mWorld.handleEvent(event);
+	popUpEvent(event);
 
-	zoomView(event);
-
-	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == GameSingleton::pickupInput.getButton())
+	if (mCurrentPopUp == 0)
 	{
-		oe::Vector2 p(getWindow().getCursorPositionView(getView()));
-		oe::Vector2i c(oe::MapUtility::worldToCoords(p, oe::MapUtility::Orthogonal, oe::Vector2i(MAPTILESIZEX, MAPTILESIZEY)));
-		GameSingleton::map->openChest(c);
+		mWorld.handleEvent(event);
+
+		//zoomView(event);
+
+		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == GameSingleton::pickupInput.getButton())
+		{
+			oe::Vector2 p(getWindow().getCursorPositionView(getView()));
+			oe::Vector2i c(oe::MapUtility::worldToCoords(p, oe::MapUtility::Orthogonal, oe::Vector2i(MAPTILESIZEX, MAPTILESIZEY)));
+			GameSingleton::map->openChest(c);
+		}
 	}
 
+	// Screenshot
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F7)
 	{
 		getWindow().screenshot();
-	}
-
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::W)
-	{
-		GameSingleton::player->setWeapon(1);
-	}
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::X)
-	{
-		GameSingleton::player->setWeapon(2);
-	}
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::C)
-	{
-		GameSingleton::player->setWeapon(3);
-	}
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::V)
-	{
-		GameSingleton::player->setWeapon(4);
-	}
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::B)
-	{
-		GameSingleton::player->setWeapon(5);
-	}
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::N)
-	{
-		GameSingleton::player->setWeapon(6);
-	}
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Comma)
-	{
-		GameSingleton::player->setWeapon(7);
 	}
 
 	// Show/Hide Profiler
@@ -142,30 +133,33 @@ bool GameState::update(oe::Time dt)
 
 	mDuration += dt;
 
-	mWorld.update(dt);
-
-	oe::Time gameDt = mWorld.getUpdateTime();
-
-	mBarPlayerLevel.setValueMax((F32)GameSingleton::player->getExperienceMax());
-	mBarPlayerLevel.setValue((F32)GameSingleton::player->getExperience());
-	mBarPlayerBattery.setValue(GameSingleton::player->getBattery());
-	mPlayerLevelText.setString(oe::toString(GameSingleton::player->getLevel()));
-	mPlayerLevelText.setOrigin(mPlayerLevelText.getGlobalBounds().width * 0.5f, mPlayerLevelText.getGlobalBounds().height * 0.5f);
-
-	Info* info = GameSingleton::map->getCurrentInfo();
-	if (info != nullptr)
+	if (mCurrentPopUp == 0)
 	{
-		U32 current = info->getId();
-		if (mCurrentInfo != current)
+		mWorld.update(dt);
+
+		oe::Time gameDt = mWorld.getUpdateTime();
+
+		mBarPlayerLevel.setValueMax((F32)GameSingleton::player->getExperienceMax());
+		mBarPlayerLevel.setValue((F32)GameSingleton::player->getExperience());
+		mBarPlayerBattery.setValue(GameSingleton::player->getBattery());
+		mPlayerLevelText.setString(oe::toString(GameSingleton::player->getLevel()));
+		mPlayerLevelText.setOrigin(mPlayerLevelText.getGlobalBounds().width * 0.5f, mPlayerLevelText.getGlobalBounds().height * 0.5f);
+
+		Info* info = GameSingleton::map->getCurrentInfo();
+		if (info != nullptr)
 		{
-			mCurrentInfo = current;
-			mInfoText.setString(info->getString());
+			U32 current = info->getId();
+			if (mCurrentInfo != current)
+			{
+				mCurrentInfo = current;
+				mInfoText.setString(info->getString());
+			}
 		}
-	}
-	else
-	{
-		mCurrentInfo = 0;
-		mInfoText.setString("");
+		else
+		{
+			mCurrentInfo = 0;
+			mInfoText.setString("");
+		}
 	}
 
 	#ifdef OE_IMGUI
@@ -192,8 +186,18 @@ void GameState::render(sf::RenderTarget& target)
 	mWorld.render(target);
 
 	target.draw(mInfoText);
+
+	// Draw PopUp
+	if (mCurrentPopUp != 0 && mPopUp != nullptr)
+	{
+		target.draw(*mPopUp);
+	}
+
 	target.draw(mBarPlayerLevel);
 	target.draw(mPlayerLevelText);
+	target.draw(mButtonR);
+	target.draw(mButtonI);
+	target.draw(mButtonO);
 	target.draw(mBarPlayerBattery);
 }
 
@@ -225,6 +229,124 @@ void GameState::zoomView(const sf::Event& event)
 			if (view.getZoom() > 1.5f)
 			{
 				view.zoom(0.5f);
+			}
+		}
+	}
+}
+
+void GameState::popUpEvent(const sf::Event& event)
+{
+	sf::Vector2f mpos((F32)event.mouseButton.x, (F32)event.mouseButton.y); // WARNING : Use only if type = mouseButton
+
+	static const sf::FloatRect closeRect(WINSIZEX - 960, WINSIZEY - 20 - 600, 40.0f, 40.0f);
+
+	if ((event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape && mCurrentPopUp != 0) || (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && closeRect.contains(mpos) && mCurrentPopUp != 0)) // Clic sur la croix
+	{
+		if (mPopUp != nullptr)
+		{
+			delete mPopUp;
+		}
+		mPopUp = nullptr;
+		mCurrentPopUp = 0;
+		mButtonR.setTextureRect(sf::IntRect(0, 0, 96, 96));
+		mButtonI.setTextureRect(sf::IntRect(96, 0, 96, 96));
+		mButtonO.setTextureRect(sf::IntRect(192, 0, 96, 96));
+	}
+	if ((event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) || (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && mButtonR.getGlobalBounds().contains(mpos)))
+	{
+		if (mCurrentPopUp == 1)
+		{
+			if (mPopUp != nullptr)
+			{
+				delete mPopUp;
+			}
+			mPopUp = nullptr;
+			mCurrentPopUp = 0;
+			mButtonR.setTextureRect(sf::IntRect(0, 0, 96, 96));
+			mButtonI.setTextureRect(sf::IntRect(96, 0, 96, 96));
+			mButtonO.setTextureRect(sf::IntRect(192, 0, 96, 96));
+		}
+		else
+		{
+			if (mPopUp != nullptr)
+			{
+				delete mPopUp;
+			}
+			mPopUp = new RobotPopUp(mScreen, getApplication().getTextures().get(GameSingleton::guiTexture), getApplication().getFonts().get(GameSingleton::sansationFont));
+			mCurrentPopUp = 1;
+			mButtonR.setTextureRect(sf::IntRect(0, 96, 96, 96));
+			mButtonI.setTextureRect(sf::IntRect(96, 0, 96, 96));
+			mButtonO.setTextureRect(sf::IntRect(192, 0, 96, 96));
+		}
+	}
+	if ((event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::I) || (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && mButtonI.getGlobalBounds().contains(mpos)))
+	{
+		if (mCurrentPopUp == 2)
+		{
+			if (mPopUp != nullptr)
+			{
+				delete mPopUp;
+			}
+			mPopUp = nullptr;
+			mCurrentPopUp = 0;
+			mButtonR.setTextureRect(sf::IntRect(0, 0, 96, 96));
+			mButtonI.setTextureRect(sf::IntRect(96, 0, 96, 96));
+			mButtonO.setTextureRect(sf::IntRect(192, 0, 96, 96));
+		}
+		else
+		{
+			if (mPopUp != nullptr)
+			{
+				delete mPopUp;
+			}
+			mPopUp = new InventoryPopUp(mScreen, getApplication().getTextures().get(GameSingleton::guiTexture), getApplication().getFonts().get(GameSingleton::sansationFont), getApplication().getTextures().get(GameSingleton::weaponsTexture));
+			mCurrentPopUp = 2;
+			mButtonR.setTextureRect(sf::IntRect(0, 0, 96, 96));
+			mButtonI.setTextureRect(sf::IntRect(96, 96, 96, 96));
+			mButtonO.setTextureRect(sf::IntRect(192, 0, 96, 96));
+		}
+	}
+	if ((event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::O) || (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && mButtonO.getGlobalBounds().contains(mpos)))
+	{
+		if (mCurrentPopUp == 3)
+		{
+			if (mPopUp != nullptr)
+			{
+				delete mPopUp;
+			}
+			mPopUp = nullptr;
+			mCurrentPopUp = 0;
+			mButtonR.setTextureRect(sf::IntRect(0, 0, 96, 96));
+			mButtonI.setTextureRect(sf::IntRect(96, 0, 96, 96));
+			mButtonO.setTextureRect(sf::IntRect(192, 0, 96, 96));
+		}
+		else
+		{
+			if (mPopUp != nullptr)
+			{
+				delete mPopUp;
+			}
+			mPopUp = new OptionsPopUp(mScreen, getApplication().getTextures().get(GameSingleton::guiTexture), getApplication().getAudio());
+			mCurrentPopUp = 3;
+			mButtonR.setTextureRect(sf::IntRect(0, 0, 96, 96));
+			mButtonI.setTextureRect(sf::IntRect(96, 0, 96, 96));
+			mButtonO.setTextureRect(sf::IntRect(192, 96, 96, 96));
+		}
+	}
+
+	if (mCurrentPopUp != 0)
+	{
+		if (mPopUp != nullptr)
+		{
+			mPopUp->handleEvent(event);
+			if (!mPopUp->isOpen())
+			{
+				delete mPopUp;
+				mPopUp = nullptr;
+				mCurrentPopUp = 0;
+				mButtonR.setTextureRect(sf::IntRect(0, 0, 96, 96));
+				mButtonI.setTextureRect(sf::IntRect(96, 0, 96, 96));
+				mButtonO.setTextureRect(sf::IntRect(192, 0, 96, 96));
 			}
 		}
 	}

@@ -15,11 +15,16 @@ int main()
 	GameSingleton::minikillerTexture = application.getTextures().create("minikillerTexture", oe::TextureLoader::loadFromFile(TEXTURE_MINIKILLER));
 	GameSingleton::killerTexture = application.getTextures().create("killerTexture", oe::TextureLoader::loadFromFile(TEXTURE_KILLER));
 	GameSingleton::projectilesTexture = application.getTextures().create("projectilesTexture", oe::TextureLoader::loadFromFile(TEXTURE_PROJECTILES));
+	GameSingleton::guiTexture = application.getTextures().create("guiTexture", oe::TextureLoader::loadFromFile(TEXTURE_GUI));
+	GameSingleton::weaponsTexture = application.getTextures().create("weaponsTexture", oe::TextureLoader::loadFromFile(TEXTURE_WEAPONS));
 	GameSingleton::sansationFont = application.getFonts().create("sansation", oe::FontLoader::loadFromFile(FONTSANSATION));
 	GameSingleton::actionSound = application.getAudio().createSound("action", SOUNDACTION);
 	GameSingleton::loadTileset();
 	GameSingleton::loadAnimations();
 	GameSingleton::loadInputs();
+	GameSingleton::loadWeapons();
+
+	GameSingleton::name = "RobotXV8";
 	
 	// Load Window
 	oe::Window& window = application.getWindow();

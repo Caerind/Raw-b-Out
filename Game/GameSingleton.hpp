@@ -33,6 +33,8 @@ class GameSingleton
 		static oe::ResourceId minikillerTexture;
 		static oe::ResourceId killerTexture;
 		static oe::ResourceId projectilesTexture;
+		static oe::ResourceId guiTexture;
+		static oe::ResourceId weaponsTexture;
 		static oe::ResourceId sansationFont;
 		static oe::ResourceId actionSound;
 
@@ -41,6 +43,7 @@ class GameSingleton
 		static GameMap* map;
 		static oe::EntityHandle playerHandle;
 		static RobotPlayer* player;
+		static std::string name;
 
 		// Inputs
 		static oe::ActionInputKey up;
