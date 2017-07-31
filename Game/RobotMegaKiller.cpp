@@ -13,10 +13,12 @@ RobotMegaKiller::RobotMegaKiller(oe::EntityManager& manager, const oe::Vector2& 
 {
 	mFocusPlayer = false;
 
-	mBatteryMax = 4000.0f;
-	mBattery = 4000.0f;
+	mBattery = GameSingleton::map->getBossBattery();
+	mBatteryMax = GameSingleton::map->getBossBattery();
+	setWeapon(GameSingleton::map->getBossWeapon());
 
-	setWeapon(GameSingleton::map->getEnemyWeapon());
+	mCollision.setSize(oe::Vector2(200, 200));
+	mCollision.setOrigin(oe::Vector2(60, 60));
 
 	mSprite.setTexture(GameSingleton::minikillerTexture);
 	mSprite.setTextureRect(sf::IntRect(0, 0, 64, 64));
@@ -34,20 +36,27 @@ RobotMegaKiller::RobotMegaKiller(oe::EntityManager& manager, const oe::Vector2& 
 
 	setPosition(position);
 
-	setScale(6.0f);
+	setScale(12.0f);
+
+	mCounter = 0;
 }
 
 void RobotMegaKiller::update(oe::Time dt)
 {
-	mWeaponCooldown += dt * 0.8f;
-	mSpecialAttack += dt;
+	oe::DebugDraw::drawPoint(getPosition(), oe::Color::Red, 5.f);
+	mWeaponCooldown += dt * 0.9f;
 
 	const oe::Vector2 player = GameSingleton::player->getPosition();
 	oe::Vector2 delta = player - getPosition();
 	const F32 d = delta.getLength();
-	if (!mFocusPlayer && d <= FOCUSGAIN_DISTANCE + 700)
+	if (!mFocusPlayer && d <= GameSingleton::FocusGainDistance + 700)
 	{
 		mFocusPlayer = true;
+		GameSingleton::enemyFocus++;
+		if (GameSingleton::playingMainMusic)
+		{
+			GameSingleton::playFight();
+		}
 	}
 
 	if (mFocusPlayer)
@@ -57,18 +66,15 @@ void RobotMegaKiller::update(oe::Time dt)
 		{
 			delta.normalize();
 			mWeaponCooldown = oe::Time::Zero;
-			getManager().createEntity<Projectile>(mWeapon.getProjType(), getPosition() + delta * 200.f, delta, mWeapon.getStrength() + mStrengthBonus, getId());
-		}
-		if (mSpecialAttack > oe::seconds(5.f))
-		{
-			mSpecialAttack = oe::Time::Zero;
-
-			for (U32 i = 0; i < 6; i++)
+			mCounter++;
+			if (mCounter > 3)
 			{
-				oe::Vector2 v(1.f, 1.f);
-				v.setPolarAngle(oe::Random::get<F32>(0.f, 360.f));
-				v.setLength(1.f);
-				getManager().createEntity<Projectile>(Projectile::Plasma, getPosition() + v * 200.f, v, mWeapon.getStrength() + mStrengthBonus, getId());
+				getManager().createEntity<Projectile>(Projectile::Plasma, getPosition() + delta * 60.f, delta, mWeapon.getStrength() + mStrengthBonus, getId());
+				mCounter = 0;
+			}
+			else
+			{
+				getManager().createEntity<Projectile>(mWeapon.getProjType(), getPosition() + delta * 60.f, delta, mWeapon.getStrength() + mStrengthBonus, getId());
 			}
 		}
 	}
@@ -79,6 +85,14 @@ void RobotMegaKiller::update(oe::Time dt)
 	if (mBattery <= 0.0f)
 	{
 		kill();
+		if (mFocusPlayer)
+		{
+			GameSingleton::enemyFocus--;
+			if (GameSingleton::enemyFocus == 0 && !GameSingleton::playingMainMusic)
+			{
+				GameSingleton::playMain();
+			}
+		}
 	}
 }
 

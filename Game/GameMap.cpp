@@ -30,7 +30,7 @@ void GameMap::setTileId(const oe::Vector2i& coords, oe::TileId id)
 	mLayer.setTileId(coords, id);
 }
 
-void GameMap::load(U32 mapId, const oe::Vector2& spawnPoint)
+void GameMap::load(U32 mapId, const oe::Vector2& spawnPoint, U32 previousMapId)
 {
 	mInfos.clear();
 	mSpawners.clear();
@@ -38,11 +38,11 @@ void GameMap::load(U32 mapId, const oe::Vector2& spawnPoint)
 	mTeleporters.clear();
 	mChargers.clear();
 	mCurrentInfo = nullptr;
+	mRemovableWalls.clear();
 
-	mPreviousMapId = mMapId;
+	mPreviousMapId = previousMapId;
 	mMapId = mapId;
-
-	setSpawnPoint(spawnPoint);
+	mSpawnPoint = spawnPoint;
 
 	oe::ParserXml xml;
 	if (!xml.loadFromFile(MAPPATH + oe::toString(mMapId) + ".tmx"))
@@ -50,19 +50,21 @@ void GameMap::load(U32 mapId, const oe::Vector2& spawnPoint)
 		printf("Cant read map");
 		return;
 	}
-
-	// read map
 	if (!xml.readNode("map"))
 	{
 		printf("Cant read map");
 		return;
 	}
+
 	oe::Vector2i size;
 	xml.getAttribute("width", size.x);
 	xml.getAttribute("height", size.y);
 
-	// read enemy weapon
-	mEnemyWeapon = 50;
+	// read enemy data
+	mEnemyWeapon = GameSingleton::WeaponEnemy;
+	mEnemyBattery = GameSingleton::BatteryEnemy;
+	mBossWeapon = GameSingleton::WeaponBoss;
+	mBossBattery = GameSingleton::BatteryBoss;
 	if (xml.readNode("properties"))
 	{
 		std::string pname;
@@ -73,12 +75,36 @@ void GameMap::load(U32 mapId, const oe::Vector2& spawnPoint)
 			{
 				xml.getAttribute("value", mEnemyWeapon);
 			}
+			if (pname == "enemy_battery")
+			{
+				xml.getAttribute("value", mEnemyBattery);
+			}
+			if (pname == "boss_weapon")
+			{
+				xml.getAttribute("value", mBossWeapon);
+			}
+			if (pname == "boss_battery")
+			{
+				xml.getAttribute("value", mBossBattery);
+			}
 			while (xml.nextSibling("property"))
 			{
 				xml.getAttribute("name", pname);
 				if (pname == "enemy_weapon")
 				{
 					xml.getAttribute("value", mEnemyWeapon);
+				}
+				if (pname == "enemy_battery")
+				{
+					xml.getAttribute("value", mEnemyBattery);
+				}
+				if (pname == "boss_weapon")
+				{
+					xml.getAttribute("value", mBossWeapon);
+				}
+				if (pname == "boss_battery")
+				{
+					xml.getAttribute("value", mBossBattery);
 				}
 			}
 			xml.closeNode();
@@ -133,14 +159,7 @@ const oe::Vector2& GameMap::getSpawnPoint() const
 
 oe::Vector2 GameMap::getRespawnPoint() const
 {
-	if (mPreviousMapId == 0 && mMapId == 0)
-	{
-		return oe::Vector2(120, 120);
-	}
-	else
-	{
-		return mSpawnPoint;
-	}
+	return mSpawnPoint;
 }
 
 oe::LayerComponent& GameMap::getLayer()
@@ -175,7 +194,7 @@ void GameMap::update(oe::Time dt)
 	{
 		const oe::Vector2 delta = GameSingleton::player->getPosition() - mChargers[i];
 		const F32 d = delta.getLength();
-		if (d <= CHARGER_DISTANCE && !GameSingleton::player->isCharged())
+		if (d <= GameSingleton::ChargerDistance && !GameSingleton::player->isCharged())
 		{
 			getManager().createEntity<Fx>(Fx::Charge, mChargers[i]);
 			GameSingleton::player->charge();
@@ -199,14 +218,19 @@ void GameMap::update(oe::Time dt)
 
 void GameMap::setCollision(const oe::Vector2i& coords, bool collide)
 {
-	ASSERT(coords.x >= 0 && coords.y >= 0 && coords.x < mLayer.getSize().x && coords.y < mLayer.getSize().y);
-	mCollisions[coords.x + coords.y * mLayer.getSize().x] = collide;
+	if (coords.x >= 0 && coords.y >= 0 && coords.x < mLayer.getSize().x && coords.y < mLayer.getSize().y)
+	{
+		mCollisions[coords.x + coords.y * mLayer.getSize().x] = collide;
+	}
 }
 
 bool GameMap::collide(const oe::Vector2i& coords)
 {
-	ASSERT(coords.x >= 0 && coords.y >= 0 && coords.x < mLayer.getSize().x && coords.y < mLayer.getSize().y);
-	return mCollisions[coords.x + coords.y * mLayer.getSize().x];
+	if (coords.x >= 0 && coords.y >= 0 && coords.x < mLayer.getSize().x && coords.y < mLayer.getSize().y)
+	{
+		return mCollisions[coords.x + coords.y * mLayer.getSize().x];
+	}
+	return true;
 }
 
 Info* GameMap::getCurrentInfo()
@@ -218,7 +242,8 @@ void GameMap::openChest(const oe::Vector2i& coords)
 {
 	for (U32 i = 0; i < mChests.size(); i++)
 	{
-		if (coords == mChests[i].getPosition() && !mChests[i].isOpen())
+		oe::Vector2 d = oe::Vector2(mChests[i].getPosition().x * 64 + 32.f, mChests[i].getPosition().y * 64 + 32.f) - GameSingleton::player->getPosition();
+		if (coords == mChests[i].getPosition() && !mChests[i].isOpen() && d.getLength() <= 200.f)
 		{
 			if (mChests[i].setOpen(true))
 			{
@@ -231,6 +256,35 @@ void GameMap::openChest(const oe::Vector2i& coords)
 WeaponId GameMap::getEnemyWeapon() const
 {
 	return mEnemyWeapon;
+}
+
+WeaponId GameMap::getBossWeapon() const
+{
+	return mBossWeapon;
+}
+
+F32 GameMap::getEnemyBattery() const
+{
+	return mEnemyBattery;
+}
+
+F32 GameMap::getBossBattery() const
+{
+	return mBossBattery;
+}
+
+void GameMap::removeRemovableWalls()
+{
+	if (mRemovableWalls.size() > 0)
+	{
+		getApplication().getAudio().playSound(GameSingleton::chestSound);
+	}
+	for (U32 i = 0; i < mRemovableWalls.size(); i++)
+	{
+		setTileId(mRemovableWalls[i], TILE_GROUND);
+		setCollision(mRemovableWalls[i], false);
+	}
+	mRemovableWalls.clear();
 }
 
 void GameMap::createLayer(const oe::Vector2i& size)
@@ -290,6 +344,10 @@ void GameMap::readLayer(oe::ParserXml& parser)
 				case TILE_WALL8:
 					gid = walls[oe::Random::get<U32>(0, walls.size() - 1)];
 					mCollisions[coords.x + coords.y * size.x] = true; 
+					break;
+				case TILE_REMOVABLEWALL:
+					mRemovableWalls.push_back(coords);
+					mCollisions[coords.x + coords.y * size.x] = true;
 					break;
 				case TILE_BREAKABLEWALL:
 					mCollisions[coords.x + coords.y * size.x] = true;
@@ -363,6 +421,14 @@ void GameMap::readInfo(oe::ParserXml& parser)
 		parser.closeNode();
 	}
 
+	U32 found = str.find("#NAME");
+	if (found != std::string::npos)
+	{
+		std::string b = str.substr(0, found);
+		std::string e = str.substr(found + 5);
+		str = b + GameSingleton::name + e;
+	}
+
 	mInfos.back().setId(id);
 	mInfos.back().setPosition(pos);
 	mInfos.back().setString(str);
@@ -401,7 +467,7 @@ void GameMap::readChest(oe::ParserXml& parser)
 
 void GameMap::readTeleporter(oe::ParserXml& parser)
 {
-	oe::Vector2 pos, target;
+	oe::Vector2 pos;
 	U32 mapId = 0;
 	std::string pname;
 
@@ -416,29 +482,12 @@ void GameMap::readTeleporter(oe::ParserXml& parser)
 			{
 				parser.getAttribute("value", mapId);
 			}
-			if (pname == "x")
-			{
-				parser.getAttribute("value", target.x);
-			}
-			if (pname == "y")
-			{
-				parser.getAttribute("value", target.y);
-			}
-
 			while (parser.nextSibling("property"))
 			{
 				parser.getAttribute("name", pname);
 				if (pname == "map")
 				{
 					parser.getAttribute("value", mapId);
-				}
-				if (pname == "x")
-				{
-					parser.getAttribute("value", target.x);
-				}
-				if (pname == "y")
-				{
-					parser.getAttribute("value", target.y);
 				}
 			}
 
@@ -447,5 +496,5 @@ void GameMap::readTeleporter(oe::ParserXml& parser)
 		parser.closeNode();
 	}
 
-	mTeleporters.push_back(Teleporter(pos, mapId, target));
+	mTeleporters.push_back(Teleporter(pos, mapId, mMapId, mapId == mPreviousMapId));
 }

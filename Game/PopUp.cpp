@@ -202,6 +202,14 @@ InventoryPopUp::InventoryPopUp(sf::Texture& screen, sf::Texture& gui, sf::Font& 
 	mEquiped.setTexture(gui);
 	mEquiped.setTextureRect(sf::IntRect(454, 300, 64, 64));
 	mEquiped.setPosition(getPosition(mEquipedId) + sf::Vector2f(6.f, 6.f));
+
+	if (GameSingleton::player->getWeapon() != 0)
+	{
+		mSelectedId = GameSingleton::player->getWeapon();
+		mSelected.setPosition(getPosition(mSelectedId) + sf::Vector2f(6.f, 6.f));
+		mName.setString(GameSingleton::weaponData[mSelectedId].name);
+		mName.setOrigin(mName.getGlobalBounds().width * 0.5f, mName.getGlobalBounds().height * 0.5f);
+	}
 }
 
 void InventoryPopUp::handleEvent(const sf::Event& event)
@@ -232,6 +240,17 @@ void InventoryPopUp::handleEvent(const sf::Event& event)
 					GameSingleton::click();
 				}
 			}
+		}
+	}
+
+	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::E)
+	{
+		if (mSelectedId != 0)
+		{
+			mEquipedId = mSelectedId;
+			GameSingleton::player->setWeapon((WeaponId)mEquipedId);
+			mEquiped.setPosition(getPosition(mEquipedId) + sf::Vector2f(6.f, 6.f));
+			GameSingleton::click();
 		}
 	}
 }
@@ -347,4 +366,28 @@ void OptionsPopUp::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(mMusicButton);
 	target.draw(mResume);
 	target.draw(mQuit);
+}
+
+MapPopUp::MapPopUp(sf::Texture& screen, sf::Texture& gui, sf::Texture& head)
+	: PopUp(screen)
+{
+	mScreen.setTextureRect(sf::IntRect(0, 0, 960, 601));
+	sf::Vector2f top = mScreen.getPosition();
+
+	// TODO : Load Map PopUp
+}
+
+void MapPopUp::handleEvent(const sf::Event& event)
+{
+	// Nothing
+}
+
+void MapPopUp::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	target.draw(mScreen);
+	for (U32 i = 0; i < mSprites.size(); i++)
+	{
+		target.draw(mSprites[i]);
+	}
+	target.draw(mHead);
 }

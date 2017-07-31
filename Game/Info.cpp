@@ -50,11 +50,11 @@ bool Info::update()
 {
 	const oe::Vector2 delta = GameSingleton::player->getPosition() - mPosition;
 	const F32 d = delta.getLength();
-	if (mVisible && d > INFO_DISTANCE)
+	if (mVisible && d > GameSingleton::InfoDistance)
 	{
 		mVisible = false;
 	}
-	else if (!mVisible && d <= INFO_DISTANCE)
+	else if (!mVisible && d <= GameSingleton::InfoDistance)
 	{
 		mVisible = true;
 	}

@@ -6,6 +6,7 @@
 #include "../Engine/Math/Random.hpp"
 
 #include "Weapon.hpp"
+#include "CollisionComponent.hpp"
 
 class Robot : public oe::Entity
 {
@@ -46,7 +47,11 @@ class Robot : public oe::Entity
 
 		oe::Time getWeaponCooldown() const;
 
+		const oe::Rect& getCollision() const;
+
 	protected:
+		CollisionComponent mCollision;
+
 		oe::Vector2i mCoords;
 		oe::Time mWeaponCooldown;
 
@@ -61,6 +66,8 @@ class Robot : public oe::Entity
 		F32 mBatteryBonus;
 		F32 mSpeedBonus;
 		U32 mStrengthBonus;
+
+		U32 mSkipRay;
 };
 
 #endif // ROBOT_HPP

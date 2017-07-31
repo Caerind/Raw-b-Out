@@ -51,6 +51,11 @@ void DebugDraw::drawPoint(F32 x, F32 y, const Color& color, F32 r)
 	}
 }
 
+void DebugDraw::drawPoint(const oe::Vector2& point, const Color& color, F32 r)
+{
+	drawPoint(point.x, point.y, color, r);
+}
+
 void DebugDraw::drawRect(F32 x, F32 y, F32 w, F32 h, const Color& c1, const Color& c2)
 {
 	if (instanced())

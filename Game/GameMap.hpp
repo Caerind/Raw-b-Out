@@ -20,7 +20,7 @@ class GameMap : public oe::Entity
 		oe::TileId getTileId(const oe::Vector2i& coords);
 		void setTileId(const oe::Vector2i& coords, oe::TileId id);
 
-		void load(U32 mapId, const oe::Vector2& spawnPoint);
+		void load(U32 mapId, const oe::Vector2& spawnPoint, U32 previousMapId);
 		U32 getMapId() const;
 		U32 getPreviousMapId() const;
 
@@ -43,6 +43,11 @@ class GameMap : public oe::Entity
 		void openChest(const oe::Vector2i& coords);
 
 		WeaponId getEnemyWeapon() const;
+		WeaponId getBossWeapon() const;
+		F32 getEnemyBattery() const;
+		F32 getBossBattery() const;
+
+		void removeRemovableWalls();
 
 	private:
 		void createLayer(const oe::Vector2i& size);
@@ -64,7 +69,11 @@ class GameMap : public oe::Entity
 		U32 mMapId;
 		U32 mPreviousMapId;
 		WeaponId mEnemyWeapon;
+		WeaponId mBossWeapon;
+		F32 mBossBattery;
+		F32 mEnemyBattery;
 		Info* mCurrentInfo;
+		std::vector<oe::Vector2i> mRemovableWalls;
 };
 
 #endif // GAMEMAP_HPP

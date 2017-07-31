@@ -107,4 +107,18 @@ class OptionsPopUp : public PopUp
 
 };
 
+class MapPopUp : public PopUp
+{
+	public:
+		MapPopUp(sf::Texture& screen, sf::Texture& gui, sf::Texture& head);
+
+		virtual void handleEvent(const sf::Event& event);
+
+		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+	protected:
+		std::vector<sf::Sprite> mSprites;
+		sf::Sprite mHead;
+};
+
 #endif // POPUP_HPP

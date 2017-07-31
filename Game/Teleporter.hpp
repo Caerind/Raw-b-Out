@@ -8,23 +8,24 @@
 class Teleporter
 {
 	public:
-		Teleporter(const oe::Vector2& position, U32 mapId, const oe::Vector2& targetPos);
+		Teleporter(const oe::Vector2& position, U32 mapId, U32 currentId, bool activated);
 
 		void setPosition(const oe::Vector2& position);
 		const oe::Vector2& getPosition() const;
-
-		void setTargetPos(const oe::Vector2& targetPos);
-		const oe::Vector2& getTargetPos() const;
 
 		void setMapId(U32 mapId);
 		U32 getMapId() const;
 
 		bool update();
 
+		void setActivated(bool activated);
+		bool isActivated() const;
+
 	private:
 		oe::Vector2 mPosition;
-		oe::Vector2 mTargetPos;
 		U32 mMapId;
+		U32 mCurrentId;
+		bool mActivated;
 };
 
 #endif // TELEPORTER_HPP

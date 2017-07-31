@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="64" tileheight="64" nextobjectid="51">
+ <properties>
+  <property name="enemy_battery" type="int" value="100"/>
+  <property name="enemy_weapon" type="int" value="50"/>
+ </properties>
+ <tileset firstgid="1" source="tileset.tsx"/>
+ <layer name="Calque de Tile 1" width="30" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzFlcEOhDAIRJutSU3d6972/7/Tk0lDaJmB1h5IjOA8y4BeKaVrY/ycgWp4mGfgvUbsNlc611ZOu58J7urYxf6CXjNziPjX467ek13cN3Xa+kp6x8yoplcGXIZ1gFz5nOSu2E3LF0Qn+l0ooKbXd3YO2Tnx9kjTygNuRLcYec97s2dGeidz8j+MeDWDa/nayzF9RvSyoqex2PMiPjN17H6g9db+efaSnYmZXHbHItwD0K1NeH1Az+zdqWjPnz35K7kqaj5B/9F+1EHOy50VN6Z0OIQ=
+  </data>
+ </layer>
+ <objectgroup name="Calque d'objets 1">
+  <object id="34" name="I" x="281.818" y="224.242">
+   <properties>
+    <property name="str">Hey ! Welcome #NAME to the tutorial
+Use WASD or ZQSD to move</property>
+   </properties>
+  </object>
+  <object id="36" name="I" x="481.818" y="227.273">
+   <properties>
+    <property name="str">You can use  MouseLeft to open the chest</property>
+   </properties>
+  </object>
+  <object id="37" name="I" x="730.303" y="224.242" height="3.0303">
+   <properties>
+    <property name="str">Use the I Key or MouseLeft on the I button
+to open the inventory to equip your new weapon</property>
+   </properties>
+  </object>
+  <object id="38" name="I" x="927.273" y="224.242">
+   <properties>
+    <property name="str">Now you can use MouseRight to shoot some bullets</property>
+   </properties>
+  </object>
+  <object id="39" name="I" x="1315.15" y="221.212">
+   <properties>
+    <property name="str">As you can see, shooting and moving consume your battery
+use charger to stay alive</property>
+   </properties>
+  </object>
+  <object id="40" name="I" x="1693.94" y="415.152">
+   <properties>
+    <property name="str">Some walls are specials
+Here you have walls that can be destroyed using powerful weapons</property>
+   </properties>
+  </object>
+  <object id="41" name="I" x="1693.94" y="669.697">
+   <properties>
+    <property name="str">Here you have walls that can be removed using pressure plate</property>
+   </properties>
+  </object>
+  <object id="42" name="I" x="1700" y="863.636">
+   <properties>
+    <property name="str">Use the R Key or MouseLeft on the R button
+to see your statistics and improve them when you level up</property>
+   </properties>
+  </object>
+  <object id="43" name="I" x="1633.33" y="1048.48">
+   <properties>
+    <property name="str">Use the M Key or MouseLeft on the M button to see the world map</property>
+   </properties>
+  </object>
+  <object id="44" name="I" x="1639.39" y="1248.48">
+   <properties>
+    <property name="str">Use the O Key or MouseLeft on the O button to open the options</property>
+   </properties>
+  </object>
+  <object id="45" name="I" x="1442.42" y="1309.09">
+   <properties>
+    <property name="str">Now it seems you're ready to kill some enemies
+Try to move faster to avoid their bullets</property>
+   </properties>
+  </object>
+  <object id="46" name="I" x="921.212" y="1763.64">
+   <properties>
+    <property name="str">Use the pressure plate to remove those walls</property>
+   </properties>
+  </object>
+  <object id="47" name="I" x="1493.94" y="1757.58">
+   <properties>
+    <property name="str">Now the tutorial is over, use the teleporter and have a good game !</property>
+   </properties>
+  </object>
+  <object id="48" name="C" x="606.061" y="157.576">
+   <properties>
+    <property name="weapon" type="int" value="11"/>
+   </properties>
+  </object>
+  <object id="49" name="C" x="733.333" y="1184.85">
+   <properties>
+    <property name="weapon" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="50" name="T" x="1630.3" y="1757.58">
+   <properties>
+    <property name="map" type="int" value="1"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

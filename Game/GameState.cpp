@@ -20,11 +20,12 @@ GameState::GameState(oe::StateManager& manager)
 	mWorld.getEntityManager().addQuery(&GameSingleton::repQuery);
 	mWorld.play();
 
-	mInfoText.setCharacterSize(20);
+	mInfoText.setLettersPerSecond(48);
+	mInfoText.setCharacterSize(30);
 	mInfoText.setFont(getApplication().getFonts().get(GameSingleton::sansationFont));
 	mInfoText.setFillColor(sf::Color::White);
 	mInfoText.setOutlineColor(sf::Color::Black);
-	mInfoText.setOutlineThickness(1.2f);
+	mInfoText.setOutlineThickness(2.0f);
 	mInfoText.setPosition(20.0f, 20.0f);
 	mInfoText.setString("");
 	mCurrentInfo = 0;
@@ -37,7 +38,7 @@ GameState::GameState(oe::StateManager& manager)
 
 	load();
 
-	mBarPlayerLevel.setSize(WINSIZEX / 2 + 20, 20);
+	mBarPlayerLevel.setSize(WINSIZEX / 2 - 20, 20);
 	mBarPlayerLevel.setPosition(52, WINSIZEY - 40);
 	mBarPlayerLevel.setBackColor(sf::Color(153, 217, 234));
 	mBarPlayerLevel.setBarColor(sf::Color(0, 162, 232));
@@ -65,7 +66,7 @@ GameState::GameState(oe::StateManager& manager)
 	mPlayerLevelText.setOrigin(mPlayerLevelText.getGlobalBounds().width * 0.5f, mPlayerLevelText.getGlobalBounds().height * 0.5f);
 
 	mBarPlayerCooldown.setPosition(mBarPlayerLevel.getPosition().x + mBarPlayerLevel.getSize().x, WINSIZEY - 40);
-	mBarPlayerCooldown.setSize(WINSIZEX - 288 - mBarPlayerCooldown.getPosition().x, 20);
+	mBarPlayerCooldown.setSize(WINSIZEX - 384 - mBarPlayerCooldown.getPosition().x, 20);
 	mBarPlayerCooldown.setBackColor(sf::Color(0, 0, 0, 96));
 	mBarPlayerCooldown.setBarColor(sf::Color(0, 0, 0, 150));
 	mBarPlayerCooldown.setOutlineColor(sf::Color::Black);
@@ -73,15 +74,22 @@ GameState::GameState(oe::StateManager& manager)
 	mBarPlayerCooldown.setValueMax(GameSingleton::weaponData[GameSingleton::player->getWeapon()].cool);
 	mBarPlayerCooldown.setValue(GameSingleton::player->getWeaponCooldown().asSeconds());
 
+	mButtonM.setTexture(getApplication().getTextures().get(GameSingleton::guiTexture));
+	mButtonM.setTextureRect(sf::IntRect(864, 384, 96, 96));
+	mButtonM.setPosition(WINSIZEX - 288, WINSIZEY - 20 - 96);
 	mButtonR.setTexture(getApplication().getTextures().get(GameSingleton::guiTexture));
 	mButtonR.setTextureRect(sf::IntRect(0, 0, 96, 96));
-	mButtonR.setPosition(WINSIZEX - 288, WINSIZEY - 20 - 96);
+	mButtonR.setPosition(WINSIZEX - 384, WINSIZEY - 20 - 96);
 	mButtonI.setTexture(getApplication().getTextures().get(GameSingleton::guiTexture));
 	mButtonI.setTextureRect(sf::IntRect(96, 0, 96, 96));
 	mButtonI.setPosition(WINSIZEX - 192, WINSIZEY - 20 - 96);
 	mButtonO.setTexture(getApplication().getTextures().get(GameSingleton::guiTexture));
 	mButtonO.setTextureRect(sf::IntRect(192, 0, 96, 96));
 	mButtonO.setPosition(WINSIZEX - 96, WINSIZEY - 20 - 96);
+
+	mShadow.setTexture(getApplication().getTextures().get(GameSingleton::shadowTexture));
+	mShadow.setTextureRect(sf::IntRect(85, 40, 563 - 85, 333 - 40));
+	mShadow.setScale(WINSIZEX / mShadow.getGlobalBounds().width, WINSIZEY / mShadow.getGlobalBounds().height);
 
 	mCurrentPopUp = 0;
 	mPopUp = nullptr;
@@ -114,6 +122,12 @@ bool GameState::handleEvent(const sf::Event& event)
 		getWindow().screenshot();
 	}
 
+	// Reload stats
+	if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F8)
+	{
+		GameSingleton::loadStats();
+	}
+
 	// Show/Hide Profiler
 	#ifdef OE_IMGUI
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F6)
@@ -139,6 +153,8 @@ bool GameState::update(oe::Time dt)
 	OE_PROFILE_FUNCTION("GameState::update");
 
 	mDuration += dt;
+
+	mInfoText.update(dt);
 
 	if (mCurrentPopUp == 0)
 	{
@@ -194,6 +210,8 @@ void GameState::render(sf::RenderTarget& target)
 
 	mWorld.render(target);
 
+	target.draw(mShadow);
+
 	target.draw(mInfoText);
 
 	// Draw PopUp
@@ -206,6 +224,7 @@ void GameState::render(sf::RenderTarget& target)
 	target.draw(mPlayerLevelText);
 	target.draw(mBarPlayerCooldown);
 
+	target.draw(mButtonM);
 	target.draw(mButtonR);
 	target.draw(mButtonI);
 	target.draw(mButtonO);
@@ -251,7 +270,21 @@ void GameState::popUpEvent(const sf::Event& event)
 
 	static const sf::FloatRect closeRect(WINSIZEX - 960, WINSIZEY - 20 - 600, 40.0f, 40.0f);
 
-	if ((event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape && mCurrentPopUp != 0) || (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && closeRect.contains(mpos) && mCurrentPopUp != 0)) // Clic sur la croix
+	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape && mCurrentPopUp == 0)
+	{
+		GameSingleton::click();
+		if (mPopUp != nullptr)
+		{
+			delete mPopUp;
+		}
+		mPopUp = new OptionsPopUp(getApplication().getTextures().get(GameSingleton::screenTexture), getApplication().getTextures().get(GameSingleton::guiTexture), getApplication().getAudio());
+		mCurrentPopUp = 3;
+		mButtonM.setTextureRect(sf::IntRect(864, 384, 96, 96));
+		mButtonR.setTextureRect(sf::IntRect(0, 0, 96, 96));
+		mButtonI.setTextureRect(sf::IntRect(96, 0, 96, 96));
+		mButtonO.setTextureRect(sf::IntRect(192, 96, 96, 96));
+	}
+	else if ((event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape && mCurrentPopUp != 0) || (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && closeRect.contains(mpos) && mCurrentPopUp != 0)) // Clic sur la croix
 	{
 		getApplication().getAudio().playSound(GameSingleton::errorSound);
 
@@ -261,11 +294,12 @@ void GameState::popUpEvent(const sf::Event& event)
 		}
 		mPopUp = nullptr;
 		mCurrentPopUp = 0;
+		mButtonM.setTextureRect(sf::IntRect(864, 384, 96, 96));
 		mButtonR.setTextureRect(sf::IntRect(0, 0, 96, 96));
 		mButtonI.setTextureRect(sf::IntRect(96, 0, 96, 96));
 		mButtonO.setTextureRect(sf::IntRect(192, 0, 96, 96));
 	}
-	if ((event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) || (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && mButtonR.getGlobalBounds().contains(mpos)))
+	else if ((event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::R) || (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && mButtonR.getGlobalBounds().contains(mpos)))
 	{
 		if (mCurrentPopUp == 1)
 		{
@@ -277,6 +311,7 @@ void GameState::popUpEvent(const sf::Event& event)
 			}
 			mPopUp = nullptr;
 			mCurrentPopUp = 0;
+			mButtonM.setTextureRect(sf::IntRect(864, 384, 96, 96));
 			mButtonR.setTextureRect(sf::IntRect(0, 0, 96, 96));
 			mButtonI.setTextureRect(sf::IntRect(96, 0, 96, 96));
 			mButtonO.setTextureRect(sf::IntRect(192, 0, 96, 96));
@@ -291,12 +326,13 @@ void GameState::popUpEvent(const sf::Event& event)
 			}
 			mPopUp = new RobotPopUp(getApplication().getTextures().get(GameSingleton::screenTexture), getApplication().getTextures().get(GameSingleton::guiTexture), getApplication().getFonts().get(GameSingleton::sansationFont));
 			mCurrentPopUp = 1;
+			mButtonM.setTextureRect(sf::IntRect(864, 384, 96, 96));
 			mButtonR.setTextureRect(sf::IntRect(0, 96, 96, 96));
 			mButtonI.setTextureRect(sf::IntRect(96, 0, 96, 96));
 			mButtonO.setTextureRect(sf::IntRect(192, 0, 96, 96));
 		}
 	}
-	if ((event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::I) || (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && mButtonI.getGlobalBounds().contains(mpos)))
+	else if ((event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::I) || (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && mButtonI.getGlobalBounds().contains(mpos)))
 	{
 		if (mCurrentPopUp == 2)
 		{
@@ -308,6 +344,7 @@ void GameState::popUpEvent(const sf::Event& event)
 			}
 			mPopUp = nullptr;
 			mCurrentPopUp = 0;
+			mButtonM.setTextureRect(sf::IntRect(864, 384, 96, 96));
 			mButtonR.setTextureRect(sf::IntRect(0, 0, 96, 96));
 			mButtonI.setTextureRect(sf::IntRect(96, 0, 96, 96));
 			mButtonO.setTextureRect(sf::IntRect(192, 0, 96, 96));
@@ -322,12 +359,13 @@ void GameState::popUpEvent(const sf::Event& event)
 			}
 			mPopUp = new InventoryPopUp(getApplication().getTextures().get(GameSingleton::screenTexture), getApplication().getTextures().get(GameSingleton::guiTexture), getApplication().getFonts().get(GameSingleton::sansationFont), getApplication().getTextures().get(GameSingleton::weaponsTexture));
 			mCurrentPopUp = 2;
+			mButtonM.setTextureRect(sf::IntRect(864, 384, 96, 96));
 			mButtonR.setTextureRect(sf::IntRect(0, 0, 96, 96));
 			mButtonI.setTextureRect(sf::IntRect(96, 96, 96, 96));
 			mButtonO.setTextureRect(sf::IntRect(192, 0, 96, 96));
 		}
 	}
-	if ((event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::O) || (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && mButtonO.getGlobalBounds().contains(mpos)))
+	else if ((event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::O) || (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && mButtonO.getGlobalBounds().contains(mpos)))
 	{
 		if (mCurrentPopUp == 3)
 		{
@@ -339,6 +377,7 @@ void GameState::popUpEvent(const sf::Event& event)
 			}
 			mPopUp = nullptr;
 			mCurrentPopUp = 0;
+			mButtonM.setTextureRect(sf::IntRect(864, 384, 96, 96));
 			mButtonR.setTextureRect(sf::IntRect(0, 0, 96, 96));
 			mButtonI.setTextureRect(sf::IntRect(96, 0, 96, 96));
 			mButtonO.setTextureRect(sf::IntRect(192, 0, 96, 96));
@@ -353,9 +392,43 @@ void GameState::popUpEvent(const sf::Event& event)
 			}
 			mPopUp = new OptionsPopUp(getApplication().getTextures().get(GameSingleton::screenTexture), getApplication().getTextures().get(GameSingleton::guiTexture), getApplication().getAudio());
 			mCurrentPopUp = 3;
+			mButtonM.setTextureRect(sf::IntRect(864, 384, 96, 96));
 			mButtonR.setTextureRect(sf::IntRect(0, 0, 96, 96));
 			mButtonI.setTextureRect(sf::IntRect(96, 0, 96, 96));
 			mButtonO.setTextureRect(sf::IntRect(192, 96, 96, 96));
+		}
+	}
+	else if ((event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::M) || (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left && mButtonM.getGlobalBounds().contains(mpos)))
+	{
+		if (mCurrentPopUp == 4)
+		{
+			getApplication().getAudio().playSound(GameSingleton::errorSound);
+
+			if (mPopUp != nullptr)
+			{
+				delete mPopUp;
+			}
+			mPopUp = nullptr;
+			mCurrentPopUp = 0;
+			mButtonM.setTextureRect(sf::IntRect(864, 384, 96, 96));
+			mButtonR.setTextureRect(sf::IntRect(0, 0, 96, 96));
+			mButtonI.setTextureRect(sf::IntRect(96, 0, 96, 96));
+			mButtonO.setTextureRect(sf::IntRect(192, 0, 96, 96));
+		}
+		else
+		{
+			GameSingleton::click();
+
+			if (mPopUp != nullptr)
+			{
+				delete mPopUp;
+			}
+			mPopUp = new MapPopUp(getApplication().getTextures().get(GameSingleton::screenTexture), getApplication().getTextures().get(GameSingleton::guiTexture), getApplication().getTextures().get(GameSingleton::headTexture));
+			mCurrentPopUp = 4;
+			mButtonM.setTextureRect(sf::IntRect(864, 480, 96, 96));
+			mButtonR.setTextureRect(sf::IntRect(0, 0, 96, 96));
+			mButtonI.setTextureRect(sf::IntRect(96, 0, 96, 96));
+			mButtonO.setTextureRect(sf::IntRect(192, 0, 96, 96));
 		}
 	}
 
@@ -364,11 +437,12 @@ void GameState::popUpEvent(const sf::Event& event)
 		if (mPopUp != nullptr)
 		{
 			mPopUp->handleEvent(event);
-			if (!mPopUp->isOpen())
+			if (mPopUp != nullptr && !mPopUp->isOpen())
 			{
 				delete mPopUp;
 				mPopUp = nullptr;
 				mCurrentPopUp = 0;
+				mButtonM.setTextureRect(sf::IntRect(864, 384, 96, 96));
 				mButtonR.setTextureRect(sf::IntRect(0, 0, 96, 96));
 				mButtonI.setTextureRect(sf::IntRect(96, 0, 96, 96));
 				mButtonO.setTextureRect(sf::IntRect(192, 0, 96, 96));
@@ -382,6 +456,11 @@ void GameState::popUpEvent(const sf::Event& event)
 
 				clearStates();
 				pushState<MenuState>();
+
+				if (!GameSingleton::playingMainMusic)
+				{
+					GameSingleton::playMain();
+				}
 			}
 		}
 	}
@@ -402,6 +481,7 @@ void GameState::load()
 	U32 strengthB;
 
 	U32 mapId = 0;
+	U32 previousId = 0;
 	std::string spawn;
 	std::string pos;
 
@@ -425,6 +505,7 @@ void GameState::load()
 	GameSingleton::loader.closeNode();
 	GameSingleton::loader.readNode("map");
 	GameSingleton::loader.getAttribute("id", mapId);
+	GameSingleton::loader.getAttribute("previous", previousId);
 	GameSingleton::loader.getAttribute(std::string("spawn"), spawn);
 	GameSingleton::loader.getAttribute(std::string("position"), pos);
 	GameSingleton::loader.closeNode();
@@ -495,7 +576,7 @@ void GameState::load()
 	GameSingleton::player->updateView();
 
 	// Load after to ensure the chest will be opened if necesary
-	GameSingleton::map->load(mapId, oe::fromString<oe::Vector2>(spawn));
+	GameSingleton::map->load(mapId, oe::fromString<oe::Vector2>(spawn), previousId);
 }
 
 void GameState::save()
@@ -523,6 +604,7 @@ void GameState::save()
 
 	node = node.append_child("map");
 	node.append_attribute("id") = GameSingleton::map->getMapId();
+	node.append_attribute("previous") = GameSingleton::map->getPreviousMapId();
 	node.append_attribute("spawn") = oe::toString(GameSingleton::map->getRespawnPoint()).c_str();
 	node.append_attribute("position") = oe::toString(GameSingleton::player->getPosition()).c_str();
 	node = node.parent();

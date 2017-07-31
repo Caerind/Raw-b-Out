@@ -54,6 +54,9 @@ class RobotPlayer : public Robot
 		void setColor(const oe::Color& color);
 		oe::Color getColor() const;
 
+		void setRespawning(bool respawning);
+		bool isRespawning() const;
+
 	private:
 		bool determineMovement(oe::Vector2& mvt);
 
@@ -69,6 +72,8 @@ class RobotPlayer : public Robot
 		U32 mPoints;
 
 		std::vector<WeaponId> mWeapons;
+
+		bool mRespawning;
 
 };
 

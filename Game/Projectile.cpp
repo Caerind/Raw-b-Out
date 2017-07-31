@@ -11,12 +11,11 @@ Projectile::Projectile(oe::EntityManager& manager, Type projType, const oe::Vect
 	: oe::Entity(manager)
 	, mSprite(*this)
 	, mDirection(direction)
-	, mStrength(strength / 5) // Used for more active combat
+	, mStrength(strength / GameSingleton::ProjectileReduction) // Used for more active combat
 	, mStricker(stricker)
 	, mProjType(projType)
 {
 	setPosition(position);
-	setPositionZ(5.0f);
 
 	mSprite.setTexture(GameSingleton::projectilesTexture);
 	mSprite.setPosition(-16.0f, -16.0f);
@@ -38,8 +37,10 @@ Projectile::Type Projectile::getProjType() const
 
 void Projectile::update(oe::Time dt)
 {
+	//oe::DebugDraw::drawRect(getAABB());
+
 	oe::Vector2 mvt(mDirection);
-	mvt.setLength(dt.asSeconds() * 500.0f); // Proj speed
+	mvt.setLength(dt.asSeconds() * GameSingleton::ProjectileSpeed);
 	oe::Vector2 nextPos = getPosition() + mvt;
 	oe::Vector2i coords = oe::MapUtility::worldToCoords(nextPos, oe::MapUtility::Orthogonal, oe::Vector2i(MAPTILESIZEX, MAPTILESIZEY));
 
@@ -90,44 +91,41 @@ void Projectile::update(oe::Time dt)
 
 	mElapsed += dt;
 	const oe::Rect& r = getAABB();
-	for (Entity* entity : GameSingleton::rpQuery.getEntities()) // If need to optimise, we can use only robots
+	for (Entity* entity : GameSingleton::rpQuery.getEntities())
 	{
-		if (entity->getAABB().intersects(r))
+		Robot* robot = entity->getAs<Robot>();
+		if (robot != nullptr && robot->getCollision().intersects(r) && ((robot->getId() != mStricker) || (robot->getId() == mStricker && mElapsed > oe::seconds(0.4f))))
 		{
-			Robot* robot = entity->getAs<Robot>();
-			if (robot != nullptr && ((robot->getId() != mStricker) || (robot->getId() == mStricker && mElapsed > oe::seconds(0.8f))))
+			if (robot->consumeBattery((F32)mStrength) && mStricker == GameSingleton::player->getId())
 			{
-				if (robot->consumeBattery((F32)mStrength) && mStricker == GameSingleton::player->getId())
+				U32 amountExp = 0;
+				switch (robot->getRobotType())
 				{
-					U32 amountExp = 0;
-					switch (robot->getRobotType())
-					{
-						case Robot::MiniKiller: amountExp = 10; break;
-						case Robot::Killer: amountExp = 200; break;
-						case Robot::MegaKiller: amountExp = 1000; break;
-						default: break;
-					}
-					GameSingleton::player->addExperience(amountExp);
+					case Robot::MiniKiller: amountExp = GameSingleton::ExperienceMiniKiller; break;
+					case Robot::Killer: amountExp = GameSingleton::ExperienceKiller; GameSingleton::map->removeRemovableWalls(); break;
+					case Robot::MegaKiller: amountExp = GameSingleton::ExperienceMegaKiller; GameSingleton::map->removeRemovableWalls(); break;
+					default: break;
 				}
-				if (mProjType == Type::Plasma || mProjType == Type::Ultime)
-				{
-					explode(robot->getId());
-				}
-				kill();
+				GameSingleton::player->addExperience(amountExp);
 			}
-			else
+			if (mProjType == Type::Plasma || mProjType == Type::Ultime)
 			{
-				Projectile* projectile = entity->getAs<Projectile>();
-				if (projectile != nullptr && projectile != this)
+				explode(robot->getId());
+			}
+			kill();
+		}
+		else
+		{
+			Projectile* projectile = entity->getAs<Projectile>();
+			if (projectile != nullptr && projectile != this && projectile->getAABB().intersects(r))
+			{
+				if (projectile->mProjType == Type::Ammo || projectile->mProjType == Type::Plasma)
 				{
-					if (projectile->mProjType == Type::Ammo || projectile->mProjType == Type::Plasma)
-					{
-						projectile->kill();
-					}
-					if (mProjType == Type::Ammo || mProjType == Type::Plasma)
-					{
-						kill();
-					}
+					projectile->kill();
+				}
+				if (mProjType == Type::Ammo || mProjType == Type::Plasma)
+				{
+					kill();
 				}
 			}
 		}
@@ -154,16 +152,16 @@ void Projectile::explode(U32 ignoreId)
 		{
 			const oe::Vector2 delta = robot->getPosition() - getPosition();
 			const F32 d = delta.getLength();
-			if (d <= EXPLOSION_DISTANCE)
+			if (d <= GameSingleton::ExplosionDistance)
 			{
-				if (robot->consumeBattery(mStrength * 0.5f) && mStricker == GameSingleton::player->getId())
+				if (robot->consumeBattery(mStrength * GameSingleton::PlasmaReduction) && mStricker == GameSingleton::player->getId())
 				{
 					U32 amountExp = 0;
 					switch (robot->getRobotType())
 					{
-						case Robot::MiniKiller: amountExp = 10; break;
-						case Robot::Killer: amountExp = 100; break;
-						case Robot::MegaKiller: amountExp = 5000; break;
+						case Robot::MiniKiller: amountExp = GameSingleton::ExperienceMiniKiller; break;
+						case Robot::Killer: amountExp = GameSingleton::ExperienceKiller; GameSingleton::map->removeRemovableWalls(); break;
+						case Robot::MegaKiller: amountExp = GameSingleton::ExperienceMegaKiller; GameSingleton::map->removeRemovableWalls(); break;
 						default: break;
 					}
 					GameSingleton::player->addExperience(amountExp);

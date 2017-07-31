@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
-<save version="1.0" name="XV9" color="e2d6ccff" date="31-07-2017 04-41-24">
-	<stats level="2" exp="14" points="0" battery="214.016907" batteryB="15" speedB="0" strengthB="0" />
-	<map id="3" spawn="200,200" position="200,200" />
+<save version="1.0" name="qsqdqsd" color="897494ff" date="31-07-2017 21-35-51">
+	<stats level="1" exp="0" points="0" battery="400" batteryB="0" speedB="0" strengthB="0" />
+	<map id="1" previous="0" spawn="148,160" position="148,160" />
 	<weapons>
-		<weapon id="1" equiped="true" />
-		<weapon id="6" />
+		<weapon id="11" />
+		<weapon id="1" />
 	</weapons>
 </save>

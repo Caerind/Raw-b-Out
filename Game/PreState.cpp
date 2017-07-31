@@ -244,6 +244,7 @@ void PreState::generate()
 
 	node = node.append_child("map");
 	node.append_attribute("id") = 0;
+	node.append_attribute("previous") = 0;
 	node.append_attribute("spawn") = "200,200";
 	node.append_attribute("position") = "200,200";
 	node = node.parent();

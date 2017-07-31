@@ -9,14 +9,16 @@
 
 Robot::Robot(oe::EntityManager& manager, Robot::Type robotType)
 	: oe::Entity(manager)
-	, mBattery(ROBOT_DEFAULT_BATTERY)
-	, mBatteryMax(ROBOT_DEFAULT_BATTERY)
-	, mSpeed(ROBOT_DEFAULT_SPEED)
+	, mCollision(*this)
+	, mBattery(GameSingleton::BatteryEnemy)
+	, mBatteryMax(GameSingleton::BatteryEnemy)
+	, mSpeed(GameSingleton::SpeedEnemy)
 	, mRobotType(robotType)
 {
 	mBatteryBonus = 0.0f;
 	mSpeedBonus = 0.0f;
 	mStrengthBonus = 0;
+	mSkipRay = 0;
 }
 
 void Robot::setBattery(F32 battery)
@@ -171,6 +173,10 @@ bool Robot::tryMove(oe::Time dt, oe::Vector2& mvt)
 		}
 		else
 		{
+			if (GameSingleton::player->getId() == getId() && GameSingleton::map->getTileId(coords) == TILE_PRESSUREPLATE)
+			{
+				GameSingleton::map->removeRemovableWalls();
+			}
 			mCoords = coords;
 		}
 	}
@@ -189,4 +195,9 @@ bool Robot::tryMove(oe::Time dt, oe::Vector2& mvt)
 oe::Time Robot::getWeaponCooldown() const
 {
 	return mWeaponCooldown;
+}
+
+const oe::Rect& Robot::getCollision() const
+{
+	return mCollision.getAABB();
 }

@@ -36,10 +36,10 @@ void Spawner::spawn()
 	{
 		const oe::Vector2 delta = GameSingleton::player->getPosition() - mPosition;
 		const F32 d = delta.getLength();
-		if (d > SPAWNER_DISTANCE)
+		if (d > GameSingleton::SpawnerDistance)
 		{
 			mHandles.push_back(mManager.createEntity<RobotMiniKiller>());
-			mHandles.back()->setPosition(getPosition() + oe::Vector2(oe::Random::getDev(0.0f, 100.0f), oe::Random::getDev(0.0f, 100.0f)));
+			mHandles.back()->setPosition(getPosition() + oe::Vector2(oe::Random::getDev(0.0f, GameSingleton::SpawnDistance), oe::Random::getDev(0.0f, GameSingleton::SpawnDistance)));
 		}
 	}
 }

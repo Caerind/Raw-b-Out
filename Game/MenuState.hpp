@@ -26,6 +26,7 @@ class MenuState : public oe::State
 		sf::Sprite mSound;
 		sf::Sprite mMusic;
 		sf::Sprite mName;
+		sf::Sprite mShadow;
 };
 
 #endif // MENUSTATE_HPP

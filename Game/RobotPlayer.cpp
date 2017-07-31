@@ -16,8 +16,17 @@ RobotPlayer::RobotPlayer(oe::EntityManager& manager)
 	, mEyes(*this)
 	, mWeaponSprite(*this)
 {
-	mBatteryMax *= 2.f;
-	mBattery = mBatteryMax;
+	mRespawning = false;
+
+	mBattery = GameSingleton::BatteryPlayer;
+	mBatteryMax = GameSingleton::BatteryPlayer;
+	mSpeed = GameSingleton::SpeedPlayer;
+
+	mBatteryBonus = 0.0f;
+	mSpeedBonus = 0.0f;
+	mStrengthBonus = 0;
+
+	mCollision.setSize(oe::Vector2(40, 40));
 
 	oe::ActionId shootAction = mAction.addAction("shoot");
 	mAction.setInput(shootAction, &GameSingleton::shootInput);
@@ -60,9 +69,10 @@ void RobotPlayer::gainLevel()
 	getManager().createEntity<Fx>(Fx::Level, getPosition());
 	getApplication().getAudio().playSound(GameSingleton::levelSound);
 	mLevel++;
-	addPoint();
-	addPoint();
-	addPoint();
+	for (U32 i = 0; i < GameSingleton::PointsGain; i++)
+	{
+		addPoint();
+	}
 }
 
 void RobotPlayer::setExperience(U32 experience)
@@ -77,7 +87,7 @@ U32 RobotPlayer::getExperience() const
 
 U32 RobotPlayer::getExperienceMax() const
 {
-	return 10 + mLevel * (15 + mLevel);
+	return GameSingleton::ExperienceC + mLevel * (GameSingleton::ExperienceB + mLevel);
 }
 
 void RobotPlayer::addExperience(U32 experience)
@@ -124,8 +134,8 @@ void RobotPlayer::increaseBattery()
 {
 	if (hasPoints())
 	{
-		mBatteryBonus += 5.0f;
-		mBattery += 5.0f;
+		mBatteryBonus += GameSingleton::BatteryGain;
+		mBattery += GameSingleton::BatteryGain;
 		spendPoint();
 	}
 }
@@ -134,7 +144,7 @@ void RobotPlayer::increaseSpeed()
 {
 	if (hasPoints())
 	{
-		mSpeedBonus += 3.0f;
+		mSpeedBonus += GameSingleton::SpeedGain;
 		spendPoint();
 	}
 }
@@ -143,7 +153,7 @@ void RobotPlayer::increaseStrength()
 {
 	if (hasPoints())
 	{
-		mStrengthBonus += 2;
+		mStrengthBonus += GameSingleton::StrengthGain;
 		spendPoint();
 	}
 }
@@ -180,6 +190,9 @@ U32 RobotPlayer::getStrengthBonus() const
 
 void RobotPlayer::update(oe::Time dt)
 {
+	//oe::DebugDraw::drawPoint(getPosition(), oe::Color::Red, 5.f);
+	//oe::DebugDraw::drawRect(getCollision());
+
 	oe::Vector2 mvt;
 	bool moved = determineMovement(mvt);
 	if (moved)
@@ -196,6 +209,7 @@ void RobotPlayer::update(oe::Time dt)
 
 	if (mBattery <= 0.0f)
 	{
+		mRespawning = true;
 		setPosition(GameSingleton::map->getRespawnPoint());
 		updateView();
 		charge();
@@ -293,6 +307,16 @@ void RobotPlayer::setColor(const oe::Color& color)
 oe::Color RobotPlayer::getColor() const
 {
 	return mBody.getColor();
+}
+
+void RobotPlayer::setRespawning(bool respawning)
+{
+	mRespawning = respawning;
+}
+
+bool RobotPlayer::isRespawning() const
+{
+	return mRespawning;
 }
 
 bool RobotPlayer::determineMovement(oe::Vector2& mvt)

@@ -13,7 +13,11 @@ RobotMiniKiller::RobotMiniKiller(oe::EntityManager& manager)
 {
 	mFocusPlayer = false;
 
+	mCollision.setSize(oe::Vector2(40, 40));
+
 	setWeapon(GameSingleton::map->getEnemyWeapon());
+	mBattery = GameSingleton::map->getEnemyBattery();
+	mBatteryMax = GameSingleton::map->getEnemyBattery();
 
 	mSprite.setTexture(GameSingleton::minikillerTexture);
 	mSprite.setTextureRect(sf::IntRect(0, 0, 64, 64));
@@ -32,26 +36,69 @@ RobotMiniKiller::RobotMiniKiller(oe::EntityManager& manager)
 
 void RobotMiniKiller::update(oe::Time dt)
 {
+	//oe::DebugDraw::drawRect(getCollision());
+	//oe::DebugDraw::drawPoint(getPosition());
+
 	mWeaponCooldown += dt * 0.8f;
 
 	const oe::Vector2 player = GameSingleton::player->getPosition();
 	oe::Vector2 delta = player - getPosition();
 	const F32 d = delta.getLength();
-	if (mFocusPlayer && d > FOCUSLOST_DISTANCE)
+	delta.normalize();
+	if (!mFocusPlayer && d <= GameSingleton::FocusGainDistance)
 	{
-		mFocusPlayer = false;
+		if (mSkipRay >= 2)
+		{
+			mSkipRay = 0;
+			oe::Vector2 point(getPosition());
+			U32 it = (U32)(GameSingleton::FocusGainDistance / 32);
+			oe::Vector2i coords;
+			oe::Vector2i oldCoords;
+			bool found = true;
+			for (U32 i = 0; i < it; i++)
+			{
+				point += delta * 32.f;
+				coords = oe::MapUtility::worldToCoords(point, oe::MapUtility::Orthogonal, oe::Vector2i(MAPTILESIZEX, MAPTILESIZEY));
+				if (oldCoords != coords)
+				{
+					oldCoords = coords;
+					if (GameSingleton::map->collide(coords))
+					{
+						found = false;
+						it = 0;
+					}
+				}
+			}
+			if (found)
+			{
+				mFocusPlayer = true;
+				GameSingleton::enemyFocus++;
+				if (GameSingleton::playingMainMusic)
+				{
+					GameSingleton::playFight();
+				}
+			}
+		}
+		else
+		{
+			mSkipRay++;
+		}
 	}
-	else if (!mFocusPlayer && d <= FOCUSGAIN_DISTANCE)
+	else if (mFocusPlayer && d > GameSingleton::FocusLostDistance)
 	{
-		mFocusPlayer = true;
-	}
+		mFocusPlayer = false; 
+		GameSingleton::enemyFocus--;
+		if (GameSingleton::enemyFocus == 0 && !GameSingleton::playingMainMusic)
+		{
+			GameSingleton::playMain();
+		}
+	} 
 
 	if (mFocusPlayer)
 	{
 		mSprite.setTextureRect(sf::IntRect(0, (delta.x >= 0.0f) ? 0 : 64, 64, 64));
 		if (mWeaponCooldown > mWeapon.getCooldown() && mWeapon.getId() > 0)
 		{
-			delta.normalize();
 			mWeaponCooldown = oe::Time::Zero;
 			getManager().createEntity<Projectile>(mWeapon.getProjType(), getPosition(), delta, mWeapon.getStrength() + mStrengthBonus, getId());
 		}
@@ -63,5 +110,13 @@ void RobotMiniKiller::update(oe::Time dt)
 	if (mBattery <= 0.0f)
 	{
 		kill();
+		if (mFocusPlayer)
+		{
+			GameSingleton::enemyFocus--;
+			if (GameSingleton::enemyFocus == 0 && !GameSingleton::playingMainMusic)
+			{
+				GameSingleton::playMain();
+			}
+		}
 	}
 }

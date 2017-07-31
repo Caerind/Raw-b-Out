@@ -11,6 +11,8 @@ oe::ResourceId GameSingleton::guiTexture;
 oe::ResourceId GameSingleton::weaponsTexture;
 oe::ResourceId GameSingleton::particleTexture;
 oe::ResourceId GameSingleton::screenTexture;
+oe::ResourceId GameSingleton::shadowTexture;
+oe::ResourceId GameSingleton::headTexture;
 oe::ResourceId GameSingleton::sansationFont;
 oe::ResourceId GameSingleton::ammoSound;
 oe::ResourceId GameSingleton::buttonSound;
@@ -31,6 +33,8 @@ oe::ResourceId GameSingleton::wallSound;
 oe::ResourceId GameSingleton::mainMusic;
 oe::ResourceId GameSingleton::fightMusic;
 bool GameSingleton::playingMainMusic;
+oe::AudioSystem::MusicPtr GameSingleton::musicHandle;
+U32 GameSingleton::enemyFocus;
 oe::Application* GameSingleton::application;
 oe::EntityHandle GameSingleton::mapHandle;
 GameMap* GameSingleton::map;
@@ -51,6 +55,35 @@ oe::EntityQuery GameSingleton::rpQuery;
 oe::EntityQuery GameSingleton::repQuery;
 std::map<WeaponId, WeaponData> GameSingleton::weaponData;
 oe::ParserXml GameSingleton::loader;
+F32 GameSingleton::BatteryPlayer;
+F32 GameSingleton::SpeedPlayer;
+U32 GameSingleton::ExperienceB;
+U32 GameSingleton::ExperienceC;
+U32 GameSingleton::PointsGain;
+F32 GameSingleton::BatteryGain;
+F32 GameSingleton::SpeedGain;
+U32 GameSingleton::StrengthGain;
+F32 GameSingleton::BatteryEnemy;
+F32 GameSingleton::SpeedEnemy;
+U32 GameSingleton::WeaponEnemy;
+F32 GameSingleton::BatteryBoss;
+F32 GameSingleton::SpeedBoss;
+U32 GameSingleton::WeaponBoss;
+F32 GameSingleton::InfoDistance;
+F32 GameSingleton::ChargerDistance;
+F32 GameSingleton::SpawnerDistance;
+F32 GameSingleton::SpawnDistance;
+F32 GameSingleton::FocusGainDistance;
+F32 GameSingleton::FocusLostDistance;
+F32 GameSingleton::TeleporterDistance;
+F32 GameSingleton::TeleporterLostDistance;
+F32 GameSingleton::ExplosionDistance;
+U32 GameSingleton::ExperienceMiniKiller;
+U32 GameSingleton::ExperienceKiller;
+U32 GameSingleton::ExperienceMegaKiller;
+F32 GameSingleton::PlasmaReduction;
+U32 GameSingleton::ProjectileReduction;
+F32 GameSingleton::ProjectileSpeed;
 
 void GameSingleton::loadTileset()
 {
@@ -67,19 +100,21 @@ void GameSingleton::loadResources(oe::Application& application)
 
 	mainMusic = application.getAudio().createMusic("main", MUSIC_MAIN);
 	fightMusic = application.getAudio().createMusic("fight", MUSIC_FIGHT);
-	application.getAudio().playMusic(mainMusic);
-	playingMainMusic = true;
+	musicHandle = nullptr;
+	playMain();
 }
 
 void GameSingleton::loadResources2()
 {
-	minikillerTexture = application->getTextures().create("minikillerTexture", oe::TextureLoader::loadFromFile(TEXTURE_MINIKILLER));
-	killerTexture = application->getTextures().create("killerTexture", oe::TextureLoader::loadFromFile(TEXTURE_KILLER));
+	minikillerTexture = application->getTextures().create("minikillerTexture", oe::TextureLoader::loadFromFile(TEXTURE_ENEMY));
+	killerTexture = application->getTextures().create("killerTexture", oe::TextureLoader::loadFromFile(TEXTURE_ROBOT));
 	projectilesTexture = application->getTextures().create("projectilesTexture", oe::TextureLoader::loadFromFile(TEXTURE_PROJECTILES));
 	guiTexture = application->getTextures().create("guiTexture", oe::TextureLoader::loadFromFile(TEXTURE_GUI));
 	weaponsTexture = application->getTextures().create("weaponsTexture", oe::TextureLoader::loadFromFile(TEXTURE_WEAPONS));
 	particleTexture = application->getTextures().create("particleTexture", oe::TextureLoader::loadFromFile(TEXTURE_PARTICLE));
 	screenTexture = application->getTextures().create("screenTexture", oe::TextureLoader::loadFromFile(TEXTURE_SCREEN));
+	shadowTexture = application->getTextures().create("shadowTexture", oe::TextureLoader::loadFromFile(TEXTURE_SHADOW));
+	headTexture = application->getTextures().create("headTexture", oe::TextureLoader::loadFromFile(ICON_48));
 
 	sansationFont = application->getFonts().create("sansation", oe::FontLoader::loadFromFile(FONT_SANSATION));
 
@@ -156,26 +191,30 @@ void GameSingleton::loadQueries()
 void GameSingleton::loadWeapons()
 {
 	oe::ParserXml xml;
-	if (xml.loadFromFile("../Assets/weapons.xml"))
+	if (xml.loadFromFile("../Assets/data.xml"))
 	{
-		if (xml.readNode("weapon"))
+		if (xml.readNode("weapons"))
 		{
-			U32 id = 0;
-			xml.getAttribute("id", id);
-			weaponData[id].id = id;
-			xml.getAttribute("name", weaponData[id].name);
-			xml.getAttribute("cool", weaponData[id].cool);
-			xml.getAttribute("stre", weaponData[id].stre);
-			xml.getAttribute("proj", weaponData[id].proj);
-			while (xml.nextSibling("weapon"))
+			if (xml.readNode("weapon"))
 			{
+				U32 id = 0;
 				xml.getAttribute("id", id);
 				weaponData[id].id = id;
 				xml.getAttribute("name", weaponData[id].name);
 				xml.getAttribute("cool", weaponData[id].cool);
 				xml.getAttribute("stre", weaponData[id].stre);
 				xml.getAttribute("proj", weaponData[id].proj);
+				while (xml.nextSibling("weapon"))
+				{
+					xml.getAttribute("id", id);
+					weaponData[id].id = id;
+					xml.getAttribute("name", weaponData[id].name);
+					xml.getAttribute("cool", weaponData[id].cool);
+					xml.getAttribute("stre", weaponData[id].stre);
+					xml.getAttribute("proj", weaponData[id].proj);
+				}
 			}
+			xml.closeNode();
 		}
 		xml.closeNode();
 	}
@@ -203,6 +242,83 @@ void GameSingleton::clear()
 {
 	map = nullptr;
 	player = nullptr;
+	enemyFocus = 0;
+}
+
+void GameSingleton::loadStats()
+{
+	BatteryPlayer = 400.f;
+	SpeedPlayer = 300.f;
+	ExperienceB = 15;
+	ExperienceC = 10;
+	PointsGain = 3;
+	BatteryGain = 5;
+	SpeedGain = 3.f;
+	StrengthGain = 2;
+
+	BatteryEnemy = 200.f;
+	SpeedEnemy = 100.f;
+	WeaponEnemy = 50;
+
+	BatteryBoss = 2000.f;
+	SpeedBoss = 100.f;
+	WeaponBoss = 13;
+
+	InfoDistance = 200.f;
+	ChargerDistance = 70.f;
+	SpawnerDistance = 700.f;
+	SpawnDistance = 100.f;
+	FocusGainDistance = 500.f;
+	FocusLostDistance = 600.f;
+	TeleporterDistance = 50.f;
+	TeleporterLostDistance = 100.f;
+	ExplosionDistance = 200.f;
+
+	ExperienceMiniKiller = 10;
+	ExperienceKiller = 100;
+	ExperienceMegaKiller = 400;
+
+	PlasmaReduction = 0.5f;
+	ProjectileReduction = 5;
+	ProjectileSpeed = 500.f;
+
+	oe::ParserXml xml;
+	if (xml.loadFromFile("../Assets/data.xml"))
+	{
+		if (xml.readNode("stats"))
+		{
+			xml.readNode("BatteryPlayer"); xml.getAttribute("value", BatteryPlayer); xml.closeNode();
+			xml.readNode("SpeedPlayer"); xml.getAttribute("value", SpeedPlayer); xml.closeNode();
+			xml.readNode("ExperienceC"); xml.getAttribute("value", ExperienceC); xml.closeNode();
+			xml.readNode("ExperienceB"); xml.getAttribute("value", ExperienceB); xml.closeNode();
+			xml.readNode("PointsGain"); xml.getAttribute("value", PointsGain); xml.closeNode();
+			xml.readNode("BatteryGain"); xml.getAttribute("value", BatteryGain); xml.closeNode();
+			xml.readNode("SpeedGain"); xml.getAttribute("value", SpeedGain); xml.closeNode();
+			xml.readNode("StrengthGain"); xml.getAttribute("value", StrengthGain); xml.closeNode();
+			xml.readNode("BatteryEnemy"); xml.getAttribute("value", BatteryEnemy); xml.closeNode();
+			xml.readNode("SpeedEnemy"); xml.getAttribute("value", SpeedEnemy); xml.closeNode();
+			xml.readNode("WeaponEnemy"); xml.getAttribute("value", WeaponEnemy); xml.closeNode();
+			xml.readNode("BatteryBoss"); xml.getAttribute("value", BatteryBoss); xml.closeNode();
+			xml.readNode("SpeedBoss"); xml.getAttribute("value", SpeedBoss); xml.closeNode();
+			xml.readNode("WeaponBoss"); xml.getAttribute("value", WeaponBoss); xml.closeNode();
+			xml.readNode("InfoDistance"); xml.getAttribute("value", InfoDistance); xml.closeNode();
+			xml.readNode("ChargerDistance"); xml.getAttribute("value", ChargerDistance); xml.closeNode();
+			xml.readNode("SpawnerDistance"); xml.getAttribute("value", SpawnerDistance); xml.closeNode();
+			xml.readNode("SpawnDistance"); xml.getAttribute("value", SpawnDistance); xml.closeNode();
+			xml.readNode("FocusGainDistance"); xml.getAttribute("value", FocusGainDistance); xml.closeNode();
+			xml.readNode("FocusLostDistance"); xml.getAttribute("value", FocusLostDistance); xml.closeNode();
+			xml.readNode("TeleporterDistance"); xml.getAttribute("value", TeleporterDistance); xml.closeNode();
+			xml.readNode("TeleporterLostDistance"); xml.getAttribute("value", TeleporterLostDistance); xml.closeNode();
+			xml.readNode("ExplosionDistance"); xml.getAttribute("value", ExplosionDistance); xml.closeNode();
+			xml.readNode("ExperienceMiniKiller"); xml.getAttribute("value", ExperienceMiniKiller); xml.closeNode();
+			xml.readNode("ExperienceKiller"); xml.getAttribute("value", ExperienceKiller); xml.closeNode();
+			xml.readNode("ExperienceMegaKiller"); xml.getAttribute("value", ExperienceMegaKiller); xml.closeNode();
+			xml.readNode("PlasmaReduction"); xml.getAttribute("value", PlasmaReduction); xml.closeNode();
+			xml.readNode("ProjectileReduction"); xml.getAttribute("value", ProjectileReduction); xml.closeNode();
+			xml.readNode("ProjectileSpeed"); xml.getAttribute("value", ProjectileSpeed); xml.closeNode();
+		}
+		xml.closeNode();
+	}
 }
 
 void GameSingleton::playSound(oe::ResourceId sound)
@@ -216,4 +332,24 @@ void GameSingleton::playSound(oe::ResourceId sound)
 void GameSingleton::click()
 {
 	playSound(clickSound);
+}
+
+void GameSingleton::playMain()
+{
+	if (musicHandle != nullptr)
+	{
+		musicHandle->stop();
+	}
+	musicHandle = application->getAudio().playMusic(mainMusic);
+	playingMainMusic = true;
+}
+
+void GameSingleton::playFight()
+{
+	if (musicHandle != nullptr)
+	{
+		musicHandle->stop();
+	}
+	musicHandle = application->getAudio().playMusic(fightMusic);
+	playingMainMusic = false;
 }

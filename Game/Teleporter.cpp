@@ -5,11 +5,18 @@
 #include "GameState.hpp"
 
 
-Teleporter::Teleporter(const oe::Vector2& position, U32 mapId, const oe::Vector2& targetPos)
+Teleporter::Teleporter(const oe::Vector2& position, U32 mapId, U32 currentId, bool activated)
 	: mPosition(position)
-	, mTargetPos(targetPos)
 	, mMapId(mapId)
+	, mCurrentId(currentId)
+	, mActivated(activated)
 {
+	if (mActivated)
+	{
+		GameSingleton::player->setPosition(position);
+		GameSingleton::player->updateView();
+		GameSingleton::map->setSpawnPoint(position);
+	}
 }
 
 void Teleporter::setPosition(const oe::Vector2& position)
@@ -20,16 +27,6 @@ void Teleporter::setPosition(const oe::Vector2& position)
 const oe::Vector2& Teleporter::getPosition() const
 {
 	return mPosition;
-}
-
-void Teleporter::setTargetPos(const oe::Vector2& targetPos)
-{
-	mTargetPos = targetPos;
-}
-
-const oe::Vector2& Teleporter::getTargetPos() const
-{
-	return mTargetPos;
 }
 
 void Teleporter::setMapId(U32 mapId)
@@ -46,23 +43,55 @@ bool Teleporter::update()
 {
 	const oe::Vector2 delta = GameSingleton::player->getPosition() - mPosition;
 	const F32 d = delta.getLength();
-	if (d <= TELEPORTER_DISTANCE)
+
+	if (mActivated && d >= GameSingleton::TeleporterLostDistance)
 	{
-		GameSingleton::playSound(GameSingleton::teleportSound);
-
-		for (oe::Entity* entity : GameSingleton::repQuery.getEntities())
+		mActivated = false;
+	}
+	else if (d <= GameSingleton::TeleporterDistance && !mActivated)
+	{
+		if (GameSingleton::player->isRespawning())
 		{
-			entity->kill();
+			mActivated = true;
+			GameSingleton::player->setRespawning(false);
 		}
+		else
+		{
+			GameSingleton::playSound(GameSingleton::teleportSound);
 
-		GameSingleton::player->setPosition(mTargetPos);
-		GameSingleton::player->updateView();
+			if (!GameSingleton::playingMainMusic)
+			{
+				GameSingleton::playMain();
+			}
 
-		GameSingleton::map->load(mMapId, mTargetPos);
+			for (oe::Entity* entity : GameSingleton::repQuery.getEntities())
+			{
+				entity->kill();
+			}
 
-		GameState::save();
+			GameSingleton::player->setPosition(mPosition);
+			GameSingleton::player->updateView();
 
-		return true;
-	}	
+			GameSingleton::player->charge();
+
+			GameSingleton::map->load(mMapId, mPosition, mCurrentId);
+
+			GameState::save();
+
+			GameSingleton::enemyFocus = 0;
+
+			return true;
+		}
+	}
 	return false;
+}
+
+void Teleporter::setActivated(bool activated)
+{
+	mActivated = activated;
+}
+
+bool Teleporter::isActivated() const
+{
+	return mActivated;
 }

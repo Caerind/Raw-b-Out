@@ -15,9 +15,8 @@ class RobotKiller : public Robot
 	private:
 		oe::SpriteComponent mSprite;
 		BarComponent mBar;
+		U32 mCounter;
 		bool mFocusPlayer;
-
-		oe::Time mSpecialAttack;
 };
 
 #endif // ROBOTKILLER_HPP

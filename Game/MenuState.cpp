@@ -42,6 +42,10 @@ MenuState::MenuState(oe::StateManager& manager)
 	mPlay.setPosition(150, 300);
 	mQuit.setPosition(150, 450);
 	mName.setPosition(512 - 144, 120);
+
+	mShadow.setTexture(getApplication().getTextures().get(GameSingleton::shadowTexture));
+	mShadow.setTextureRect(sf::IntRect(85, 40, 563 - 85, 333 - 40));
+	mShadow.setScale(WINSIZEX / mShadow.getGlobalBounds().width, WINSIZEY / mShadow.getGlobalBounds().height);
 }
 
 bool MenuState::handleEvent(const sf::Event& event)
@@ -98,6 +102,8 @@ bool MenuState::update(oe::Time dt)
 void MenuState::render(sf::RenderTarget& target)
 {
 	target.draw(mBackground);
+
+	target.draw(mShadow);
 
 	target.draw(mScreen);
 

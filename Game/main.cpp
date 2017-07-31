@@ -13,11 +13,12 @@ int main()
 
 	// Load Resources
 	GameSingleton::loadResources(application);
+	GameSingleton::loadStats();
 	
 	// Load Window
 	oe::Window& window = application.getWindow();
 	window.create(sf::VideoMode(WINSIZEX, WINSIZEY), WINTITLE, sf::Style::Close);
-	window.setIcon(WINICON);
+	window.setIcon(ICON_144);
 	window.useCustomCursor(WINCURSOR, sf::IntRect(0, 0, 48, 48), sf::Vector2f(24, 24));
 	window.setScreenshotPath(WINSCREENSHOTS);
 	window.setMainView(sf::View(sf::FloatRect(0.0f, 0.0f, WINSIZEX, WINSIZEY)));

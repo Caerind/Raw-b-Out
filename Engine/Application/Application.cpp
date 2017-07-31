@@ -36,6 +36,8 @@ Application::~Application()
 		mWindow.close();
 	}
 
+	mAudioSystem.stop();
+
 	#ifdef OE_PLATFORM_ANDROID
 	std::exit(0);
 	#endif
@@ -165,7 +167,9 @@ void Application::run()
 			mFps = mFpsTemp;
 			mFpsTemp = 0;
 
+			#ifdef OE_DEBUG
 			mWindow.setTitle("FPS : " + toString(mFps));
+			#endif
 		}
 
 		// Stop ?

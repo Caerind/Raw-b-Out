@@ -8,6 +8,7 @@
 #include "../Engine/Core/Systems/ActionSystem.hpp"
 #include "../Engine/Core/EntityQuery.hpp"
 #include "../Engine/System/ParserXml.hpp"
+#include "../Engine/Application/AudioSystem.hpp"
 
 #include <SFML/Window/Keyboard.hpp>
 
@@ -38,6 +39,8 @@ class GameSingleton
 		static oe::ResourceId weaponsTexture;
 		static oe::ResourceId particleTexture;
 		static oe::ResourceId screenTexture;
+		static oe::ResourceId shadowTexture;
+		static oe::ResourceId headTexture;
 
 		// Font
 		static oe::ResourceId sansationFont;
@@ -59,11 +62,17 @@ class GameSingleton
 		static oe::ResourceId teleportSound;
 		static oe::ResourceId ultimeSound;
 		static oe::ResourceId wallSound;
+		static void playSound(oe::ResourceId sound);
+		static void click();
 
 		// Musics
 		static oe::ResourceId mainMusic;
 		static oe::ResourceId fightMusic;
 		static bool playingMainMusic;
+		static void playMain();
+		static void playFight();
+		static oe::AudioSystem::MusicPtr musicHandle;
+		static U32 enemyFocus;
 
 		static oe::Application* application;
 
@@ -107,9 +116,38 @@ class GameSingleton
 		// Loader
 		static oe::ParserXml loader;
 
-		// Sound
-		static void playSound(oe::ResourceId sound);
-		static void click();
+
+		// Stats
+		static F32 BatteryPlayer;
+		static F32 SpeedPlayer;
+		static U32 ExperienceB;
+		static U32 ExperienceC;
+		static U32 PointsGain;
+		static F32 BatteryGain;
+		static F32 SpeedGain;
+		static U32 StrengthGain;
+		static F32 BatteryEnemy;
+		static F32 SpeedEnemy;
+		static U32 WeaponEnemy;
+		static F32 BatteryBoss;
+		static F32 SpeedBoss;
+		static U32 WeaponBoss;
+		static F32 InfoDistance;
+		static F32 ChargerDistance;
+		static F32 SpawnerDistance;
+		static F32 SpawnDistance;
+		static F32 FocusGainDistance;
+		static F32 FocusLostDistance;
+		static F32 TeleporterDistance;
+		static F32 TeleporterLostDistance;
+		static F32 ExplosionDistance;
+		static U32 ExperienceMiniKiller;
+		static U32 ExperienceKiller;
+		static U32 ExperienceMegaKiller;
+		static F32 PlasmaReduction;
+		static U32 ProjectileReduction;
+		static F32 ProjectileSpeed;
+		static void loadStats();
 
 };
 
