@@ -37,18 +37,18 @@ RobotPopUp::RobotPopUp(sf::Texture& screen, sf::Texture& gui, sf::Font& font)
 	mNameText.setString(GameSingleton::name);
 	mNameText.setOrigin(mNameText.getGlobalBounds().width * 0.5f, mNameText.getGlobalBounds().height * 0.5f);
 	mNameText.setPosition(310.0f, 230.0f);
-	f(mBatteryText, font); 
+	f(mBatteryText, font);
 	mBatteryText.setString(oe::toString((U32)GameSingleton::player->getBatteryMax()) + " + " + oe::toString((U32)GameSingleton::player->getBatteryBonus()));
 	mBatteryText.setOrigin(mBatteryText.getGlobalBounds().width * 0.5f, mBatteryText.getGlobalBounds().height * 0.5f);
 	mBatteryText.setPosition(630.0f, 420.0f);
-	f(mSpeedText, font); 
+	f(mSpeedText, font);
 	mSpeedText.setString(oe::toString((U32)GameSingleton::player->getSpeed()) + " + " + oe::toString((U32)GameSingleton::player->getSpeedBonus()));
 	mSpeedText.setOrigin(mSpeedText.getGlobalBounds().width * 0.5f, mSpeedText.getGlobalBounds().height * 0.5f);
 	mSpeedText.setPosition(630.0f, 525.0f);
-	f(mStrengthText, font); 
+	f(mStrengthText, font);
 	mStrengthText.setString(oe::toString(GameSingleton::weaponData[GameSingleton::player->getWeapon()].stre) + " + " + oe::toString(GameSingleton::player->getStrengthBonus()));
 	mStrengthText.setOrigin(mStrengthText.getGlobalBounds().width * 0.5f, mStrengthText.getGlobalBounds().height * 0.5f);
-	mStrengthText.setPosition(630.0f, 630.0f); 
+	mStrengthText.setPosition(630.0f, 630.0f);
 	f(mPointsText, font);
 	mPointsText.setString(oe::toString(GameSingleton::player->getPoints()));
 	mPointsText.setOrigin(mPointsText.getGlobalBounds().width * 0.5f, mPointsText.getGlobalBounds().height * 0.5f);
@@ -173,7 +173,6 @@ InventoryPopUp::InventoryPopUp(sf::Texture& screen, sf::Texture& gui, sf::Font& 
 	: PopUp(screen)
 {
 	mScreen.setTextureRect(sf::IntRect(0, 601, 960, 601));
-	sf::Vector2f top = mScreen.getPosition();
 
 	auto& v = GameSingleton::player->getWeapons();
 	for (U32 i = 0; i < v.size(); i++)

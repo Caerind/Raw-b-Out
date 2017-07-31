@@ -4,6 +4,8 @@
 #include "../System/Id.hpp"
 #include "../System/Type.hpp"
 
+#include "../ExtLibs/FastDynamicCast/fast_dynamic_cast.h"
+
 #include "Component.hpp"
 #include "ComponentList.hpp"
 #include "SceneComponent.hpp"
@@ -89,7 +91,7 @@ class Entity : public Node
 		friend class SceneComponent;
 		void registerSceneComponent(SceneComponent* sceneComponent);
 		void unregisterSceneComponent(SceneComponent* sceneComponent);
-		
+
 	private:
 		friend class RenderableComponent;
 		void registerRenderableComponent(RenderableComponent* renderableComponent);

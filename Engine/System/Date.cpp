@@ -229,7 +229,11 @@ Date operator+(const Time& left, const Date& right)
 
 Time operator-(const Date& left, const Date& right)
 {
-	return seconds(difftime(mktime(&left.getInternalData()), mktime(&right.getInternalData())));
+    std::tm tm1 = left.getInternalData();
+    std::tm tm2 = right.getInternalData();
+    std::time_t t1 = mktime(&tm1);
+    std::time_t t2 = mktime(&tm2);
+	return seconds((F32)difftime(t1, t2));
 }
 
 Date& operator+=(Date& left, const Time& right)

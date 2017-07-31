@@ -10,7 +10,9 @@ Application::Application()
 	, mStates(*this)
 	, mWindow(sf::VideoMode(800,600), "OlympusEngine")
 	, mLocalization()
+	, mProfiler()
 	, mConsole()
+	, mDataManager()
 	, mFpsAccumulator(Time::Zero)
 	, mFpsTemp(0)
 	, mFps(0)
@@ -227,7 +229,7 @@ void Application::render()
 	#ifdef OE_IMGUI
 	mWindow.draw(sf::RectangleShape()); // This fix a bug when rendering with the World
 	ImGuiWrapper::render();
-	#endif 
+	#endif
 
 	mWindow.display();
 }

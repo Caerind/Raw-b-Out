@@ -55,12 +55,12 @@ Now, you're ready to kill some robots</property>
   </object>
   <object id="32" name="I" x="1493.94" y="1251.52">
    <properties>
-    <property name="str" value="Some walls can be destroyed using powerful weapons"/>
+    <property name="str">Some walls can be destroyed using powerful weapons</property>
    </properties>
   </object>
   <object id="33" name="I" x="1178.79" y="1696.97">
    <properties>
-    <property name="str" value="There are different types of weapons "/>
+    <property name="str">There are different types of weapons</property>
    </properties>
   </object>
  </objectgroup>

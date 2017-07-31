@@ -26,11 +26,7 @@ bool IntroState::update(oe::Time dt)
 	GameSingleton::loadInputs();
 	GameSingleton::loadWeapons();
 
-	#ifdef OE_DEBUG
-		static const oe::Time duration = oe::seconds(0.2f);
-	#else
-		static const oe::Time duration = oe::seconds(2.0f);
-	#endif
+	static const oe::Time duration = oe::seconds(1.0f);
 
 	mElapsed += dt;
 	if (mElapsed > duration)

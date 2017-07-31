@@ -57,7 +57,7 @@ void RobotMegaKiller::update(oe::Time dt)
 		{
 			delta.normalize();
 			mWeaponCooldown = oe::Time::Zero;
-			getManager().createEntity<Projectile>(mWeapon.getProjType(), getPosition(), delta, mWeapon.getStrength() + mStrengthBonus, getId());
+			getManager().createEntity<Projectile>(mWeapon.getProjType(), getPosition() + delta * 200.f, delta, mWeapon.getStrength() + mStrengthBonus, getId());
 		}
 		if (mSpecialAttack > oe::seconds(5.f))
 		{

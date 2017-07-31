@@ -142,7 +142,7 @@ void GameSingleton::loadQueries()
 
 	repQuery.setSelector([](oe::Entity* entity) -> bool
 	{
-		if (entity->getName() != "player" && fast_dynamic_cast<Robot*>(entity) != nullptr)
+		if (entity->getId() != GameSingleton::player->getId() && fast_dynamic_cast<Robot*>(entity) != nullptr)
 		{
 			return true;
 		}
@@ -194,6 +194,7 @@ sf::IntRect GameSingleton::getTextureRectFromWeapon(WeaponId id)
 		case Projectile::Plasma: return sf::IntRect(0, 64, 64, 64); break;
 		case Projectile::Laser: return sf::IntRect(0, 128, 64, 64); break;
 		case Projectile::Ultime: return sf::IntRect(256, 0, 64, 64); break;
+		default: break;
 	}
 	return sf::IntRect();
 }

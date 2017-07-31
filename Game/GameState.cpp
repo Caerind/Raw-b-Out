@@ -12,7 +12,7 @@ GameState::GameState(oe::StateManager& manager)
 {
 	GameSingleton::clear();
 	GameSingleton::loadQueries();
-	
+
 	mWorld.getRenderSystem().setBackgroundColor(oe::Color::DarkGray);
 	mWorld.getRenderSystem().setView(oe::View(0, 0, WINSIZEX, WINSIZEY));
 	mWorld.getEntityManager().addQuery(&GameSingleton::rQuery);
@@ -31,11 +31,9 @@ GameState::GameState(oe::StateManager& manager)
 
 	GameSingleton::mapHandle = mWorld.getEntityManager().createEntity<GameMap>();
 	GameSingleton::map = GameSingleton::mapHandle.getAs<GameMap>();
-	GameSingleton::map->setName("map");
 
 	GameSingleton::playerHandle = mWorld.getEntityManager().createEntity<RobotPlayer>();
 	GameSingleton::player = GameSingleton::playerHandle.getAs<RobotPlayer>();
-	GameSingleton::player->setName("player");
 
 	load();
 
@@ -54,7 +52,7 @@ GameState::GameState(oe::StateManager& manager)
 	mBarPlayerBattery.setBarColor(sf::Color::Green);
 	mBarPlayerBattery.setOutlineColor(sf::Color::Black);
 	mBarPlayerBattery.setOutlineThickness(1.2f);
-	mBarPlayerBattery.setValueMax(GameSingleton::player->getBatteryMax());
+	mBarPlayerBattery.setValueMax(GameSingleton::player->getBatteryMaxWithBonus());
 	mBarPlayerBattery.setValue(GameSingleton::player->getBattery());
 
 	mPlayerLevelText.setCharacterSize(20);
@@ -117,7 +115,7 @@ bool GameState::handleEvent(const sf::Event& event)
 	}
 
 	// Show/Hide Profiler
-	#ifdef OE_IMGUI	
+	#ifdef OE_IMGUI
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F6)
 	{
 		if (mProfiler.isVisible())
@@ -146,16 +144,6 @@ bool GameState::update(oe::Time dt)
 	{
 		mWorld.update(dt);
 
-		oe::Time gameDt = mWorld.getUpdateTime();
-
-		mBarPlayerLevel.setValueMax((F32)GameSingleton::player->getExperienceMax());
-		mBarPlayerLevel.setValue((F32)GameSingleton::player->getExperience());
-		mBarPlayerBattery.setValue(GameSingleton::player->getBattery());
-		mPlayerLevelText.setString(oe::toString(GameSingleton::player->getLevel()));
-		mPlayerLevelText.setOrigin(mPlayerLevelText.getGlobalBounds().width * 0.5f, mPlayerLevelText.getGlobalBounds().height * 0.5f);
-		mBarPlayerCooldown.setValueMax(GameSingleton::weaponData[GameSingleton::player->getWeapon()].cool);
-		mBarPlayerCooldown.setValue(GameSingleton::weaponData[GameSingleton::player->getWeapon()].cool - GameSingleton::player->getWeaponCooldown().asSeconds());
-
 		Info* info = GameSingleton::map->getCurrentInfo();
 		if (info != nullptr)
 		{
@@ -173,6 +161,15 @@ bool GameState::update(oe::Time dt)
 			mInfoText.setString("");
 		}
 	}
+
+	mBarPlayerLevel.setValueMax((F32)GameSingleton::player->getExperienceMax());
+	mBarPlayerLevel.setValue((F32)GameSingleton::player->getExperience());
+	mBarPlayerBattery.setValueMax(GameSingleton::player->getBatteryMaxWithBonus());
+	mBarPlayerBattery.setValue(GameSingleton::player->getBattery());
+	mPlayerLevelText.setString(oe::toString(GameSingleton::player->getLevel()));
+	mPlayerLevelText.setOrigin(mPlayerLevelText.getGlobalBounds().width * 0.5f, mPlayerLevelText.getGlobalBounds().height * 0.5f);
+	mBarPlayerCooldown.setValueMax(GameSingleton::weaponData[GameSingleton::player->getWeapon()].cool);
+	mBarPlayerCooldown.setValue(GameSingleton::weaponData[GameSingleton::player->getWeapon()].cool - GameSingleton::player->getWeaponCooldown().asSeconds());
 
 	#ifdef OE_IMGUI
 	oe::Vector2 p(getWindow().getCursorPositionView(getView()));
@@ -544,7 +541,7 @@ void GameState::save()
 	}
 
 	xml.saveToFile("../Assets/save.xml");
-	
+
 
 	// TODO : Post-LD Debug
 	/*

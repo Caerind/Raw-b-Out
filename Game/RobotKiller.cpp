@@ -13,8 +13,8 @@ RobotKiller::RobotKiller(oe::EntityManager& manager, const oe::Vector2& position
 {
 	mFocusPlayer = false;
 
-	mBatteryMax = 200.0f;
-	mBattery = 200.0f;
+	mBatteryMax = 2000.f;
+	mBattery = 2000.f;
 
 	setWeapon(GameSingleton::map->getEnemyWeapon());
 
@@ -57,7 +57,7 @@ void RobotKiller::update(oe::Time dt)
 		{
 			delta.normalize();
 			mWeaponCooldown = oe::Time::Zero;
-			getManager().createEntity<Projectile>(mWeapon.getProjType(), getPosition(), delta, mWeapon.getStrength() + mStrengthBonus, getId());
+			getManager().createEntity<Projectile>(mWeapon.getProjType(), getPosition() + delta * 150.f, delta, mWeapon.getStrength() + mStrengthBonus, getId());
 		}
 		if (mSpecialAttack > oe::seconds(4.f))
 		{

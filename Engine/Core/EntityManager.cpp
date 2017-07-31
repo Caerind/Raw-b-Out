@@ -153,7 +153,7 @@ U32 EntityManager::destroyEntities()
 			destroyed++;
 		}
 	}
-	mEntitiesKilled.clear(); 
+	mEntitiesKilled.clear();
 	return destroyed;
 }
 

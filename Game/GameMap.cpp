@@ -61,6 +61,31 @@ void GameMap::load(U32 mapId, const oe::Vector2& spawnPoint)
 	xml.getAttribute("width", size.x);
 	xml.getAttribute("height", size.y);
 
+	// read enemy weapon
+	mEnemyWeapon = 50;
+	if (xml.readNode("properties"))
+	{
+		std::string pname;
+		if (xml.readNode("property"))
+		{
+			xml.getAttribute("name", pname);
+			if (pname == "enemy_weapon")
+			{
+				xml.getAttribute("value", mEnemyWeapon);
+			}
+			while (xml.nextSibling("property"))
+			{
+				xml.getAttribute("name", pname);
+				if (pname == "enemy_weapon")
+				{
+					xml.getAttribute("value", mEnemyWeapon);
+				}
+			}
+			xml.closeNode();
+		}
+		xml.closeNode();
+	}
+
 	// read layer
 	if (xml.readNode("layer"))
 	{
@@ -79,34 +104,6 @@ void GameMap::load(U32 mapId, const oe::Vector2& spawnPoint)
 			while (xml.nextSibling("object"))
 			{
 				readObject(xml);
-			}
-			xml.closeNode();
-		}
-		xml.closeNode();
-	}
-
-	// read enemy weapon
-	if (xml.readNode("properties"))
-	{
-		std::string pname;
-		if (xml.readNode("property"))
-		{
-			xml.getAttribute("name", pname);
-			if (pname == "enemy_weapon")
-			{
-				xml.getAttribute("value", mEnemyWeapon);
-			}
-
-
-			while (xml.nextSibling("property"))
-			{
-				xml.getAttribute("name", pname);
-				if (pname == "enemy_weapon")
-				{
-					xml.getAttribute("value", mEnemyWeapon);
-				}
-
-
 			}
 			xml.closeNode();
 		}

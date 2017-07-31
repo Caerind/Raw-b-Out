@@ -16,13 +16,12 @@ RobotPlayer::RobotPlayer(oe::EntityManager& manager)
 	, mEyes(*this)
 	, mWeaponSprite(*this)
 {
+	mBatteryMax *= 2.f;
+	mBattery = mBatteryMax;
+
 	oe::ActionId shootAction = mAction.addAction("shoot");
 	mAction.setInput(shootAction, &GameSingleton::shootInput);
 	mAction.addOutput(shootAction, [this]() { shoot(); });
-
-	// TODO : Temp
-	mSpeed = 1000.f;
-	mBatteryBonus = 10000.f;
 
 	mWheel.setTexture(GameSingleton::killerTexture);
 	mWheel.setTextureRect(sf::IntRect(64, 0, 21, 21));
@@ -61,8 +60,6 @@ void RobotPlayer::gainLevel()
 	getManager().createEntity<Fx>(Fx::Level, getPosition());
 	getApplication().getAudio().playSound(GameSingleton::levelSound);
 	mLevel++;
-	addPoint();
-	addPoint();
 	addPoint();
 	addPoint();
 	addPoint();
@@ -127,7 +124,8 @@ void RobotPlayer::increaseBattery()
 {
 	if (hasPoints())
 	{
-		mBatteryBonus += 1.0f;
+		mBatteryBonus += 5.0f;
+		mBattery += 5.0f;
 		spendPoint();
 	}
 }
@@ -136,7 +134,7 @@ void RobotPlayer::increaseSpeed()
 {
 	if (hasPoints())
 	{
-		mSpeedBonus += 1.0f;
+		mSpeedBonus += 3.0f;
 		spendPoint();
 	}
 }
@@ -145,7 +143,7 @@ void RobotPlayer::increaseStrength()
 {
 	if (hasPoints())
 	{
-		mStrengthBonus++;
+		mStrengthBonus += 2;
 		spendPoint();
 	}
 }

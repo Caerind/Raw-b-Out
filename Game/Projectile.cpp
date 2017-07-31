@@ -10,10 +10,10 @@
 Projectile::Projectile(oe::EntityManager& manager, Type projType, const oe::Vector2& position, const oe::Vector2& direction, U32 strength, U32 stricker)
 	: oe::Entity(manager)
 	, mSprite(*this)
+	, mDirection(direction)
 	, mStrength(strength / 5) // Used for more active combat
 	, mStricker(stricker)
 	, mProjType(projType)
-	, mDirection(direction)
 {
 	setPosition(position);
 	setPositionZ(5.0f);
@@ -47,7 +47,7 @@ void Projectile::update(oe::Time dt)
 	{
 		rotate(400.f * dt.asSeconds());
 	}
-	
+
 	bool collision = false;
 	if (coords != mCoords)
 	{
@@ -156,7 +156,7 @@ void Projectile::explode(U32 ignoreId)
 			const F32 d = delta.getLength();
 			if (d <= EXPLOSION_DISTANCE)
 			{
-				if (robot->consumeBattery((F32)mStrength) && mStricker == GameSingleton::player->getId())
+				if (robot->consumeBattery(mStrength * 0.5f) && mStricker == GameSingleton::player->getId())
 				{
 					U32 amountExp = 0;
 					switch (robot->getRobotType())
