@@ -16,14 +16,14 @@ class GameState : public oe::State
 		bool update(oe::Time dt);
 		void render(sf::RenderTarget& target);
 
+		static void load();
+		static void save();
+
 	private:
 		inline oe::Window& getWindow();
 		inline oe::View& getView();
 		void zoomView(const sf::Event& event);
 		void popUpEvent(const sf::Event& event);
-
-		void load();
-		void save();
 
 	private:
 		oe::World mWorld;

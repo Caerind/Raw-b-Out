@@ -39,7 +39,9 @@ RobotPlayer* GameSingleton::player;
 std::string GameSingleton::name;
 oe::Color GameSingleton::color;
 oe::ActionInputKey GameSingleton::up;
+oe::ActionInputKey GameSingleton::up2;
 oe::ActionInputKey GameSingleton::left;
+oe::ActionInputKey GameSingleton::left2;
 oe::ActionInputKey GameSingleton::down;
 oe::ActionInputKey GameSingleton::right;
 oe::ActionInputMouse GameSingleton::shootInput;
@@ -103,16 +105,20 @@ void GameSingleton::loadInputs()
 {
 	up.setKey(sf::Keyboard::Z);
 	up.setType(oe::ActionType::Hold);
+	up2.setKey(sf::Keyboard::W);
+	up2.setType(oe::ActionType::Hold);
 	left.setKey(sf::Keyboard::Q);
 	left.setType(oe::ActionType::Hold);
+	left2.setKey(sf::Keyboard::A);
+	left2.setType(oe::ActionType::Hold);
 	down.setKey(sf::Keyboard::S);
 	down.setType(oe::ActionType::Hold);
 	right.setKey(sf::Keyboard::D);
 	right.setType(oe::ActionType::Hold);
-	shootInput.setButton(sf::Mouse::Left);
-	shootInput.setType(oe::ActionType::Pressed);
 	shootInput.setButton(sf::Mouse::Right);
 	shootInput.setType(oe::ActionType::Pressed);
+	pickupInput.setButton(sf::Mouse::Left);
+	pickupInput.setType(oe::ActionType::Pressed);
 }
 
 void GameSingleton::loadQueries()

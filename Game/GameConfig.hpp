@@ -5,6 +5,9 @@
 #define WINSIZEX 1024
 #define WINSIZEY 768
 #define WINTITLE "LudumDare39"
+#define WINICON "../Assets/icon-144.png"
+#define WINCURSOR "../Assets/cursor.png"
+#define WINSCREENSHOTS "../Screenshots/"
 
 // Textures
 #define TEXTURE_MINIKILLER "../Assets/robot-minikiller.png"
@@ -80,8 +83,8 @@
 #define TILE_WALL7 19
 #define TILE_WALL8 20
 #define TILE_GROUND 21
-#define TILE_FAKEGROUND 22
-#define TILE_GROUND1 23
+#define TILE_KILLER 22
+#define TILE_MEGAKILLER 23
 #define TILE_GROUND2 24
 #define TILE_GROUND3 25
 #define TILE_GROUND4 26

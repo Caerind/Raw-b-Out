@@ -1,17 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="64" tileheight="64" nextobjectid="2">
+<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="64" tileheight="64" nextobjectid="17">
+<properties>
+  <property name="enemy_weapon" type="int" value="11"/>
+ </properties>
  <tileset firstgid="1" source="tileset.tsx"/>
  <layer name="Calque de Tile 1" width="50" height="50">
   <data encoding="base64" compression="zlib">
-   eJztmksOgzAMRKO2Uiux5v5X7apSFEUxdvwZmy68CQTm2WEcBEdr7SgSZ/LoOR7d+BNAm5RDGm/mOHUsisMqOKzIHJr1yOIXmtoiWb3zaMUWvR5mbFk5Rj3ZOD6KetDqIdWEyPHTtTo+7pt2OSy81mOORKPH/pszD3UNSjii9VpxzLwzIwdK3JUD9Vnf8Wqr8OLwyKu0R/VjLwAeig29HtI19OfAYeByrM619mTq+jt+QN2P6zsac6/o08ypVt/gcGR4hq5yROusyjH2ag0OhG8lWetxdw4Plh0/9uwflN7VfkPr3YXDsdrHWdVWm8OqX0dwWOrV4ED2LQtPQOc4mefOwurdf+Sg/s2oVI9Ilj63fc4luhBrUo2jQnwBrZm7vQ==
+   eJztmcEOwyAIhptuyZbU697/VXdZE2OYCgL+2B64WG3/DxQwPbZtOxaxT3DLOfZs/AGgTcohtdfAGBIHgl2FI0q+0NSWr0k/82L19qNVHGfvB4otKkepJxrHW1EPWjykmhA5Tl2152XfNMphUVc81kg0evTfnHWoe1DCMVvvzXFzIHOgnvWRXE1ZIszjDoPmXykbNe8JwNNiQ4+HdA+hclA9fUQODgOXozbXOie33j+SD1rf4+YdjbU9+jR9qlU3OBwRzlAvx2ydq3KUtVqDA+FfSdR4XJ3Dg2UkH3vWj5beWr9B3W2k/f1IjDVrnkc8rOr1DA5LvRocyP0JV1sC0IzAYXX3r3FQ/cYq+2r2GfnXy+W69s53IcXk1CzxLxJHGY8V7AvxJrvY
   </data>
  </layer>
- <objectgroup name="Calque d'objets 1" visible="0">
+ <objectgroup name="Calque d'objets 1">
   <object id="1" name="T" x="148" y="160">
    <properties>
     <property name="map" type="int" value="0"/>
     <property name="x" type="float" value="1760"/>
     <property name="y" type="float" value="1760"/>
+   </properties>
+  </object>
+  <object id="2" name="T" x="160" y="3030">
+   <properties>
+    <property name="map" type="int" value="2"/>
+    <property name="x" type="int" value="2800"/>
+    <property name="y" type="int" value="200"/>
+   </properties>
+  </object>
+  <object id="3" name="T" x="3035" y="3035">
+   <properties>
+    <property name="map" type="int" value="3"/>
+    <property name="x" type="int" value="200"/>
+    <property name="y" type="int" value="200"/>
+   </properties>
+  </object>
+  <object id="4" name="C" x="1952" y="732">
+   <properties>
+    <property name="weapon" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="5" name="C" x="2400" y="1696">
+   <properties>
+    <property name="weapon" type="int" value="11"/>
+   </properties>
+  </object>
+  <object id="11" name="I" x="1060" y="224">
+   <properties>
+    <property name="str">Now the tutorial is finish
+You will have to explore the world to find more weapons</property>
+   </properties>
+  </object>
+  <object id="13" name="I" x="1380" y="228">
+   <properties>
+    <property name="str">A map can be connected to many others maps</property>
+   </properties>
+  </object>
+  <object id="15" name="I" x="1696" y="224">
+   <properties>
+    <property name="str">Teleporters are linked together</property>
    </properties>
   </object>
  </objectgroup>

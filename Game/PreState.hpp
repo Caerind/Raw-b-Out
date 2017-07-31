@@ -21,6 +21,8 @@ class PreState : public oe::State
 
 		void generate();
 
+		sf::Color randomColor();
+
 	private:
 		sf::Sprite mScreen;
 
@@ -36,6 +38,18 @@ class PreState : public oe::State
 		sf::RectangleShape mSeparator;
 
 		bool mLoaded;
+
+
+
+		sf::Sprite mNameLabel;
+		sf::Sprite mNameBack;
+		sf::Text mNameText;
+
+		sf::Sprite mColorLabel;
+		sf::Sprite mColorBack;
+		sf::Sprite mWheel;
+		sf::Sprite mRobot;
+		sf::Sprite mEyes;
 };
 
 #endif // PRESTATE_HPP

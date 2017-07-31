@@ -2,6 +2,7 @@
 
 #include "GameSingleton.hpp"
 #include "GameConfig.hpp"
+#include "GameState.hpp"
 
 
 Teleporter::Teleporter(const oe::Vector2& position, U32 mapId, const oe::Vector2& targetPos)
@@ -47,6 +48,8 @@ bool Teleporter::update()
 	const F32 d = delta.getLength();
 	if (d <= TELEPORTER_DISTANCE)
 	{
+		GameSingleton::playSound(GameSingleton::teleportSound);
+
 		for (oe::Entity* entity : GameSingleton::repQuery.getEntities())
 		{
 			entity->kill();
@@ -56,6 +59,8 @@ bool Teleporter::update()
 		GameSingleton::player->updateView();
 
 		GameSingleton::map->load(mMapId, mTargetPos);
+
+		GameState::save();
 
 		return true;
 	}	

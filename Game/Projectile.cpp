@@ -95,7 +95,7 @@ void Projectile::update(oe::Time dt)
 		if (entity->getAABB().intersects(r))
 		{
 			Robot* robot = entity->getAs<Robot>();
-			if (robot != nullptr && ((robot->getId() != mStricker) || (robot->getId() == mStricker && mElapsed > oe::seconds(0.4f))))
+			if (robot != nullptr && ((robot->getId() != mStricker) || (robot->getId() == mStricker && mElapsed > oe::seconds(0.8f))))
 			{
 				if (robot->consumeBattery((F32)mStrength) && mStricker == GameSingleton::player->getId())
 				{
@@ -103,8 +103,8 @@ void Projectile::update(oe::Time dt)
 					switch (robot->getRobotType())
 					{
 						case Robot::MiniKiller: amountExp = 10; break;
-						case Robot::Killer: amountExp = 100; break;
-						case Robot::MegaKiller: amountExp = 5000; break;
+						case Robot::Killer: amountExp = 200; break;
+						case Robot::MegaKiller: amountExp = 1000; break;
 						default: break;
 					}
 					GameSingleton::player->addExperience(amountExp);

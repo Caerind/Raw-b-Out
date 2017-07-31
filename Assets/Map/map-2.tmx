@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="64" tileheight="64" nextobjectid="12">
+<properties>
+  <property name="enemy_weapon" type="int" value="12"/>
+ </properties>
+ <tileset firstgid="1" source="tileset.tsx"/>
+ <layer name="Calque de Tile 1" width="50" height="50">
+  <data encoding="base64" compression="zlib">
+   eJztmskOwzAIRKOmm5Re+/+/2iuy6mbAM3hRD5zqkHlgbIh6bNt2LGLvyW12jkuFYyf4fpDXWavpmz0ff44x7YzDe6Zln4uIf/ubh4OdeyQ2ZxyIPpTD48f7jIcD9Tcyh137qhjCiuw7r0+Eg12btbpsfRdyXjE5ECYVx4j3yzOgc0SOSLxX4ZjBVBy3RTgYhsxCK8y1aH9l1/fW/IvBw9GLpfbuWs8U9deDgaEvi0epK2vOi/j01AfSh7F6PgU7YxZV5sKbj5aY2tlIkUvWvOpZr6ivrHwwY4RqLL+7Rvcre08w8qHksDqU9dFyhkT1KO6PrJwguu7kWLNYyu8F0TiwOK4C/9/uGjVHS05m4oi8Q8XRWrercER6xtE4vD7UfXLWbKu6B6PrR+XIYsnSpO4BWjnQ/2X06mVsH7MXz6jmYQWHQs+IHCvYB6HlvNM=
+  </data>
+ </layer>
+ <objectgroup name="Calque d'objets 1">
+  <object id="2" name="I" x="1304" y="220">
+   <properties>
+    <property name="str">There are more enemies ?</property>
+   </properties>
+  </object>
+  <object id="3" name="I" x="1952" y="216">
+   <properties>
+    <property name="str">Enemies are getting stronger ?</property>
+   </properties>
+  </object>
+  <object id="4" name="T" x="3030" y="160">
+   <properties>
+    <property name="map" type="int" value="1"/>
+    <property name="x" type="int" value="200"/>
+    <property name="y" type="int" value="2800"/>
+   </properties>
+  </object>
+  <object id="5" name="C" x="2908" y="936">
+   <properties>
+    <property name="weapon" type="int" value="12"/>
+   </properties>
+  </object>
+  <object id="6" name="C" x="2780" y="2984">
+   <properties>
+    <property name="weapon" type="int" value="7"/>
+   </properties>
+  </object>
+  <object id="7" name="C" x="2008" y="2260">
+   <properties>
+    <property name="weapon" type="int" value="3"/>
+   </properties>
+  </object>
+  <object id="8" name="I" x="288" y="2016" height="4">
+   <properties>
+    <property name="str">Some chest might already be opened...
+Sometimes...</property>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

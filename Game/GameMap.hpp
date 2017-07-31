@@ -9,6 +9,9 @@
 #include "Chest.hpp"
 #include "Teleporter.hpp"
 
+#include "RobotMegaKiller.hpp"
+#include "RobotKiller.hpp"
+
 class GameMap : public oe::Entity
 {
 	public:

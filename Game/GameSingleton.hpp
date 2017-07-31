@@ -81,7 +81,9 @@ class GameSingleton
 
 		// Inputs
 		static oe::ActionInputKey up;
+		static oe::ActionInputKey up2;
 		static oe::ActionInputKey left;
+		static oe::ActionInputKey left2;
 		static oe::ActionInputKey down;
 		static oe::ActionInputKey right;
 		static oe::ActionInputMouse shootInput;

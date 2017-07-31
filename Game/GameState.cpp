@@ -394,6 +394,8 @@ void GameState::load()
 {
 	// READ
 
+	std::string color;
+
 	U32 level;
 	U32 exp;
 	U32 points;
@@ -402,7 +404,7 @@ void GameState::load()
 	U32 speedB;
 	U32 strengthB;
 
-	U32 mapId;
+	U32 mapId = 0;
 	std::string spawn;
 	std::string pos;
 
@@ -410,6 +412,10 @@ void GameState::load()
 	std::string equiped = "";
 
 	// We start from "save"
+
+	GameSingleton::loader.getAttribute("name", GameSingleton::name);
+	GameSingleton::loader.getAttribute("color", color);
+	GameSingleton::color = oe::fromString<oe::Color>(color);
 
 	GameSingleton::loader.readNode("stats");
 	GameSingleton::loader.getAttribute("level", level);
@@ -479,13 +485,11 @@ void GameState::load()
 	GameSingleton::player->setPoints(points);
 	if (battery == 0)
 	{
-
 		GameSingleton::player->charge();
 	}
 	else
 	{
 		GameSingleton::player->setBattery((F32)battery);
-
 	}
 	GameSingleton::player->setBatteryBonus((F32)batteryB);
 	GameSingleton::player->setSpeedBonus((F32)speedB);
@@ -494,7 +498,7 @@ void GameState::load()
 	GameSingleton::player->updateView();
 
 	// Load after to ensure the chest will be opened if necesary
-	GameSingleton::map->load(0, oe::Vector2(200.0f, 200.0f));
+	GameSingleton::map->load(mapId, oe::fromString<oe::Vector2>(spawn));
 }
 
 void GameState::save()

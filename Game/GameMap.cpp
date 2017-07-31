@@ -196,10 +196,7 @@ void GameMap::update(oe::Time dt)
 	// Teleporters
 	for (U32 i = 0; i < mTeleporters.size(); i++)
 	{
-		if (mTeleporters[i].update())
-		{
-			getApplication().getAudio().playSound(GameSingleton::teleportSound);
-		}
+		mTeleporters[i].update();
 	}
 }
 
@@ -273,16 +270,15 @@ void GameMap::readLayer(oe::ParserXml& parser)
 			byteVector.push_back(*i);
 		}
 		mLayer.ensureUpdateGeometry();
+
+		std::string seed0 = oe::Random::getSeed();
+		oe::Random::setSeed(oe::toString((mMapId + 123456) * 1499));
+
 		for (U32 i = 0; i < byteVector.size() - 3; i += 4)
 		{
 			oe::TileId gid = byteVector[i] | byteVector[i + 1] << 8 | byteVector[i + 2] << 16 | byteVector[i + 3] << 24;
 
-			if (gid == TILE_CHEST)
-			{
-				gid = TILE_CHEST_OPEN;
-			}
-
-			mLayer.setTileId(coords, gid);
+			static std::vector<oe::TileId> walls = { TILE_WALL,TILE_WALL ,TILE_WALL ,TILE_WALL,TILE_WALL ,TILE_WALL ,TILE_WALL1, TILE_WALL2, TILE_WALL3, TILE_WALL4 };
 
 			switch (gid)
 			{
@@ -295,9 +291,15 @@ void GameMap::readLayer(oe::ParserXml& parser)
 				case TILE_WALL6:
 				case TILE_WALL7:
 				case TILE_WALL8:
-					mCollisions[coords.x + coords.y * size.x] = true; break;
+					gid = walls[oe::Random::get<U32>(0, walls.size() - 1)];
+					mCollisions[coords.x + coords.y * size.x] = true; 
+					break;
+				case TILE_BREAKABLEWALL:
+					mCollisions[coords.x + coords.y * size.x] = true;
+					break;
 				case TILE_CHEST:
 				case TILE_CHEST_OPEN:
+					gid = TILE_CHEST_OPEN;
 					mCollisions[coords.x + coords.y * size.x] = true;
 					mChests.push_back(Chest(coords, 0));
 					break;
@@ -305,8 +307,12 @@ void GameMap::readLayer(oe::ParserXml& parser)
 				case TILE_ENEMY1: mSpawners.push_back(Spawner(getManager(), oe::Vector2(coords.x * 64 + 32.f, coords.y * 64 + 32.f), 1)); break;
 				case TILE_ENEMY2: mSpawners.push_back(Spawner(getManager(), oe::Vector2(coords.x * 64 + 32.f, coords.y * 64 + 32.f), 2)); break;
 				case TILE_ENEMY3: mSpawners.push_back(Spawner(getManager(), oe::Vector2(coords.x * 64 + 32.f, coords.y * 64 + 32.f), 3)); break;
+				case TILE_KILLER: getManager().createEntity<RobotKiller>(oe::Vector2(coords.x * 64 + 32.f, coords.y * 64 + 32.f)); break;
+				case TILE_MEGAKILLER: getManager().createEntity<RobotMegaKiller>(oe::Vector2(coords.x * 64 + 32.f, coords.y * 64 + 32.f)); break;
 				default: break;
 			}
+
+			mLayer.setTileId(coords, gid);
 
 			coords.x = (coords.x + 1) % size.x;
 			if (coords.x == 0)
@@ -314,6 +320,9 @@ void GameMap::readLayer(oe::ParserXml& parser)
 				coords.y++;
 			}
 		}
+
+		oe::Random::setSeed(seed0);
+
 		parser.closeNode();
 	}
 }
@@ -396,7 +405,7 @@ void GameMap::readChest(oe::ParserXml& parser)
 void GameMap::readTeleporter(oe::ParserXml& parser)
 {
 	oe::Vector2 pos, target;
-	U32 mapId;
+	U32 mapId = 0;
 	std::string pname;
 
 	parser.getAttribute("x", pos.x);

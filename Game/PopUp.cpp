@@ -68,15 +68,15 @@ RobotPopUp::RobotPopUp(sf::Texture& screen, sf::Texture& gui, sf::Font& font)
 	mBonusValue.setTexture(gui);
 	mPointsBack.setTexture(gui);
 
-	mName.setTextureRect(sf::IntRect(768, 288, 288, 96));
+	mName.setTextureRect(sf::IntRect(769, 288, 287, 96));
 	mBattery.setTextureRect(sf::IntRect(768, 0, 288, 96));
-	mBatteryBack.setTextureRect(sf::IntRect(768, 288, 288, 96));
+	mBatteryBack.setTextureRect(sf::IntRect(769, 288, 287, 96));
 	mBatteryPlus.setTextureRect(sf::IntRect((GameSingleton::player->hasPoints()) ? 672 : 576, 192, 96, 96));
 	mSpeed.setTextureRect(sf::IntRect(768, 96, 288, 96));
-	mSpeedBack.setTextureRect(sf::IntRect(768, 288, 288, 96));
+	mSpeedBack.setTextureRect(sf::IntRect(769, 288, 287, 96));
 	mSpeedPlus.setTextureRect(sf::IntRect((GameSingleton::player->hasPoints()) ? 672 : 576, 192, 96, 96));
 	mStrength.setTextureRect(sf::IntRect(768, 192, 288, 96));
-	mStrengthBack.setTextureRect(sf::IntRect(768, 288, 288, 96));
+	mStrengthBack.setTextureRect(sf::IntRect(769, 288, 287, 96));
 	mStrengthPlus.setTextureRect(sf::IntRect((GameSingleton::player->hasPoints()) ? 672 : 576, 192, 96, 96));
 	mBasicValue.setTextureRect(sf::IntRect(0, 288, 96, 96));
 	mBonusValue.setTextureRect(sf::IntRect(96, 288, 96, 96));

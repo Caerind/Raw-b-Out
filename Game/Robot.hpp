@@ -3,6 +3,8 @@
 
 #include "../Engine/Core/Entity.hpp"
 
+#include "../Engine/Math/Random.hpp"
+
 #include "Weapon.hpp"
 
 class Robot : public oe::Entity

@@ -20,6 +20,10 @@ RobotPlayer::RobotPlayer(oe::EntityManager& manager)
 	mAction.setInput(shootAction, &GameSingleton::shootInput);
 	mAction.addOutput(shootAction, [this]() { shoot(); });
 
+	// TODO : Temp
+	mSpeed = 1000.f;
+	mBatteryBonus = 10000.f;
+
 	mWheel.setTexture(GameSingleton::killerTexture);
 	mWheel.setTextureRect(sf::IntRect(64, 0, 21, 21));
 	mWheel.setPosition(-11.f, -10.f);
@@ -76,17 +80,18 @@ U32 RobotPlayer::getExperience() const
 
 U32 RobotPlayer::getExperienceMax() const
 {
-	return 30 + mLevel * (20 + mLevel);
+	return 10 + mLevel * (15 + mLevel);
 }
 
 void RobotPlayer::addExperience(U32 experience)
 {
 	mExperience += experience;
 	U32 max = getExperienceMax();
-	if (mExperience > max)
+	while (mExperience > max)
 	{
 		gainLevel();
 		mExperience -= max;
+		max = getExperienceMax();
 	}
 }
 
@@ -296,9 +301,9 @@ bool RobotPlayer::determineMovement(oe::Vector2& mvt)
 {
 	bool moved = false;
 
-	bool left = sf::Keyboard::isKeyPressed(GameSingleton::left.getKey());
+	bool left = (sf::Keyboard::isKeyPressed(GameSingleton::left.getKey()) || sf::Keyboard::isKeyPressed(GameSingleton::left2.getKey()));
 	bool right = sf::Keyboard::isKeyPressed(GameSingleton::right.getKey());
-	bool up = sf::Keyboard::isKeyPressed(GameSingleton::up.getKey());
+	bool up = (sf::Keyboard::isKeyPressed(GameSingleton::up.getKey()) || sf::Keyboard::isKeyPressed(GameSingleton::up2.getKey()));
 	bool down = sf::Keyboard::isKeyPressed(GameSingleton::down.getKey());
 
 	if (left && !right)
