@@ -168,9 +168,11 @@ void Application::run()
 			mFps = mFpsTemp;
 			mFpsTemp = 0;
 
+			/*
 			#ifdef OE_DEBUG
 			mWindow.setTitle("FPS : " + toString(mFps));
 			#endif
+			*/
 		}
 
 		// Stop ?

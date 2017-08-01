@@ -4,7 +4,7 @@
 // Window
 #define WINSIZEX 1024
 #define WINSIZEY 768
-#define WINTITLE "LudumDare39"
+#define WINTITLE "Raw'b Out"
 #define WINCURSOR "../Assets/Textures/cursor.png"
 #define WINSCREENSHOTS "../Screenshots/"
 

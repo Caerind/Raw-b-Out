@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<save version="1.0" name="XV9" color="32bda4ff" date="01-08-2017 02-35-50">
-	<stats level="9" exp="196" points="15" battery="40000" batteryB="0" speedB="0" strengthB="18" />
-	<map id="1" previous="0" spawn="224.242,927.273" position="224.242,927.273" />
+<save version="1.0" name="XV9" color="32bda4ff" date="01-08-2017 03-02-50">
+	<stats level="9" exp="216" points="15" battery="743.035645" batteryB="0" speedB="0" strengthB="18" />
+	<map id="1" previous="0" spawn="224.242,927.273" position="963.606,974.092" />
 	<weapons>
 		<weapon id="12" />
 		<weapon id="26" />

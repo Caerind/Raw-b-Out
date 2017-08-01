@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="64" tileheight="64" nextobjectid="55">
  <properties>
-  <property name="boss_battery" type="int" value="2000"/>
-  <property name="boss_weapon" type="int" value="13"/>
-  <property name="enemy_battery" type="int" value="100"/>
-  <property name="enemy_weapon" type="int" value="50"/>
+  <property name="boss_battery" type="int" value="7000"/>
+  <property name="boss_weapon" type="int" value="12"/>
  </properties>
  <tileset firstgid="1" source="tileset.tsx"/>
  <layer name="Calque de Tile 1" width="30" height="30">
   <data encoding="base64" compression="zlib">
-   eJzV1LEKgDAMBNCig2Jdxf//UxEUSui1SS4qDhkUzPNMbE4p5R/UWqloYxNVWrV7Ee8jzdJB91kbmZryuozptctn5S4xttat7TCT25tV7nBk5lbWnrsTM2ZcZrc0rtbW/stotuhc9JgWt9XDaiJ3dNjac1qT1+paSnM2fu1GZve6rbKavfmy7nIVcifSzRXrLtQ3Im8GVqt3xHxRn17fJ9zJ6Hq/M5uXdUfRD53BUXsl+8yd3uf1QJps3gjXMt+36wAqajHJ
+   eJzV1MEKwkAMBNDFHipur+r//6kUFJaQ2Z1kguIhh1aa13HT9NZa/4M6nKo27qZGy7tX8T7WHB10X7WRyVTWVcysPT5rZ0mxWdebYSV3Nqud4crMs6wr9ymcseIqs8W4rM1+y+hs0V7MmBF31iNqIndL2OyeZvJG3Ugxu/HXbmX2rDurqLk6X9W9vQu5u+h2x/oU6luRtwNr1tv7/Xz2ESxmh64yV7h70M3+z2pe1d1MP7SDq+bK9rkuep/XF9FU81a4kfP9dr0AkE8yzw==
   </data>
  </layer>
  <objectgroup name="Calque d'objets 1">
@@ -25,7 +23,7 @@
   </object>
   <object id="53" name="I" x="157.576" y="1309.09">
    <properties>
-    <property name="str">Biggest fight incoming...</property>
+    <property name="str" value="Biggest fight incoming..."/>
    </properties>
   </object>
   <object id="54" name="I" x="1509.09" y="1506.06">
