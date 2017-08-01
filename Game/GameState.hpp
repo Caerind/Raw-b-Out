@@ -23,14 +23,12 @@ class GameState : public oe::State
 	private:
 		inline oe::Window& getWindow();
 		inline oe::View& getView();
-		void zoomView(const sf::Event& event);
 		void popUpEvent(const sf::Event& event);
 
 	private:
 		oe::World mWorld;
 		oe::Time mDuration;
 		oe::ImGuiProfiler mProfiler;
-		oe::ImGuiDataViewer mDataViewer;
 
 		WritingText mInfoText;
 		U32 mCurrentInfo;

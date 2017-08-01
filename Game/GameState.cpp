@@ -115,33 +115,22 @@ bool GameState::handleEvent(const sf::Event& event)
 	}
 
 	// Screenshot
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F7)
+	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F1)
 	{
 		getWindow().screenshot();
 	}
 
-	// Reload stats
-	if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F8)
-	{
-		GameSingleton::loadStats();
-	}
-
-	// Show/Hide Profiler
-	#ifdef OE_IMGUI
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F6)
+	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F2)
 	{
 		if (mProfiler.isVisible())
 		{
 			mProfiler.hide();
-			mDataViewer.hide();
 		}
 		else
 		{
 			mProfiler.show();
-			mDataViewer.show();
 		}
 	}
-	#endif
 
 	return false;
 }
@@ -185,19 +174,7 @@ bool GameState::update(oe::Time dt)
 	mBarPlayerCooldown.setValueMax(GameSingleton::weaponData[GameSingleton::player->getWeapon()].cool);
 	mBarPlayerCooldown.setValue(GameSingleton::weaponData[GameSingleton::player->getWeapon()].cool - GameSingleton::player->getWeaponCooldown().asSeconds());
 
-	#ifdef OE_IMGUI
-	oe::Vector2 p(getWindow().getCursorPositionView(getView()));
-	oe::Vector2i c(oe::MapUtility::worldToCoords(p, oe::MapUtility::Orthogonal, oe::Vector2i(MAPTILESIZEX, MAPTILESIZEY)));
-
-	getApplication().getData().setData("MousePos", oe::toString(p));
-	getApplication().getData().setData("MouseCoords", oe::toString(c));
-	getApplication().getData().setData("MouseTile", oe::toString(GameSingleton::map->getTileId(c)));
-
-	getApplication().getData().setData("WeaponId", oe::toString(GameSingleton::player->getWeapon()));
-
 	mProfiler.draw();
-	mDataViewer.draw();
-	#endif
 
 	return false;
 }
@@ -237,29 +214,6 @@ oe::Window& GameState::getWindow()
 oe::View& GameState::getView()
 {
 	return mWorld.getRenderSystem().getView();
-}
-
-void GameState::zoomView(const sf::Event& event)
-{
-	if (event.type == sf::Event::MouseWheelScrolled && event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
-	{
-		oe::Vector2 wSize = getWindow().getSize();
-		oe::View& view = getView();
-		if (event.mouseWheelScroll.delta < 1)
-		{
-			if (view.getZoom() < 3.0f)
-			{
-				view.zoom(2.0f);
-			}
-		}
-		else
-		{
-			if (view.getZoom() > 1.5f)
-			{
-				view.zoom(0.5f);
-			}
-		}
-	}
 }
 
 void GameState::popUpEvent(const sf::Event& event)
@@ -649,7 +603,7 @@ void GameState::save()
 	}
 	node = node.parent();
 
-	xml.saveToFile("../Assets/save.xml");
+	xml.saveToFile("Assets/save.xml");
 
 
 	// TODO : Post-LD Debug
@@ -704,6 +658,6 @@ void GameState::save()
 		}
 		xml.closeNode();
 	}
-	xml.saveToFile("../Assets/save.xml");
+	xml.saveToFile("Assets/save.xml");
 	*/
 }

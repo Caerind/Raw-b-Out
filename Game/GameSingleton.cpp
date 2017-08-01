@@ -192,7 +192,7 @@ void GameSingleton::loadQueries()
 void GameSingleton::loadWeapons()
 {
 	oe::ParserXml xml;
-	if (xml.loadFromFile("../Assets/data.xml"))
+	if (xml.loadFromFile("Assets/data.xml"))
 	{
 		if (xml.readNode("weapons"))
 		{
@@ -285,7 +285,7 @@ void GameSingleton::loadStats()
 	ProjectileSpeed = 500.f;
 
 	oe::ParserXml xml;
-	if (xml.loadFromFile("../Assets/data.xml"))
+	if (xml.loadFromFile("Assets/data.xml"))
 	{
 		if (xml.readNode("stats"))
 		{

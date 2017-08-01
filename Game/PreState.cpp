@@ -75,7 +75,7 @@ PreState::PreState(oe::StateManager& manager)
 	mRobot.setColor(randomColor());
 
 	mLoaded = false;
-	if (GameSingleton::loader.loadFromFile("../Assets/save.xml"))
+	if (GameSingleton::loader.loadFromFile("Assets/save.xml"))
 	{
 		if (GameSingleton::loader.readNode("save"))
 		{
@@ -120,7 +120,7 @@ bool PreState::handleEvent(const sf::Event& event)
 		if (mNew.getGlobalBounds().contains(mpos))
 		{
 			GameSingleton::playSound(GameSingleton::clickSound);
-			
+
 			if (mNameText.getString() == "Write your name")
 			{
 				GameSingleton::name = "XV9";
@@ -212,7 +212,7 @@ void PreState::render(sf::RenderTarget& target)
 	target.draw(mNameLabel);
 	target.draw(mNameBack);
 	target.draw(mNameText);
-	
+
 	target.draw(mColorLabel);
 	target.draw(mColorBack);
 	target.draw(mWheel);
@@ -255,7 +255,7 @@ void PreState::generate()
 	node = node.append_child("visited");
 	node = node.parent();
 
-	GameSingleton::loader.saveToFile("../Assets/save.xml");
+	GameSingleton::loader.saveToFile("Assets/save.xml");
 }
 
 sf::Color PreState::randomColor()

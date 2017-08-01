@@ -1,76 +1,18 @@
 <?xml version="1.0"?>
-<save version="1.0" name="XV9" color="32bda4ff" date="01-08-2017 03-02-50">
-	<stats level="9" exp="216" points="15" battery="743.035645" batteryB="0" speedB="0" strengthB="18" />
-	<map id="1" previous="0" spawn="224.242,927.273" position="963.606,974.092" />
+<save version="1.0" name="sdqsddsqd" color="8ed987ff" date="01-08-2017 03-25-16">
+	<stats level="2" exp="44" points="3" battery="515.917664" batteryB="0" speedB="0" strengthB="0" />
+	<map id="3" previous="4" spawn="1112.12,1760.61" position="1396.96,902.387" />
 	<weapons>
-		<weapon id="12" />
-		<weapon id="26" />
-		<weapon id="21" />
-		<weapon id="16" />
-		<weapon id="41" />
-		<weapon id="36" />
-		<weapon id="31" />
-		<weapon id="48" />
-		<weapon id="49" equiped="true" />
-		<weapon id="46" />
-		<weapon id="47" />
-		<weapon id="15" />
-		<weapon id="20" />
-		<weapon id="40" />
-		<weapon id="10" />
-		<weapon id="30" />
-		<weapon id="35" />
-		<weapon id="5" />
-		<weapon id="25" />
-		<weapon id="45" />
-		<weapon id="34" />
-		<weapon id="39" />
-		<weapon id="44" />
-		<weapon id="19" />
-		<weapon id="29" />
-		<weapon id="24" />
-		<weapon id="33" />
-		<weapon id="38" />
-		<weapon id="43" />
-		<weapon id="14" />
-		<weapon id="18" />
-		<weapon id="37" />
-		<weapon id="32" />
-		<weapon id="9" />
-		<weapon id="28" />
-		<weapon id="42" />
-		<weapon id="23" />
-		<weapon id="4" />
-		<weapon id="3" />
-		<weapon id="8" />
-		<weapon id="13" />
-		<weapon id="22" />
-		<weapon id="2" />
+		<weapon id="11" />
+		<weapon id="2" equiped="true" />
+		<weapon id="6" />
 		<weapon id="7" />
-		<weapon id="27" />
 	</weapons>
 	<visited>
 		<map id="0" />
 		<map id="1" />
 		<map id="2" />
-		<map id="4" />
 		<map id="3" />
-		<map id="5" />
-		<map id="6" />
-		<map id="7" />
-		<map id="8" />
-		<map id="9" />
-		<map id="10" />
-		<map id="11" />
-		<map id="12" />
-		<map id="13" />
-		<map id="14" />
-		<map id="15" />
-		<map id="16" />
-		<map id="17" />
-		<map id="18" />
-		<map id="19" />
-		<map id="20" />
-		<map id="21" />
+		<map id="4" />
 	</visited>
 </save>
