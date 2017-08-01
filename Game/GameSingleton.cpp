@@ -84,6 +84,7 @@ U32 GameSingleton::ExperienceMegaKiller;
 F32 GameSingleton::PlasmaReduction;
 U32 GameSingleton::ProjectileReduction;
 F32 GameSingleton::ProjectileSpeed;
+std::vector<U32> GameSingleton::visited;
 
 void GameSingleton::loadTileset()
 {
@@ -243,6 +244,7 @@ void GameSingleton::clear()
 	map = nullptr;
 	player = nullptr;
 	enemyFocus = 0;
+	visited.clear();
 }
 
 void GameSingleton::loadStats()
@@ -319,6 +321,18 @@ void GameSingleton::loadStats()
 		}
 		xml.closeNode();
 	}
+}
+
+void GameSingleton::visit(U32 mapId)
+{
+	for (U32 i = 0; i < visited.size(); i++)
+	{
+		if (visited[i] == mapId)
+		{
+			return;
+		}
+	}
+	visited.push_back(mapId);
 }
 
 void GameSingleton::playSound(oe::ResourceId sound)

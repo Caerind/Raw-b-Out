@@ -1,50 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="64" tileheight="64" nextobjectid="12">
-<properties>
-  <property name="enemy_weapon" type="int" value="12"/>
+<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="64" tileheight="64" nextobjectid="55">
+ <properties>
+  <property name="boss_battery" type="int" value="2000"/>
+  <property name="boss_weapon" type="int" value="13"/>
+  <property name="enemy_battery" type="int" value="200"/>
+  <property name="enemy_weapon" type="int" value="11"/>
  </properties>
  <tileset firstgid="1" source="tileset.tsx"/>
- <layer name="Calque de Tile 1" width="50" height="50">
+ <layer name="Calque de Tile 1" width="30" height="30">
   <data encoding="base64" compression="zlib">
-   eJzt2rEOwjAMBNCIDiCVFf7/U1kYoiiEuD7b5yiDxVS4V6duI3qWUs5F6pW8asft+3kQ5NI4MtdqDkbP/UL+rNf/KrMtem5bf4+XC3VOvO+zz6YQ/fU2XHFoe8pkaXO3zxlRDqmFtR89x8iSwXH8cbDOK8naYp67krXFdi+cdUhzs1oyO2rLCg6EIdqBMkQ5kPm3gccQ4bAweDu2wd6B2kNEGZD7hyhHz6B97vZ2/DJkcowM2r0DiwPVizeJw6sPlg5vg9QRkU/rmDl25n+VDA6m2g6eynpNz+SvHQ+SLJrq/SZqPllnt+6HZ/5RPzTvmUQYkP2Iyj/qR0bHCvUBjECbLA==
+   eJzdlsEKgDAMQ4dTED178/+/04u7jHVN19SBhyDo7FttIjtTSufPdDUkPWdzihaB27rv4RTlgH5731HaR/1+NnC1mhpvtF+tJsK0cJE+UGa9fhYXmQWTK7G1nET4BZWXi7C3IK6171GPevbA8JSmo9LIvqxZYniN7WUPE+W2vOyd6dd9IkyrH0a5DP+j3Ezmzsg7Ojcm1+q/yPyXGe6dmig/Im+WGiuw5n6vljM6438yK6ctPZKONRk=
   </data>
  </layer>
  <objectgroup name="Calque d'objets 1">
-  <object id="2" name="T" x="152" y="168">
+  <object id="51" name="T" x="154.545" y="215.152" width="6.06061" height="3.0303">
+   <properties>
+    <property name="map" type="int" value="1"/>
+   </properties>
+  </object>
+  <object id="52" name="T" x="1696.97" y="160.606">
    <properties>
     <property name="map" type="int" value="3"/>
-    <property name="x" type="int" value="1500"/>
-    <property name="y" type="int" value="2800"/>
    </properties>
   </object>
-  <object id="3" name="C" x="164" y="2788">
+  <object id="53" name="T" x="1757.58" y="1757.58">
    <properties>
-    <property name="weapon" type="int" value="16"/>
+    <property name="map" type="int" value="5"/>
    </properties>
   </object>
-  <object id="4" name="C" x="160" y="2920">
+  <object id="54" name="C" x="1754.55" y="1633.33">
    <properties>
-    <property name="weapon" type="int" value="21"/>
-   </properties>
-  </object>
-  <object id="6" name="C" x="160" y="3052">
-   <properties>
-    <property name="weapon" type="int" value="26"/>
-   </properties>
-  </object>
-  <object id="8" name="I" x="2476" y="344">
-   <properties>
-    <property name="str">Fight incoming...</property>
-   </properties>
-  </object>
-  <object id="9" name="I" x="672" y="2464">
-   <properties>
-    <property name="str">You can break this type of wall with plasma</property>
-   </properties>
-  </object>
-  <object id="11" name="I" x="420" y="2852">
-   <properties>
-    <property name="str">Discover the power of plasma !</property>
+    <property name="weapon" type="int" value="12"/>
    </properties>
   </object>
  </objectgroup>

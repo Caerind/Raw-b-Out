@@ -1,55 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="64" tileheight="64" nextobjectid="11">
-<properties>
-  <property name="enemy_weapon" type="int" value="12"/>
+<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="64" tileheight="64" nextobjectid="55">
+ <properties>
+  <property name="boss_battery" type="int" value="2000"/>
+  <property name="boss_weapon" type="int" value="13"/>
+  <property name="enemy_battery" type="int" value="200"/>
+  <property name="enemy_weapon" type="int" value="11"/>
  </properties>
  <tileset firstgid="1" source="tileset.tsx"/>
- <layer name="Calque de Tile 1" width="50" height="50">
+ <layer name="Calque de Tile 1" width="30" height="30">
   <data encoding="base64" compression="zlib">
-   eJzdmksOgzAMRBG0aiXY9v5X7YZIKArEnxnHsLC6iWM/uySTwDpN0/oQ+ynN4sO0I8e8/y434vg2OJ7Sjwi/bBxW33dCjmLbbhn64Vm7CksGjlZ9NXVGcTCfV8kYJAeTvzcOtX5FrDmIvrH8kRyeekp8P0COeuwLXNOoXmrWBW1e0f9Jbf9Q/9sr/Wrl0PYwYz+0MaV98dQ0Urcj9qmzsRl1e0vz1Vqpjo/YezKcQxB5ZGBB5jCSR6L/EHFaaz+S2cIhuU/xxK61zpXNnbkYNWPGiDpXsFiWg79kn2VzeOOw9IJ1jqhzFFvLjNAXTN3LOBch87PUScKVmUOTayQHioXFEdmTs/u+aA4vi4ejd9fPWrc0vhHPR+uOyxOrlXP0c+7laPEgzqXMvT0iD0Qvy/1BBg5v/AwciBxQ7xZHc/R6K32/O0Ina1nYHEgGay6ac20Uh2feI0f55gT1nUyZZxaMtdY043cyKL1yd/sDXWa8+w==
+   eJztld0KgCAMhaW6EOzW93/VrgZDtLnfJLw4RHDY1+ZxlZRS2dpiqiJFc3Mwu3YUyfLmUkwPNtS8Ariz9eH9VHK5s5ztl/JwZij1UN+uqYW9R3MW2M/Jh8YrzaQ2u9J7ELGfVuVa8+/BU5IrLrcn770MnPzCbXf1V/1asKnzHeXr73fLu1+L/Spljv4pXvNdIT9cPWSVLnQ=
   </data>
  </layer>
  <objectgroup name="Calque d'objets 1">
-  <object id="2" name="T" x="160" y="160">
+  <object id="51" name="T" x="160.606" y="921.212">
    <properties>
     <property name="map" type="int" value="1"/>
-    <property name="x" type="int" value="2800"/>
-    <property name="y" type="int" value="2800"/>
    </properties>
   </object>
-  <object id="3" name="C" x="3040" y="164">
-   <properties>
-    <property name="weapon" type="int" value="12"/>
-   </properties>
-  </object>
-  <object id="4" name="C" x="3028" y="3048">
-   <properties>
-    <property name="weapon" type="int" value="8"/>
-   </properties>
-  </object>
-  <object id="5" name="C" x="156" y="3040">
-   <properties>
-    <property name="weapon" type="int" value="13"/>
-   </properties>
-  </object>
-  <object id="6" name="T" x="1556" y="3040">
+  <object id="52" name="T" x="1112.12" y="1760.61">
    <properties>
     <property name="map" type="int" value="4"/>
-    <property name="x" type="int" value="200"/>
-    <property name="y" type="int" value="200"/>
    </properties>
   </object>
-  <object id="7" name="T" x="3040" y="1576">
+  <object id="53" name="C" x="1506.06" y="357.576">
    <properties>
-    <property name="map" type="int" value="5"/>
-    <property name="x" type="int" value="200"/>
-    <property name="y" type="int" value="200"/>
+    <property name="weapon" type="int" value="7"/>
    </properties>
   </object>
-  <object id="9" name="I" x="2720" y="792">
+  <object id="54" name="C" x="921.212" y="1378.79">
    <properties>
-    <property name="str">Some chest might already be opened...
-Sometimes...</property>
+    <property name="weapon" type="int" value="27"/>
    </properties>
   </object>
  </objectgroup>

@@ -43,7 +43,6 @@ RobotMegaKiller::RobotMegaKiller(oe::EntityManager& manager, const oe::Vector2& 
 
 void RobotMegaKiller::update(oe::Time dt)
 {
-	oe::DebugDraw::drawPoint(getPosition(), oe::Color::Red, 5.f);
 	mWeaponCooldown += dt * 0.9f;
 
 	const oe::Vector2 player = GameSingleton::player->getPosition();
@@ -66,16 +65,7 @@ void RobotMegaKiller::update(oe::Time dt)
 		{
 			delta.normalize();
 			mWeaponCooldown = oe::Time::Zero;
-			mCounter++;
-			if (mCounter > 3)
-			{
-				getManager().createEntity<Projectile>(Projectile::Plasma, getPosition() + delta * 60.f, delta, mWeapon.getStrength() + mStrengthBonus, getId());
-				mCounter = 0;
-			}
-			else
-			{
-				getManager().createEntity<Projectile>(mWeapon.getProjType(), getPosition() + delta * 60.f, delta, mWeapon.getStrength() + mStrengthBonus, getId());
-			}
+			getManager().createEntity<Projectile>(Projectile::Plasma, getPosition() + delta * 60.f, delta, mWeapon.getStrength() + mStrengthBonus, getId());
 		}
 	}
 

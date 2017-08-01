@@ -72,7 +72,7 @@ bool MenuState::handleEvent(const sf::Event& event)
 			}
 			else
 			{
-				getApplication().getAudio().setSoundVolume(100.0f);
+				getApplication().getAudio().setSoundVolume(50.0f);
 			}
 			mSoundButton.setTextureRect(sf::IntRect((getApplication().getAudio().getSoundVolume() > 0.0f) ? 288 : 384, 0, 96, 192));
 			GameSingleton::playSound(GameSingleton::buttonSound);
@@ -85,7 +85,7 @@ bool MenuState::handleEvent(const sf::Event& event)
 			}
 			else
 			{
-				getApplication().getAudio().setMusicVolume(100.0f);
+				getApplication().getAudio().setMusicVolume(50.0f);
 			}
 			mMusicButton.setTextureRect(sf::IntRect((getApplication().getAudio().getMusicVolume() > 0.0f) ? 288 : 384, 0, 96, 192));
 			GameSingleton::playSound(GameSingleton::buttonSound);

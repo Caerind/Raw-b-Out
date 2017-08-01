@@ -252,6 +252,9 @@ void PreState::generate()
 	node = node.append_child("weapons");
 	node = node.parent();
 
+	node = node.append_child("visited");
+	node = node.parent();
+
 	GameSingleton::loader.saveToFile("../Assets/save.xml");
 }
 

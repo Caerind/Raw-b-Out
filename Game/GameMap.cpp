@@ -40,6 +40,8 @@ void GameMap::load(U32 mapId, const oe::Vector2& spawnPoint, U32 previousMapId)
 	mCurrentInfo = nullptr;
 	mRemovableWalls.clear();
 
+	GameSingleton::visit(mapId);
+
 	mPreviousMapId = previousMapId;
 	mMapId = mapId;
 	mSpawnPoint = spawnPoint;

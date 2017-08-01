@@ -77,13 +77,11 @@ class InventoryPopUp : public PopUp
 
 	protected:
 		sf::Text mName;
-		sf::Sprite mSelected;
 		sf::Sprite mEquiped;
 
 		std::vector<U32> mPlayerWeapons;
 		std::vector<sf::Sprite> mWeaponsSprites;
 
-		U32 mSelectedId;
 		U32 mEquipedId;
 };
 

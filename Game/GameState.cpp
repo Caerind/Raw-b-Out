@@ -105,8 +105,6 @@ bool GameState::handleEvent(const sf::Event& event)
 	{
 		mWorld.handleEvent(event);
 
-		//zoomView(event);
-
 		// Open Chest
 		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == GameSingleton::pickupInput.getButton())
 		{
@@ -487,6 +485,7 @@ void GameState::load()
 
 	U32 wId = 0;
 	std::string equiped = "";
+	U32 mId = 0;
 
 	// We start from "save"
 
@@ -553,7 +552,26 @@ void GameState::load()
 				equiped.clear();
 			}
 		}
+		GameSingleton::loader.closeNode();
 	}
+	GameSingleton::loader.closeNode();
+
+
+	GameSingleton::visited.clear();
+	GameSingleton::loader.readNode("visited");
+	if (GameSingleton::loader.readNode("map"))
+	{
+		GameSingleton::loader.getAttribute("id", mId);
+		GameSingleton::visited.push_back(mId);
+
+		while (GameSingleton::loader.nextSibling("map"))
+		{
+			GameSingleton::loader.getAttribute("id", mId);
+			GameSingleton::visited.push_back(mId);
+		}
+		GameSingleton::loader.closeNode();
+	}
+	GameSingleton::loader.closeNode();
 
 	// LOAD
 
@@ -621,6 +639,15 @@ void GameState::save()
 		}
 		node = node.parent();
 	}
+	node = node.parent();
+
+	node = node.append_child("visited");
+	size = GameSingleton::visited.size();
+	for (U32 i = 0; i < size; i++)
+	{
+		node.append_child("map").append_attribute("id") = GameSingleton::visited[i];
+	}
+	node = node.parent();
 
 	xml.saveToFile("../Assets/save.xml");
 

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <stats>
-	<BatteryPlayer value="400" />
-	<SpeedPlayer value="1000" />
+	<BatteryPlayer value="40000" def="400" />
+	<SpeedPlayer value="1000" def="300" />
 	<ExperienceB value="15" />
 	<ExperienceC value="10" />
 	<PointsGain value="3" />
@@ -69,11 +69,11 @@
 	<weapon id="38" name="Laser Sniper III" cool="0.7" stre="350" proj="3" />
 	<weapon id="39" name="Laser Sniper IV" cool="0.7" stre="375" proj="3" />
 	<weapon id="40" name="Laser Sniper V" cool="0.7" stre="400" proj="3" />
-	<weapon id="41" name="Laser Gun I" cool="0.5" stre="200" proj="1" />
-	<weapon id="42" name="Laser Gun II" cool="0.5" stre="225" proj="1" />
-	<weapon id="43" name="Laser Gun III" cool="0.5" stre="250" proj="1" />
-	<weapon id="44" name="Laser Gun IV" cool="0.5" stre="275" proj="1" />
-	<weapon id="45" name="Laser Gun V" cool="0.5" stre="300" proj="1" />
+	<weapon id="41" name="Laser Gun I" cool="0.5" stre="200" proj="3" />
+	<weapon id="42" name="Laser Gun II" cool="0.5" stre="225" proj="3" />
+	<weapon id="43" name="Laser Gun III" cool="0.5" stre="250" proj="3" />
+	<weapon id="44" name="Laser Gun IV" cool="0.5" stre="275" proj="3" />
+	<weapon id="45" name="Laser Gun V" cool="0.5" stre="300" proj="3" />
 	<weapon id="46" name="Gun X" cool="0.3" stre="350" proj="1" />
 	<weapon id="47" name="Plasma X" cool="0.5" stre="350" proj="2" />
 	<weapon id="48" name="Laser X" cool="0.4" stre="350" proj="3" />

@@ -193,21 +193,14 @@ InventoryPopUp::InventoryPopUp(sf::Texture& screen, sf::Texture& gui, sf::Font& 
 	mName.setString("");
 	mName.setOrigin(mName.getGlobalBounds().width * 0.5f, mName.getGlobalBounds().height * 0.5f);
 
-	mSelectedId = 0;
-	mSelected.setTexture(gui);
-	mSelected.setTextureRect(sf::IntRect(390, 300, 64, 64));
-	mSelected.setPosition(getPosition(mSelectedId) + sf::Vector2f(6.f, 6.f));
-
 	mEquipedId = GameSingleton::player->getWeapon();
 	mEquiped.setTexture(gui);
 	mEquiped.setTextureRect(sf::IntRect(454, 300, 64, 64));
 	mEquiped.setPosition(getPosition(mEquipedId) + sf::Vector2f(6.f, 6.f));
 
-	if (GameSingleton::player->getWeapon() != 0)
+	if (mEquipedId != 0)
 	{
-		mSelectedId = GameSingleton::player->getWeapon();
-		mSelected.setPosition(getPosition(mSelectedId) + sf::Vector2f(6.f, 6.f));
-		mName.setString(GameSingleton::weaponData[mSelectedId].name);
+		mName.setString(GameSingleton::weaponData[mEquipedId].name);
 		mName.setOrigin(mName.getGlobalBounds().width * 0.5f, mName.getGlobalBounds().height * 0.5f);
 	}
 }
@@ -217,40 +210,20 @@ void InventoryPopUp::handleEvent(const sf::Event& event)
 	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 	{
 		sf::Vector2f pos((F32)event.mouseButton.x, (F32)event.mouseButton.y);
-
-		static sf::FloatRect equipRect(mScreen.getPosition().x + 20.0f, mScreen.getPosition().y + 404.0f, 309.0f - 20.0f, 1100.0f - 1005.0f);
-		if (equipRect.contains(pos) && mSelectedId != 0)
+		for (U32 i = 0; i < mWeaponsSprites.size(); i++)
 		{
-			mEquipedId = mSelectedId;
-			GameSingleton::player->setWeapon((WeaponId)mEquipedId);
-			mEquiped.setPosition(getPosition(mEquipedId) + sf::Vector2f(6.f, 6.f));
-			GameSingleton::click();
-		}
-		else
-		{
-			for (U32 i = 0; i < mWeaponsSprites.size(); i++)
+			if (mWeaponsSprites[i].getGlobalBounds().contains(pos))
 			{
-				if (mWeaponsSprites[i].getGlobalBounds().contains(pos))
-				{
-					U32 id = mPlayerWeapons[i];
-					mSelectedId = id;
-					mSelected.setPosition(getPosition(mSelectedId) + sf::Vector2f(6.f, 6.f));
-					mName.setString(GameSingleton::weaponData[id].name);
-					mName.setOrigin(mName.getGlobalBounds().width * 0.5f, mName.getGlobalBounds().height * 0.5f);
-					GameSingleton::click();
-				}
-			}
-		}
-	}
+				U32 id = mPlayerWeapons[i];
 
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::E)
-	{
-		if (mSelectedId != 0)
-		{
-			mEquipedId = mSelectedId;
-			GameSingleton::player->setWeapon((WeaponId)mEquipedId);
-			mEquiped.setPosition(getPosition(mEquipedId) + sf::Vector2f(6.f, 6.f));
-			GameSingleton::click();
+				mEquipedId = id;
+				GameSingleton::player->setWeapon((WeaponId)mEquipedId);
+				mEquiped.setPosition(getPosition(mEquipedId) + sf::Vector2f(6.f, 6.f));
+				GameSingleton::click();
+
+				mName.setString(GameSingleton::weaponData[id].name);
+				mName.setOrigin(mName.getGlobalBounds().width * 0.5f, mName.getGlobalBounds().height * 0.5f);
+			}
 		}
 	}
 }
@@ -265,7 +238,6 @@ void InventoryPopUp::draw(sf::RenderTarget& target, sf::RenderStates states) con
 	}
 
 	target.draw(mName);
-	target.draw(mSelected);
 	target.draw(mEquiped);
 }
 
@@ -326,7 +298,7 @@ void OptionsPopUp::handleEvent(const sf::Event& event)
 			}
 			else
 			{
-				mAudio.setSoundVolume(100.0f);
+				mAudio.setSoundVolume(50.0f);
 			}
 			mSoundButton.setTextureRect(sf::IntRect((mAudio.getSoundVolume() > 0.0f) ? 288 : 384, 0, 96, 192));
 			GameSingleton::playSound(GameSingleton::buttonSound);
@@ -339,7 +311,7 @@ void OptionsPopUp::handleEvent(const sf::Event& event)
 			}
 			else
 			{
-				mAudio.setMusicVolume(100.0f);
+				mAudio.setMusicVolume(50.0f);
 			}
 			mMusicButton.setTextureRect(sf::IntRect((mAudio.getMusicVolume() > 0.0f) ? 288 : 384, 0, 96, 192));
 			GameSingleton::playSound(GameSingleton::buttonSound);
@@ -375,6 +347,72 @@ MapPopUp::MapPopUp(sf::Texture& screen, sf::Texture& gui, sf::Texture& head)
 	sf::Vector2f top = mScreen.getPosition();
 
 	// TODO : Load Map PopUp
+	U32 size = GameSingleton::visited.size();
+	for (U32 i = 0; i < size; i++)
+	{
+		mSprites.push_back(sf::Sprite(gui));
+		mSprites.back().setTextureRect(sf::IntRect(672, 288, 64,64));
+		sf::Vector2f p;
+		switch (GameSingleton::visited[i])
+		{
+		case 0: p = sf::Vector2f(0,0); break;
+		case 1: p = sf::Vector2f(64,32); break;
+		case 2: p = sf::Vector2f(0,64); break;
+		case 3: p = sf::Vector2f(128,0); break;
+		case 4: p = sf::Vector2f(128,64); break;
+		case 5: p = sf::Vector2f(160,128); break;
+		case 6: p = sf::Vector2f(192+32,128+32); break;
+		case 7: p = sf::Vector2f(192+32,64+32); break;
+		case 8: p = sf::Vector2f(256+32,64); break;
+		case 9: p = sf::Vector2f(256+32,128); break;
+		case 10: p = sf::Vector2f(192,192+32); break;
+		case 11: p = sf::Vector2f(128,192+64); break;
+		case 12: p = sf::Vector2f(64,192 + 64); break;
+		case 13: p = sf::Vector2f(64,128 + 64); break;
+		case 14: p = sf::Vector2f(0,128 + 64); break;
+		case 15: p = sf::Vector2f(0,192 + 64); break;
+		case 16: p = sf::Vector2f(0 + 32, 256 + 64); break;
+		case 17: p = sf::Vector2f(64 + 32, 256 + 64); break;
+		case 18: p = sf::Vector2f(128 + 32, 256 + 64); break;
+		case 19: p = sf::Vector2f(192 + 32, 256 + 64); break;
+		case 20: p = sf::Vector2f(256 + 32, 256 + 64); break;
+		case 21: p = sf::Vector2f(256 + 32, 192 + 64); break;
+		default: break;
+		}
+		p += top + sf::Vector2f(200, 100);
+		mSprites.back().setPosition(p);
+	}
+
+	mHead.setTexture(head);
+	sf::Vector2f p;
+	switch (GameSingleton::map->getMapId())
+	{
+		case 0: p = sf::Vector2f(0, 0); break;
+		case 1: p = sf::Vector2f(64, 32); break;
+		case 2: p = sf::Vector2f(0, 64); break;
+		case 3: p = sf::Vector2f(128, 0); break;
+		case 4: p = sf::Vector2f(128, 64); break;
+		case 5: p = sf::Vector2f(160, 128); break;
+		case 6: p = sf::Vector2f(192 + 32, 128 + 32); break;
+		case 7: p = sf::Vector2f(192 + 32, 64 + 32); break;
+		case 8: p = sf::Vector2f(256 + 32, 64); break;
+		case 9: p = sf::Vector2f(256 + 32, 128); break;
+		case 10: p = sf::Vector2f(192, 192 + 32); break;
+		case 11: p = sf::Vector2f(128, 192 + 64); break;
+		case 12: p = sf::Vector2f(64, 192 + 64); break;
+		case 13: p = sf::Vector2f(64, 128 + 64); break;
+		case 14: p = sf::Vector2f(0, 128 + 64); break;
+		case 15: p = sf::Vector2f(0, 192 + 64); break;
+		case 16: p = sf::Vector2f(0 + 32, 256 + 64); break;
+		case 17: p = sf::Vector2f(64 + 32, 256 + 64); break;
+		case 18: p = sf::Vector2f(128 + 32, 256 + 64); break;
+		case 19: p = sf::Vector2f(192 + 32, 256 + 64); break;
+		case 20: p = sf::Vector2f(256 + 32, 256 + 64); break;
+		case 21: p = sf::Vector2f(256 + 32, 192 + 64); break;
+		default: break;
+	}
+	p += top + sf::Vector2f(210, 110);
+	mHead.setPosition(p);
 }
 
 void MapPopUp::handleEvent(const sf::Event& event)

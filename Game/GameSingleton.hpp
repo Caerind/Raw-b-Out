@@ -149,6 +149,9 @@ class GameSingleton
 		static F32 ProjectileSpeed;
 		static void loadStats();
 
+		static std::vector<U32> visited;
+		static void visit(U32 mapId);
+
 };
 
 #endif // GAMESINGLETON_HPP

@@ -4,38 +4,38 @@
   <property name="boss_battery" type="int" value="2000"/>
   <property name="boss_weapon" type="int" value="13"/>
   <property name="enemy_battery" type="int" value="100"/>
-  <property name="enemy_weapon" type="int" value="11"/>
+  <property name="enemy_weapon" type="int" value="50"/>
  </properties>
  <tileset firstgid="1" source="tileset.tsx"/>
  <layer name="Calque de Tile 1" width="30" height="30">
   <data encoding="base64" compression="zlib">
-   eJzNlrEOwCAIRI11aOLc///VLm3SEGvvONQOLAZ4IJyxppTqj+y4LDJXL6f1QWJQbha4KJuJb/kUB/fpu4Hclh/bMxuD8NgdYXZgJ+Zg/bw7yM7f+qq779XkaG6LEaF1T89eva3iRumOrTuT/Ciutd4bZ8+Lg4vctfqGzeKrGlHqGaVZtJ5IPnsPK5iRc//Kq3DVPhhuL/fbH4itX5mVqgNmZpH6u896f+oormWM1vgsBmInMjk0Dg==
+   eJzdlrEKgDAMREt1EO3azf//TpcKUtLkLjYIDkHQJo9cerZHSun4KKoQ6DokT+Pm9lyUOgiXYSM1tNoI35PnnYGVz/bCaPb8tilcRvsRe+3W7wYDqYFw+7i5C8HtNfJobfXL+kbjsj6yuCvA9frX06unX+ZfxMwW0WE207svUO8w3N5Ho1pvZ2Tp/yYQfe53eRI30ttSFIFzgrU93NqYZcCOnp/FjppdUdgRPK3nGbo+zzzp/JXYkd6I2kMal7l3RPY8m2mxo3h/jwtfgDR8
   </data>
  </layer>
  <objectgroup name="Calque d'objets 1">
-  <object id="51" name="C" x="345.455" y="481.818">
+  <object id="51" name="T" x="160.606" y="160.606">
    <properties>
-    <property name="weapon" type="int" value="6"/>
+    <property name="map" type="int" value="15"/>
    </properties>
   </object>
-  <object id="52" name="T" x="1757.58" y="160.606">
+  <object id="52" name="T" x="1757.58" y="1054.55">
    <properties>
-    <property name="map" type="int" value="3"/>
+    <property name="map" type="int" value="17"/>
    </properties>
   </object>
-  <object id="53" name="T" x="151.515" y="1754.55">
+  <object id="53" name="C" x="675.758" y="545.455">
    <properties>
-    <property name="map" type="int" value="2"/>
+    <property name="weapon" type="int" value="44"/>
    </properties>
   </object>
-  <object id="54" name="T" x="1751.52" y="1751.52">
+  <object id="54" name="C" x="1760.61" y="351.515">
    <properties>
-    <property name="map" type="int" value="4"/>
+    <property name="weapon" type="int" value="39"/>
    </properties>
   </object>
-  <object id="55" name="T" x="224.242" y="927.273">
+  <object id="55" name="C" x="357.576" y="1509.09">
    <properties>
-    <property name="map" type="int" value="0"/>
+    <property name="weapon" type="int" value="34"/>
    </properties>
   </object>
  </objectgroup>

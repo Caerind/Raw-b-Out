@@ -1,56 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="50" height="50" tilewidth="64" tileheight="64" nextobjectid="12">
-<properties>
-  <property name="enemy_weapon" type="int" value="12"/>
+<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="64" tileheight="64" nextobjectid="60">
+ <properties>
+  <property name="boss_battery" type="int" value="2000"/>
+  <property name="boss_weapon" type="int" value="13"/>
+  <property name="enemy_battery" type="int" value="100"/>
+  <property name="enemy_weapon" type="int" value="50"/>
  </properties>
  <tileset firstgid="1" source="tileset.tsx"/>
- <layer name="Calque de Tile 1" width="50" height="50">
+ <layer name="Calque de Tile 1" width="30" height="30">
   <data encoding="base64" compression="zlib">
-   eJzt2TsOhDAMBNAICpDYdrX3vykNK6UwkM+MHUcurLTzMLGLHCmlY5L6Oq/csVznOkCuHofnms3h/c6wZ4DWNxl1Nm4OHIz+eNhbJXvA2oHqjbUB5bHOjrJY50ZZrDOjTNY5wxEOj46PUKMaah2aHtTcfXKwLcj98eZgedD7vNSBtoRjHEer4c5RY0A5egzhwDl681s6UNktHQwDwjFCL7QdLIP2fxWOcEi1Nhj/xTSg+qHh+E3iYPdjlrkbjnCUOFi7Q8vRMoNqDGyL5NiuM997LZlZHuktt7Qf1o63t87csSsZenqy35xSP1i5mXdFK7NGnRMRlE0=
+   eJzjZmBg4B6kWJTKmFb2seMQZyJgL7p6ZiLdS4l/KQkffGaQon6g0s9Is5cedlOalqhtL63dQK2yhlb2Utt+WpSzg9nekeZnXOaKDZC9A+XfwRa3A5WW6WkvtexCx1w4MK3sGyzpCr39SArmgWJS3EaMubjaxrjsJSacYOIcOGhy/CuDxMbXbic3fCnxLz0xADCINBI=
   </data>
  </layer>
  <objectgroup name="Calque d'objets 1">
-  <object id="2" name="T" x="156" y="164">
+  <object id="51" name="T" x="1754.55" y="166.667">
    <properties>
-    <property name="map" type="int" value="3"/>
-    <property name="x" type="int" value="2800"/>
-    <property name="y" type="int" value="1500"/>
+    <property name="map" type="int" value="4"/>
    </properties>
   </object>
-  <object id="3" name="I" x="2404" y="484">
+  <object id="52" name="T" x="1751.52" y="1757.58">
+   <properties>
+    <property name="map" type="int" value="6"/>
+   </properties>
+  </object>
+  <object id="53" name="C" x="348.485" y="1760.61">
+   <properties>
+    <property name="weapon" type="int" value="16"/>
+   </properties>
+  </object>
+  <object id="54" name="C" x="481.818" y="1757.58">
+   <properties>
+    <property name="weapon" type="int" value="21"/>
+   </properties>
+  </object>
+  <object id="55" name="C" x="609.091" y="1760.61">
+   <properties>
+    <property name="weapon" type="int" value="26"/>
+   </properties>
+  </object>
+  <object id="56" name="I" x="1378.79" y="160.606">
    <properties>
     <property name="str">Fight incoming...</property>
    </properties>
   </object>
-  <object id="4" name="C" x="2780" y="3052">
+  <object id="58" name="I" x="793.939" y="1693.94">
    <properties>
-    <property name="weapon" type="int" value="41"/>
-   </properties>
-  </object>
-  <object id="5" name="C" x="2908" y="3048">
-   <properties>
-    <property name="weapon" type="int" value="36"/>
-   </properties>
-  </object>
-  <object id="6" name="C" x="3036" y="3048">
-   <properties>
-    <property name="weapon" type="int" value="31"/>
-   </properties>
-  </object>
-  <object id="7" name="C" x="156" y="3040">
-   <properties>
-    <property name="weapon" type="int" value="49"/>
-   </properties>
-  </object>
-  <object id="8" name="I" x="2848" y="2908">
-   <properties>
-    <property name="str">Discover the power of the laser !</property>
-   </properties>
-  </object>
-  <object id="9" name="I" x="284" y="2908">
-   <properties>
-    <property name="str">This is the ultime weapon !
-Thanks for having played the entire game !</property>
+    <property name="str">Plasma weapons deals less damage but their bullets explodes and they can break walls</property>
    </properties>
   </object>
  </objectgroup>

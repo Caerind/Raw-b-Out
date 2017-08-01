@@ -3,29 +3,29 @@
  <properties>
   <property name="boss_battery" type="int" value="2000"/>
   <property name="boss_weapon" type="int" value="13"/>
-  <property name="enemy_battery" type="int" value="200"/>
-  <property name="enemy_weapon" type="int" value="11"/>
+  <property name="enemy_battery" type="int" value="100"/>
+  <property name="enemy_weapon" type="int" value="50"/>
  </properties>
  <tileset firstgid="1" source="tileset.tsx"/>
  <layer name="Calque de Tile 1" width="30" height="30">
   <data encoding="base64" compression="zlib">
-   eJzt1MEKgCAQBFDJAkmv3fr/7+wUCGnOzm4K4WEuYr5WV6NzLs48cgzwauntSW10fmn9UBnfG0H/E63zFLpLw0ZddJ+Rb+7x1ehcSy5bq7Y/2T2xdkeY6Bzt/WfdlIW5h1I39wLpSuanl1jUirrMmXrC1fYRupbVm/TFm2a9T6z9Nxe985vSRXpT07sS23cy2dqtTNS29mbscgEgMzFI
+   eJzdlMEOgCAMQ4l4MIEr//+rXjRZyBwblCkeFk0Ie5SWpRBC+mEVUt7MzYFbhPJmRoErnVN7Vm5Pqwf1IXaye+60pVfTD+nlatwRPiJbvflA5gStkdu7D3A1rExq5jug61nBHfX0SYfEtXjD+WKZJQi9Tz1avVHvoCcLiPkxmkEk23LXSL3aTHhyrbNqBa0cu55feQKTsu9/jjuTnSr2cX2jM/cNvV+vE246L/I=
   </data>
  </layer>
  <objectgroup name="Calque d'objets 1">
-  <object id="51" name="T" x="1696.97" y="412.121">
+  <object id="51" name="T" x="227.273" y="415.152">
    <properties>
-    <property name="map" type="int" value="1"/>
+    <property name="map" type="int" value="6"/>
    </properties>
   </object>
-  <object id="52" name="C" x="800" y="930.303">
+  <object id="52" name="T" x="1636.36" y="154.545">
    <properties>
-    <property name="weapon" type="int" value="22"/>
+    <property name="map" type="int" value="8"/>
    </properties>
   </object>
-  <object id="53" name="C" x="672.727" y="345.455">
+  <object id="53" name="C" x="1375.76" y="1700">
    <properties>
-    <property name="weapon" type="int" value="2"/>
+    <property name="weapon" type="int" value="13"/>
    </properties>
   </object>
  </objectgroup>

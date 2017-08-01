@@ -14,6 +14,9 @@ int main()
 	// Load Resources
 	GameSingleton::loadResources(application);
 	GameSingleton::loadStats();
+
+	application.getAudio().setMusicVolume(50.0f);
+	application.getAudio().setSoundVolume(50.0f);
 	
 	// Load Window
 	oe::Window& window = application.getWindow();

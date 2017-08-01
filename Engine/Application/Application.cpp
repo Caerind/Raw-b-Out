@@ -86,6 +86,7 @@ DataManager& Application::getData()
 void Application::stop()
 {
 	mRunning = false;
+	mAudioSystem.stop();
 }
 
 void Application::popState()
